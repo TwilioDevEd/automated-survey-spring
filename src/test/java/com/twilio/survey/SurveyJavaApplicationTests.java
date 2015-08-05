@@ -11,7 +11,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class SurveyJavaApplicationTests {
 
     @Test public void contextLoads() {
-        assert true;
     }
 
 }
