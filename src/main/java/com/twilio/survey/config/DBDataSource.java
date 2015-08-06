@@ -2,29 +2,44 @@ package com.twilio.survey.config;
 
 import com.twilio.survey.util.AppSetup;
 import org.postgresql.ds.PGPoolingDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
 import java.util.Map;
 
-@Configuration public class DBDataSource {
-    @ConfigurationProperties(prefix = "spring.datasource") @Bean(name = "dBDataSource") @Primary
-    public DataSource dBdataSource() {
-        AppSetup appSetup = new AppSetup();
-        Map<String, String> params = appSetup.getParamsFromDBURL(appSetup.getDatabaseURL());
+@Configuration
+@EnableJpaRepositories(basePackages = "com.twilio.survey.repositories", entityManagerFactoryRef = "entityManagerFactory")
+public class DBDataSource {
+  @Autowired
+  private JpaVendorAdapter jpaVendorAdapter;
 
-        return DataSourceBuilder.create().username(params.get("username")).password(params.get("url"))
-            .url(params.get("url")).type(PGPoolingDataSource.class)
-            .driverClassName("org.postgresql.Driver").build();
-    }
+  @ConfigurationProperties(prefix = "spring.datasource")
+  @Bean(name = "dBDataSource")
+  @Primary
+  public DataSource dBDataSource() {
+    AppSetup appSetup = new AppSetup();
+    Map<String, String> params = appSetup.getParamsFromDBURL(appSetup.getDatabaseURL());
 
-//    @Bean(name = "jdbcSource")
-//    public JdbcTemplate jdbcTemplate(DataSource dBDataSource) {
-//        return new JdbcTemplate(dBDataSource);
-//    }
+    return DataSourceBuilder.create().username(params.get("username")).password(params.get("url"))
+        .url(params.get("url")).type(PGPoolingDataSource.class)
+        .driverClassName("org.postgresql.Driver").build();
+  }
+
+  @Bean(name = "entityManagerFactory")
+  public LocalContainerEntityManagerFactoryBean dBEntityManager() throws Throwable {
+    LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
+    emfb.setDataSource(dBDataSource());
+
+    emfb.setJpaVendorAdapter(jpaVendorAdapter);
+    emfb.setPackagesToScan("com.twilio.survey.models");
+    return emfb;
+  }
 }
