@@ -5,6 +5,8 @@ import com.twilio.survey.repositories.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SurveyService {
   private SurveyRepository surveyRepository;
@@ -16,5 +18,25 @@ public class SurveyService {
 
   public void create(Survey survey) {
     surveyRepository.save(survey);
+  }
+
+  public void delete(Long id) {
+    surveyRepository.delete(id);
+  }
+
+  public void deleteAll() {
+    surveyRepository.deleteAll();
+  }
+
+  public Long count() {
+    return surveyRepository.count();
+  }
+
+  public List<Survey> findAll() {
+    return surveyRepository.findAll();
+  }
+
+  public Survey find(Long id) {
+    return surveyRepository.findOne(id);
   }
 }

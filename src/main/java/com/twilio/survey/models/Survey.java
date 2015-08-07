@@ -17,9 +17,7 @@ public class Survey {
   @Column(name = "date")
   private Date date;
 
-  public Survey() {
-
-  }
+  public Survey() {}
 
   public Survey(String title, Date date) {
     this.title = title;
