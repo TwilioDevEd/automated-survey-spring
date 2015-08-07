@@ -22,11 +22,6 @@ public class GreetingController {
   @RequestMapping("/greeting")
   public Greeting greeting(@RequestParam(value = "name", defaultValue = "Mario") String name) {
 
-    SurveyService service = new SurveyService(surveyRepository);
-
-    Survey survey = new Survey("Prueba Mario", new Date());
-    service.create(survey);
-
     return new Greeting(counter.incrementAndGet(), String.format(template, name));
   }
 }
