@@ -1,0 +1,26 @@
+{
+  "questions": [
+    {
+      "body": "What is your name?",
+      "type": "voice"
+    },
+    {
+      "body": "In a scale of 1 to 9, how would you rate the quality of this call?",
+      "type": "numeric"
+    },
+    {
+      "body": "Are you more than 21 year old?",
+      "type": "yes-no"
+    },
+    {
+      "body": "Do you own a smart phone?",
+      "type": "voice"
+    },
+    {
+      "body": "Do you know how to program in Java?",
+      "type": "voice"
+    }
+
+  ],
+  "title": "Sample Survey"
+}

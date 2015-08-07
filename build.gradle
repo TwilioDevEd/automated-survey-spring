@@ -41,6 +41,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.postgresql:postgresql:9.4-1201-jdbc41")
+    compile("com.googlecode.json-simple:json-simple")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
