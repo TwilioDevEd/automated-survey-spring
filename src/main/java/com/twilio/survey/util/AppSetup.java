@@ -1,7 +1,5 @@
 package com.twilio.survey.util;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -41,26 +39,13 @@ public class AppSetup {
     return params;
   }
 
-  public EntityManagerFactory getEntityManagerFactory() {
-    AppSetup appSetup = new AppSetup();
-    Map<String, String> configOverrides = new HashMap<>();
-
-    Map<String, String> params = appSetup.getParamsFromDBURL(getDatabaseURL());
-
-    configOverrides.put("javax.persistence.jdbc.url", params.get("url"));
-    configOverrides.put("javax.persistence.jdbc.user", params.get("username"));
-    configOverrides.put("javax.persistence.jdbc.password", params.get("password"));
-
-    return Persistence.createEntityManagerFactory("Appointments-Persistence", configOverrides);
-  }
-
   public int getPortNumber() {
     String port = env.get("PORT");
 
     if (port != null) {
       return Integer.parseInt(port);
     } else {
-      return 4567;
+      return 8080;
     }
   }
 

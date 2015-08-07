@@ -10,7 +10,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -47,7 +46,7 @@ public class SurveyParser {
     String title = (String) jsonObject.get("title");
     JSONArray questions = (JSONArray) jsonObject.get("questions");
 
-    insertSurveyIntoDb(title,questions);
+    insertSurveyIntoDb(title, questions);
   }
 
   @Transactional
@@ -56,7 +55,7 @@ public class SurveyParser {
     surveyService.create(survey);
     Question newQuestion;
 
-    for(Object question : questions) {
+    for (Object question : questions) {
       JSONObject obj = (JSONObject) question;
       String body = (String) obj.get("body");
       String type = (String) obj.get("type");

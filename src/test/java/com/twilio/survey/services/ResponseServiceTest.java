@@ -2,8 +2,10 @@ package com.twilio.survey.services;
 
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
+import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
+import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.repositories.SurveyRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -22,16 +24,20 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
-public class QuestionServiceTest {
+public class ResponseServiceTest {
   @Autowired
   private QuestionRepository questionRepository;
   @Autowired
   private SurveyRepository surveyRepository;
+  @Autowired
+  private ResponseRepository responseRepository;
   private QuestionService questionService;
   private SurveyService surveyService;
+  private ResponseService responseService;
 
   @After
   public void after() {
+    responseService.deleteAll();
     questionService.deleteAll();
     surveyService.deleteAll();
   }
@@ -40,19 +46,22 @@ public class QuestionServiceTest {
   public void before() {
     questionService = new QuestionService(questionRepository);
     surveyService = new SurveyService(surveyRepository);
+    responseService = new ResponseService(responseRepository);
+    responseService.deleteAll();
     questionService.deleteAll();
     surveyService.deleteAll();
   }
 
   @Test
   public void testCreate() {
-    assertThat(questionService.count(), is(0L));
+    assertThat(responseService.count(), is(0L));
 
     Survey survey = new Survey("New Title Question", new Date());
     surveyService.create(survey);
     Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
     questionService.create(question);
-    ;
+    Response response = new Response("This responds the question", "CALL_SID", question, new Date());
+    responseService.create(response);
 
     assertThat(questionService.count(), is(1L));
   }
@@ -61,17 +70,18 @@ public class QuestionServiceTest {
   public void testDelete() {
     assertThat(questionService.count(), is(0L));
 
-    Survey survey1 = new Survey("New Title Question", new Date());
-    surveyService.create(survey1);
-
-    Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
+    Survey survey = new Survey("New Title Question", new Date());
+    surveyService.create(survey);
+    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
     questionService.create(question);
+    Response response = new Response("This responds the question", "CALL_SID", question, new Date());
+    responseService.create(response);
 
-    assertThat(questionService.count(), is(1L));
+    assertThat(responseService.count(), is(1L));
 
-    questionService.delete(question.getId());
+    responseService.delete(response.getId());
 
-    assertThat(questionService.count(), is(0L));
+    assertThat(responseService.count(), is(0L));
   }
 
   @Test
@@ -82,12 +92,16 @@ public class QuestionServiceTest {
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
     questionService.create(question1);
+    Response response1 = new Response("This responds the question", "CALL_SID", question1, new Date());
+    responseService.create(response1);
     Survey survey2 = new Survey("New Title Question2", new Date());
     surveyService.create(survey2);
     Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
     questionService.create(question2);
+    Response response2 = new Response("This responds the question", "CALL_SID", question2, new Date());
+    responseService.create(response2);
 
-    assertThat(questionService.findAll().size(), is(2));
+    assertThat(responseService.findAll().size(), is(2));
   }
 
   @Test
@@ -98,21 +112,27 @@ public class QuestionServiceTest {
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
     questionService.create(question1);
+    Response response1 = new Response("This responds the question", "CALL_SID", question1, new Date());
+    responseService.create(response1);
     Survey survey2 = new Survey("New Title Question2", new Date());
     surveyService.create(survey2);
     Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
     questionService.create(question2);
+    Response response2 = new Response("This responds the question", "CALL_SID", question2, new Date());
+    responseService.create(response2);
 
-    assertThat(questionService.count(), is(2L));
+    assertThat(responseService.count(), is(2L));
   }
 
   @Test
   public void testFind() {
-    Survey survey1 = new Survey("New Title Question", new Date());
-    surveyService.create(survey1);
-    Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.create(question1);
+    Survey survey = new Survey("New Title Question", new Date());
+    surveyService.create(survey);
+    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
+    questionService.create(question);
+    Response response = new Response("This responds the question", "CALL_SID", question, new Date());
+    responseService.create(response);
 
-    assertThat(questionService.find(question1.getId()).getBody(), is("Question Body"));
+    assertThat(responseService.find(response.getId()).getResponse(), is("This responds the question"));
   }
 }

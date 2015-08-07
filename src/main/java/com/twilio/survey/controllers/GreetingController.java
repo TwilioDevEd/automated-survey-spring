@@ -1,8 +1,5 @@
 package com.twilio.survey.controllers;
 
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
@@ -10,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class GreetingController {
@@ -20,14 +20,13 @@ public class GreetingController {
   private SurveyRepository surveyRepository;
 
   @RequestMapping("/greeting")
-  public Greeting greeting(@RequestParam(value="name", defaultValue="Mario") String name) {
+  public Greeting greeting(@RequestParam(value = "name", defaultValue = "Mario") String name) {
 
     SurveyService service = new SurveyService(surveyRepository);
 
     Survey survey = new Survey("Prueba Mario", new Date());
     service.create(survey);
 
-    return new Greeting(counter.incrementAndGet(),
-        String.format(template, name));
+    return new Greeting(counter.incrementAndGet(), String.format(template, name));
   }
 }

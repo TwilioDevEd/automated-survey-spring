@@ -1,6 +1,5 @@
 package com.twilio.survey;
 
-import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
@@ -10,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Date;
 
 @SpringBootApplication
 public class SurveyJavaApplication implements CommandLineRunner {
