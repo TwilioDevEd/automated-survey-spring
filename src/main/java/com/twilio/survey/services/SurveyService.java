@@ -1,5 +1,6 @@
 package com.twilio.survey.services;
 
+import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,9 @@ public class SurveyService {
 
   public Survey findLast() {
     return surveyRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0);
+  }
+
+  public List<Question> findSurveyQuestions(Survey survey) {
+    return survey.getQuestions();
   }
 }

@@ -2,6 +2,7 @@ package com.twilio.survey.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "surveys")
@@ -16,6 +17,10 @@ public class Survey {
 
   @Column(name = "date")
   private Date date;
+
+  @OneToMany(mappedBy="question")
+  @OrderBy("name ASC")
+  List<Question> questions;
 
   public Survey() {}
 
@@ -46,5 +51,13 @@ public class Survey {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public List<Question> getQuestions() {
+    return questions;
+  }
+
+  public void setQuestions(List<Question> questions) {
+    this.questions = questions;
   }
 }

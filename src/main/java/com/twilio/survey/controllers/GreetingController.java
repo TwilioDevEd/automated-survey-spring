@@ -21,7 +21,7 @@ public class GreetingController {
 
   @RequestMapping("/greeting")
   public Greeting greeting(@RequestParam(value = "name", defaultValue = "MarioHEROKU") String name) {
-
+    surveyRepository.save(new Survey("asasas", new Date()));
     return new Greeting(counter.incrementAndGet(), String.format(template, name));
   }
 }

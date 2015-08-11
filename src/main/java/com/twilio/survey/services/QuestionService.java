@@ -1,8 +1,10 @@
 package com.twilio.survey.services;
 
 import com.twilio.survey.models.Question;
+import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,5 +40,9 @@ public class QuestionService {
 
   public Question find(Long id) {
     return questionRepository.findOne(id);
+  }
+
+  public Question findFirst(Survey survey) {
+    return questionRepository.findAll(new Sort(Sort.Direction.ASC, "id")).get(0);
   }
 }
