@@ -54,7 +54,7 @@ eclipse {
     }
 }
 
-task stage(dependsOn: ['clean', 'installDist'])
+task stage(dependsOn: ['clean', 'assemble'])
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'

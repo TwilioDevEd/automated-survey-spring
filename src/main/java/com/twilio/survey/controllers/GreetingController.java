@@ -20,7 +20,7 @@ public class GreetingController {
   private SurveyRepository surveyRepository;
 
   @RequestMapping("/greeting")
-  public Greeting greeting(@RequestParam(value = "name", defaultValue = "Mario") String name) {
+  public Greeting greeting(@RequestParam(value = "name", defaultValue = "MarioHEROKU") String name) {
 
     return new Greeting(counter.incrementAndGet(), String.format(template, name));
   }
