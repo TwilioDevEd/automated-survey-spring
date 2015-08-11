@@ -1,0 +1,19 @@
+{
+  "name": "Automated Surveys Spring",
+  "description": "Automated surveys",
+  "keywords": [
+    "twilio",
+    "spring",
+    "java"
+  ],
+  "scripts": {
+    "postdeploy": "true"
+  },
+  "addons": [
+    "heroku-postgresql:hobby-dev"
+  ],
+  "website": "https://github.com/TwilioDevEd/automated-survey-spring",
+  "repository": "https://github.com/TwilioDevEd/automated-survey-spring",
+  "logo": "https://s3.amazonaws.com/howtodocs/twilio-logo.png",
+  "success_url": "/greeting"
+}
