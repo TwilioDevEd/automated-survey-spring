@@ -47,7 +47,7 @@ public class SurveyController {
     String welcomeMessage = "Welcome to the " + lastSurvey.getTitle() + "!";
 
     TwiMLResponse twiml = new TwiMLResponse();
-    Say say = new Say(welcomeMessage + surveyService.findSurveyQuestions(lastSurvey).get(0).getBody());
+    Say say = new Say(welcomeMessage + " " + surveyService.findSurveyQuestions(lastSurvey).get(0).getBody());
     try {
       twiml.append(say);
     } catch (TwiMLException e) {

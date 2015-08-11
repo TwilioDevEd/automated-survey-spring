@@ -18,8 +18,8 @@ public class Survey {
   @Column(name = "date")
   private Date date;
 
-  @OneToMany(mappedBy="question")
-  @OrderBy("name ASC")
+  @OneToMany(mappedBy="survey")
+  @OrderBy("id ASC")
   List<Question> questions;
 
   public Survey() {}
