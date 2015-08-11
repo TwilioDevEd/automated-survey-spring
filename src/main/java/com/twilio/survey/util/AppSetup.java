@@ -30,11 +30,10 @@ public class AppSetup {
       password = "";
     }
 
-    String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-
-    params.put("url", dbUrl);
-    params.put("username", username);
-    params.put("password", password);
+    String dBUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath() +
+        "?user=" + username + "&password=" + password + "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+    System.out.println(dBUrl);
+    params.put("url", dBUrl);
 
     return params;
   }
