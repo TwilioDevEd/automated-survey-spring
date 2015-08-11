@@ -31,8 +31,11 @@ public class AppSetup {
     }
 
     String dBUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath() +
-        "?user=" + username + "&password=" + password + "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
-    System.out.println(dBUrl);
+        "?user=" + username + "&password=" + password;
+    if (getSslEnabledDb()) {
+      dBUrl += "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+
+    }
     params.put("url", dBUrl);
 
     return params;
@@ -62,5 +65,15 @@ public class AppSetup {
 
   public String getTwilioPhoneNumber() {
     return env.get("TWILIO_PHONE_NUMBER");
+  }
+
+  public boolean getSslEnabledDb() {
+    String ssl = env.get("TWILIO_DISABLE_DB_SSL");
+    if (ssl != null && ssl.compareToIgnoreCase("true") == 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 }
