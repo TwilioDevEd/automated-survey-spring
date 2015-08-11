@@ -54,6 +54,8 @@ eclipse {
     }
 }
 
+task stage(dependsOn: ['clean', 'installDist'])
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
