@@ -32,14 +32,10 @@ public class QuestionController {
 
     Long surveyId = null;
     int questionNumber = 0;
-    System.out.println("*********QUESTION***********"+request.getParameter("survey"));
-    System.out.println("********************"+request.getParameter("q"));
-    System.out.println(request.getQueryString());
 
     try {
       surveyId = Long.parseLong(request.getParameter("survey"));
       questionNumber = Integer.parseInt(request.getParameter("q"));
-      System.out.println("*****************" + questionNumber);
     } catch (NumberFormatException e) {
       System.out.println("Numbers wrongly formatted, unable to parse");
     }

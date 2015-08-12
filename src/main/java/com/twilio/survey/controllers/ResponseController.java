@@ -57,15 +57,7 @@ public class ResponseController {
     int questionIndex = questions.indexOf(currentQuestion);
     TwiMLResponse twiml = new TwiMLResponse();
     if (questionIndex < questions.size() - 1) {
-      response.setStatus(HttpServletResponse.SC_SEE_OTHER);
-      try {
-        response.sendRedirect("question?survey=" + survey.getId() + "");
-      } catch (IOException e) {
-        System.out.println("Unable to redirect to next question");
-      }
       int nextQuestionNumber = questionIndex + 2;
-
-      System.out.println("/question?survey=" + survey.getId() + "&q=" + nextQuestionNumber);
       Redirect redirect = new Redirect("/question?q=" + nextQuestionNumber + "&survey=" + survey.getId());
       redirect.setMethod("GET");
       try {
@@ -75,8 +67,10 @@ public class ResponseController {
       }
     }
     else {
+      Say say = new Say("Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
       Hangup hangup = new Hangup();
       try {
+        twiml.append(say);
         twiml.append(hangup);
       } catch (TwiMLException e) {
         System.out.println("Couldn't append redirect to Twilio's response");

@@ -43,9 +43,7 @@ public class SurveyController {
     }
 
     try {
-      System.out.println();
       response.getWriter().print(twiml.toEscapedXML());
-      System.out.println(twiml.toEscapedXML());
     } catch (IOException e) {
       System.out.println("Couldn't write Twilio's response to XML");
     }

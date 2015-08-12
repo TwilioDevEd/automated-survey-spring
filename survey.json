@@ -1,7 +1,7 @@
 {
   "questions": [
     {
-      "body": "What is your name?",
+      "body": "What is your full name?",
       "type": "voice"
     },
     {
@@ -13,11 +13,11 @@
       "type": "yes-no"
     },
     {
-      "body": "Do you own a smart phone?",
+      "body": "What is the model of the phone you own, if you own one?",
       "type": "voice"
     },
     {
-      "body": "Do you know how to program in Java?",
+      "body": "Name a Java based framework you know about?",
       "type": "voice"
     }
   ],
