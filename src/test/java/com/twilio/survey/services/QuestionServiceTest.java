@@ -52,7 +52,6 @@ public class QuestionServiceTest {
     surveyService.create(survey);
     Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
     questionService.create(question);
-    ;
 
     assertThat(questionService.count(), is(1L));
   }
