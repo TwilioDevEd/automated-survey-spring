@@ -2,6 +2,7 @@ package com.twilio.survey.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "responses")
@@ -17,7 +18,7 @@ public class Response {
   @Column(name = "call_sid")
   private String callSid;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id")
   private Question question;
 

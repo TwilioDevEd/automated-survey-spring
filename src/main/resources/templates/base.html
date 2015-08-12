@@ -1,0 +1,30 @@
+{{! base.mustache }}
+<!DOCTYPE html>
+<html>
+{{$header}}{{/header}}
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Appointment Reminders</a>
+        </div>
+
+        <div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/">
+                        Index
+                    </a>
+                </li>
+                <li>
+                    <a href="new">
+                        New appointment
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+{{$content}}{{/content}}
+</div>
+</html>

@@ -4,8 +4,11 @@ import com.twilio.sdk.verbs.Redirect;
 import com.twilio.sdk.verbs.Say;
 import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.sdk.verbs.TwiMLResponse;
+import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
+import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.repositories.SurveyRepository;
+import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,38 +18,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 
 @Controller
-public class SurveyController {
+public class DisplayController {
   @Autowired
   private SurveyRepository surveyRepository;
   private SurveyService surveyService;
+  @Autowired
+  private ResponseRepository responseRepository;
+  private ResponseService responseService;
 
-  public SurveyController() {}
+  public DisplayController() {}
 
-  @RequestMapping(value = "/survey", method = RequestMethod.GET)
-  public void welcome(HttpServletRequest request, HttpServletResponse response) {
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  public String index(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {
     this.surveyService = new SurveyService(surveyRepository);
+    this.responseService = new ResponseService(responseRepository);
 
     Survey lastSurvey = surveyService.findLast();
-    String welcomeMessage = "Welcome to the " + lastSurvey.getTitle() + " survey";
+    model.put("surveyTitle", lastSurvey.getTitle());
 
-    TwiMLResponse twiml = new TwiMLResponse();
-    Say say = new Say(welcomeMessage);
-    Redirect redirect = new Redirect("/question?survey=" + lastSurvey.getId() + "&q=1");
-    redirect.setMethod("GET");
-    try {
-      twiml.append(say);
-      twiml.append(redirect);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or redirect to Twilio's response");
-    }
+    model.put("questions", lastSurvey.getQuestions());
 
-    try {
-      response.getWriter().print(twiml.toEscapedXML());
-    } catch (IOException e) {
-      System.out.println("Couldn't write Twilio's response to XML");
-    }
-    response.setContentType("application/xml");
+    return "index";
   }
 }

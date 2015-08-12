@@ -71,11 +71,4 @@ public class QuestionController {
       }
     }
   }
-
-  //  @RequestMapping("/")
-  //  public String welcome(Map<String, Object> model) {
-  //    model.put("time", new Date());
-  //    model.put("message", "hola hola");
-  //    return "welcome";
-  //  }
 }

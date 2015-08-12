@@ -2,6 +2,7 @@ package com.twilio.survey.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "questions")
@@ -23,6 +24,10 @@ public class Question {
 
   @Column(name = "date")
   private Date date;
+
+  @OneToMany(mappedBy="question")
+  @OrderBy("id ASC")
+  List<Response> responses;
 
   public Question() {}
 
