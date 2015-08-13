@@ -1,0 +1,144 @@
+package com.twilio.survey.controllers;
+
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.twilio.survey.SurveyJavaApplication;
+import com.twilio.survey.models.Question;
+import com.twilio.survey.models.Response;
+import com.twilio.survey.models.Survey;
+import com.twilio.survey.repositories.QuestionRepository;
+import com.twilio.survey.repositories.ResponseRepository;
+import com.twilio.survey.repositories.SurveyRepository;
+import com.twilio.survey.services.QuestionService;
+import com.twilio.survey.services.ResponseService;
+import com.twilio.survey.services.SurveyService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.Date;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
+@WebAppConfiguration
+@IntegrationTest("server.port:0")
+public class DisplayControllerTest {
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private SurveyRepository surveyRepository;
+    @Autowired
+    private ResponseRepository responseRepository;
+    private QuestionService questionService;
+    private SurveyService surveyService;
+    private ResponseService responseService;
+
+    @Value("${local.server.port}") int port;
+
+    @After
+    public void after() {
+        responseService.deleteAll();
+        questionService.deleteAll();
+        surveyService.deleteAll();
+    }
+
+    @Before
+    public void before() {
+        questionService = new QuestionService(questionRepository);
+        surveyService = new SurveyService(surveyRepository);
+        responseService = new ResponseService(responseRepository);
+        questionService.deleteAll();
+        surveyService.deleteAll();
+    }
+
+    @Test
+    public void showQuestions() {
+        assertThat(questionService.count(), is(0L));
+
+        Survey survey = new Survey("New Title Survey", new Date());
+        surveyService.create(survey);
+        Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
+        questionService.create(question);
+
+        HttpResponse<String> stringResponse = null;
+        try {
+            stringResponse = Unirest.get("http://localhost:" + port).asString();
+        } catch (UnirestException e) {
+            System.out.println("Unable to create request");
+        }
+        assertTrue(stringResponse.getBody().contains("New Title Survey"));
+        assertTrue(stringResponse.getBody().contains("Question Body"));
+    }
+
+    @Test
+    public void showResponses() {
+        Survey survey = new Survey("New Title Survey", new Date());
+        surveyService.create(survey);
+        Question question = new Question("Numeric Question", "numeric", survey, new Date());
+        questionService.create(question);
+        Response response = new Response("test number", "CALL_SID", question, new Date());
+        responseService.create(response);
+
+        HttpResponse<String> stringResponse = null;
+
+        try {
+            stringResponse = Unirest.get("http://localhost:" + port).asString();
+        } catch (UnirestException e) {
+            System.out.println("Unable to create request");
+        }
+
+        assertTrue(stringResponse.getBody().contains("Response: test number"));
+    }
+
+    @Test
+    public void showVoiceResponses() {
+        Survey survey = new Survey("New Title Survey", new Date());
+        surveyService.create(survey);
+        Question question = new Question("Voice Question", "voice", survey, new Date());
+        questionService.create(question);
+        Response response = new Response("http://recording_url", "CALL_SID", question, new Date());
+        responseService.create(response);
+
+        HttpResponse<String> stringResponse = null;
+
+        try {
+            stringResponse = Unirest.get("http://localhost:" + port).asString();
+        } catch (UnirestException e) {
+            System.out.println("Unable to create request");
+        }
+
+        assertTrue(stringResponse.getBody().contains("<source src=\"http://recording_url\" type=\"audio/mpeg\">"));
+    }
+
+    @Test
+    public void showYesNoResponses() {
+        Survey survey = new Survey("New Title Survey", new Date());
+        surveyService.create(survey);
+        Question question = new Question("YesNo Question", "yes-no", survey, new Date());
+        questionService.create(question);
+        Response response = new Response("0", "CALL_SID", question, new Date());
+        responseService.create(response);
+
+        HttpResponse<String> stringResponse = null;
+
+        try {
+            stringResponse = Unirest.get("http://localhost:" + port).asString();
+        } catch (UnirestException e) {
+            System.out.println("Unable to create request");
+        }
+
+        assertTrue(stringResponse.getBody().contains("(1: YES, 0: NO) Response: 0"));
+    }
+}
