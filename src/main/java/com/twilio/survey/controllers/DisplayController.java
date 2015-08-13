@@ -4,6 +4,7 @@ import com.twilio.sdk.verbs.Redirect;
 import com.twilio.sdk.verbs.Say;
 import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.sdk.verbs.TwiMLResponse;
+import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.ResponseRepository;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -40,7 +42,14 @@ public class DisplayController {
     Survey lastSurvey = surveyService.findLast();
     model.put("surveyTitle", lastSurvey.getTitle());
 
-    model.put("questions", lastSurvey.getQuestions());
+    List<Question> questions = lastSurvey.getQuestions();
+
+    for (Question question : questions) {
+      List<Response> responses = question.getResponses();
+      System.out.println(responses.size());
+    }
+
+    model.put("questions", questions);
 
     return "index";
   }

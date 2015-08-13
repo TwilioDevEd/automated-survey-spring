@@ -25,6 +25,15 @@ public class Response {
   @Column(name = "date")
   private Date date;
 
+  @Column(name = "isVoice")
+  private boolean isVoice;
+
+  @Column(name = "isNumeric")
+  private boolean isNumeric;
+
+  @Column(name = "isYesNo")
+  private boolean isYesNo;
+
   public Response() {}
 
   public Response(String response, String callSid, Question question, Date date) {
@@ -32,6 +41,18 @@ public class Response {
     this.callSid = callSid;
     this.question = question;
     this.date = date;
+    this.isVoice = false;
+    this.isNumeric = false;
+    this.isYesNo = false;
+    if (question.getType().compareTo("voice") == 0) {
+      this.isVoice = true;
+    }
+    else if(question.getType().compareTo("numeric") == 0) {
+      this.isNumeric = true;
+    }
+    else if(question.getType().compareTo("yes-no") == 0) {
+      this.isYesNo = true;
+    }
   }
 
   public Long getId() {
@@ -72,5 +93,29 @@ public class Response {
 
   public void setDate(Date date) {
     this.date = date;
+  }
+
+  public boolean isVoice() {
+    return isVoice;
+  }
+
+  public void setIsVoice(boolean isVoice) {
+    this.isVoice = isVoice;
+  }
+
+  public boolean isNumeric() {
+    return isNumeric;
+  }
+
+  public void setIsNumeric(boolean isNumeric) {
+    this.isNumeric = isNumeric;
+  }
+
+  public boolean isYesNo() {
+    return isYesNo;
+  }
+
+  public void setIsYesNo(boolean isYesNo) {
+    this.isYesNo = isYesNo;
   }
 }

@@ -69,7 +69,7 @@ public class QuestionHandler {
   }
 
   private TwiMLResponse getYesNoResponse(TwiMLResponse response) {
-    String defaultMessage = "For the next question, press 1 for yes, and 2 for no. Then press the pound key.";
+    String defaultMessage = "For the next question, press 1 for yes, and 0 for no. Then press the pound key.";
     Say say = new Say(defaultMessage);
     Say questionSay = new Say(question.getBody());
     Pause pause = new Pause();

@@ -50,9 +50,31 @@
                 {{#responses}}
                 <div class="panel-body">
                     <ol class="list-group">
-                        <li class="list-group-item">Response: {{response}}</li>
                         <li class="list-group-item">Answer type: {{type}}</li>
                         <li class="list-group-item">Date: {{date}}</li>
+                        <li class="list-group-item">Call SID: {{callSid}}</li>
+                        <li class="list-group-item">
+                        {{#isVoice}}
+                            <div class="voice-response">
+                                <span class="voice-response-text">Response:</span>
+                                <audio controls>
+                                    <source src="{{response}}" type="audio/mpeg">
+                                    Your browser does not support the audio tag.
+                                </audio>
+                            </div>
+                        {{/isVoice}}
+                        {{#isNumeric}}
+                            {{response}}
+                        {{/isNumeric}}
+                        {{#isYesNo}}
+                            {{#response}}
+                                YES
+                            {{/response}}
+                            {{^response}}
+                                NO
+                            {{/response}}
+                        {{/isYesNo}}
+                        </li>
                     </ol>
                 </div>
                 {{/responses}}
