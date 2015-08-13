@@ -25,6 +25,7 @@ public class Response {
   @Column(name = "date")
   private Date date;
 
+  /** The next three field are necessary for Mustache templating engine */
   @Column(name = "isVoice")
   private boolean isVoice;
 
