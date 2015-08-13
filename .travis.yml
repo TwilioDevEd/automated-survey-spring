@@ -1,0 +1,8 @@
+language: java
+jdk:
+- oraclejdk7
+env:
+  global:
+  - DATABASE_URL=postgres://postgres:@localhost:5432/survey
+before_script:
+- psql -c 'create database survey;' -U postgres
