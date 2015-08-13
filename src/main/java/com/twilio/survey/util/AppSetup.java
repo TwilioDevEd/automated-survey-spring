@@ -55,18 +55,6 @@ public class AppSetup {
     return env.get("DATABASE_URL");
   }
 
-  public String getAccountSid() {
-    return env.get("TWILIO_ACCOUNT_SID");
-  }
-
-  public String getAuthToken() {
-    return env.get("TWILIO_AUTH_TOKEN");
-  }
-
-  public String getTwilioPhoneNumber() {
-    return env.get("TWILIO_PHONE_NUMBER");
-  }
-
   public boolean getSslEnabledDb() {
     String ssl = env.get("TWILIO_DISABLE_DB_SSL");
     if (ssl != null && ssl.compareToIgnoreCase("true") == 0) {

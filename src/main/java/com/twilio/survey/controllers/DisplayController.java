@@ -44,11 +44,6 @@ public class DisplayController {
 
     List<Question> questions = lastSurvey.getQuestions();
 
-    for (Question question : questions) {
-      List<Response> responses = question.getResponses();
-      System.out.println(responses.size());
-    }
-
     model.put("questions", questions);
 
     return "index";
