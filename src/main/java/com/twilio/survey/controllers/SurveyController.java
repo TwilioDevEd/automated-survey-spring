@@ -33,7 +33,7 @@ public class SurveyController {
 
     TwiMLResponse twiml = new TwiMLResponse();
     Say say = new Say(welcomeMessage);
-    Redirect redirect = new Redirect("/question?survey=" + lastSurvey.getId() + "&q=1");
+    Redirect redirect = new Redirect("/question?survey=" + lastSurvey.getId() + "&question=1");
     redirect.setMethod("GET");
     try {
       twiml.append(say);

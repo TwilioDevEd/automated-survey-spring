@@ -5,7 +5,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
-import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.ResponseRepository;
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class DisplayControllerTest {
+public class SurveyControllerTest {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
@@ -64,81 +63,19 @@ public class DisplayControllerTest {
     }
 
     @Test
-    public void showQuestions() {
+    public void getFirstSurvey() {
         assertThat(questionService.count(), is(0L));
 
         Survey survey = new Survey("New Title Survey", new Date());
         surveyService.create(survey);
-        Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
-        questionService.create(question);
 
         HttpResponse<String> stringResponse = null;
         try {
-            stringResponse = Unirest.get("http://localhost:" + port).asString();
+            stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
         } catch (UnirestException e) {
             System.out.println("Unable to create request");
         }
         assertTrue(stringResponse.getBody().contains("New Title Survey"));
-        assertTrue(stringResponse.getBody().contains("Question Body"));
-    }
-
-    @Test
-    public void showResponses() {
-        Survey survey = new Survey("New Title Survey", new Date());
-        surveyService.create(survey);
-        Question question = new Question("Numeric Question", "numeric", survey, new Date());
-        questionService.create(question);
-        Response response = new Response("test number", "CALL_SID", question, new Date());
-        responseService.create(response);
-
-        HttpResponse<String> stringResponse = null;
-
-        try {
-            stringResponse = Unirest.get("http://localhost:" + port).asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-
-        assertTrue(stringResponse.getBody().contains("Response: test number"));
-    }
-
-    @Test
-    public void showVoiceResponses() {
-        Survey survey = new Survey("New Title Survey", new Date());
-        surveyService.create(survey);
-        Question question = new Question("Voice Question", "voice", survey, new Date());
-        questionService.create(question);
-        Response response = new Response("http://recording_url", "CALL_SID", question, new Date());
-        responseService.create(response);
-
-        HttpResponse<String> stringResponse = null;
-
-        try {
-            stringResponse = Unirest.get("http://localhost:" + port).asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-
-        assertTrue(stringResponse.getBody().contains("http://recording_url"));
-    }
-
-    @Test
-    public void showYesNoResponses() {
-        Survey survey = new Survey("New Title Survey", new Date());
-        surveyService.create(survey);
-        Question question = new Question("YesNo Question", "yes-no", survey, new Date());
-        questionService.create(question);
-        Response response = new Response("0", "CALL_SID", question, new Date());
-        responseService.create(response);
-
-        HttpResponse<String> stringResponse = null;
-
-        try {
-            stringResponse = Unirest.get("http://localhost:" + port).asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-
-        assertTrue(stringResponse.getBody().contains("(1: YES, 0: NO) Response: 0"));
+        assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
     }
 }

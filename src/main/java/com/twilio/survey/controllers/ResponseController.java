@@ -58,7 +58,7 @@ public class ResponseController {
     TwiMLResponse twiml = new TwiMLResponse();
     if (questionIndex < questions.size() - 1) {
       int nextQuestionNumber = questionIndex + 2;
-      Redirect redirect = new Redirect("/question?q=" + nextQuestionNumber + "&survey=" + survey.getId());
+      Redirect redirect = new Redirect("/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber);
       redirect.setMethod("GET");
       try {
         twiml.append(redirect);
