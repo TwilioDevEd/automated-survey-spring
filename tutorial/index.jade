@@ -1,0 +1,36 @@
+.chapter(data-title='Your New Viewsaurus Tutorial')
+  .step(data-title='Welcome!', data-file='tutorial/config.json')
+    h2 Welcome to Viewsaurus
+
+    p Thanks for writing a Viewsaurus tutorial! If you're new to Viewsaurus, feel free to click through this brief tutorial showing you how a Viewsaurus tutorial is structured.
+
+    p The tutorial's navigation controls are located above this text. Use <i class="fa fa-fw fa-play"></i> to move to the next step of the tutorial. Use <i class="fa fa-fw fa-play fa-rotate-180"></i> to move to the previous step of the tutorial (if there is one). Use <i class="fa fa-fw fa-list"></i> to see an overview of all the steps in the tutorial.
+
+    p Let's begin by walking through the files generated for you in the `tutorial` directory with the `saurus new` command - those files are actually what is being used to show you this tutorial right now!
+
+  .step(data-title='Tutorial Configuration', data-file='tutorial/config.json')
+    :markdown
+      ## Configuration
+
+      The first file we'll look at is `config.json`. This contains high-level configuration information about your tutorial. This JSON file contains several properties you can declare about your tutorial:
+
+      * `title`: This is the title of your tutorial which will show on the first page
+      * `description`: This is a string of text that will appear above the "Start" button for your tutorial.
+      * `repo`: This is the GitHub repo that your code lives in. Right now we assume all projects are hosted there, but we'll likely make this agnostic in the future.
+      * `heroku`: This indicates whether or not your project supports instant deployment with the [Heroku Button](https://blog.heroku.com/archives/2014/8/7/heroku-button)
+
+      Now, let's take a look at the first file that contains the actual content of the tutorial, `index.jade`.
+
+  .step(data-title='Step Two')
+    h2 Under Construction
+
+    p more tutorial to come.
+
+  //- Example: include markdown file
+    .step(data-title='Step Three', data-file='', data-highlight='')
+      include:markdown three.md
+
+  //- Example: include jade file (don't need file extension)
+    .step(data-title='Step Four', data-file='', data-highlight='')
+      include four
+
