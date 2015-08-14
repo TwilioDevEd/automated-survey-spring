@@ -1,36 +1,210 @@
-.chapter(data-title='Your New Viewsaurus Tutorial')
-  .step(data-title='Welcome!', data-file='tutorial/config.json')
-    h2 Welcome to Viewsaurus
-
-    p Thanks for writing a Viewsaurus tutorial! If you're new to Viewsaurus, feel free to click through this brief tutorial showing you how a Viewsaurus tutorial is structured.
-
-    p The tutorial's navigation controls are located above this text. Use <i class="fa fa-fw fa-play"></i> to move to the next step of the tutorial. Use <i class="fa fa-fw fa-play fa-rotate-180"></i> to move to the previous step of the tutorial (if there is one). Use <i class="fa fa-fw fa-list"></i> to see an overview of all the steps in the tutorial.
-
-    p Let's begin by walking through the files generated for you in the `tutorial` directory with the `saurus new` command - those files are actually what is being used to show you this tutorial right now!
-
-  .step(data-title='Tutorial Configuration', data-file='tutorial/config.json')
+.chapter(data-title='Introduction')
+  .step(data-file='src/main/java/com/twilio/survey/SurveyJavaApplication.java',
+    data-highlight='13-36')
     :markdown
-      ## Configuration
+      ## About this application
 
-      The first file we'll look at is `config.json`. This contains high-level configuration information about your tutorial. This JSON file contains several properties you can declare about your tutorial:
+        This [Spring Boot](http://projects.spring.io/spring-boot/) web application performs
+        automated phone surveys using Twilio's voice API and TwiML. In
+        addition to that, the application also displays the survey
+        results. The majority of the application's routes will be
+        accessed by Twilio itself since survey-takers will interact with
+        the application through the phone, not through the
+        web. Questions in surveys might be voice responses, numeric
+        responses or yes-no responses. A limitation in this sample
+        application is that it can only perform the first survey stored
+        the database. The source for the application [can be found in
+        GitHub.](https://github.com/TwilioDevEd/automated-survey-spring)
 
-      * `title`: This is the title of your tutorial which will show on the first page
-      * `description`: This is a string of text that will appear above the "Start" button for your tutorial.
-      * `repo`: This is the GitHub repo that your code lives in. Right now we assume all projects are hosted there, but we'll likely make this agnostic in the future.
-      * `heroku`: This indicates whether or not your project supports instant deployment with the [Heroku Button](https://blog.heroku.com/archives/2014/8/7/heroku-button)
+        In this tutorial, we'll highlight the code that interacts with
+        Twilio and in turn makes the application tick.  [Check out the project
+        README on
+        GitHub](https://github.com/TwilioDevEd/automated-survey-laravel/blob/master/readme.md)
+        to see how to run the code yourself.
 
-      Now, let's take a look at the first file that contains the actual content of the tutorial, `index.jade`.
+        Let's get started! Click the right arrow above to advance to the next code snippet.
 
-  .step(data-title='Step Two')
-    h2 Under Construction
+      #### See Also
 
-    p more tutorial to come.
+      * [The Twilio Java Helper Library](https://www.twilio.com/docs/java/install).
+      * [TwiML: Java Quickstart Tutorial](https://www.twilio.com/docs/quickstart/java).
+      * [TwiMLTM: the Twilio Markup Language](https://www.twilio.com/docs/api/twiml).
+      * [Spring framework](http://spring.io/).
+      * [JUnit](http://junit.org/).
+      * [Flyway DB Migrations](http://flywaydb.org/).
 
-  //- Example: include markdown file
-    .step(data-title='Step Three', data-file='', data-highlight='')
-      include:markdown three.md
+  .step(data-file='.env.example')
+    :markdown
+      ## Configure the application
 
-  //- Example: include jade file (don't need file extension)
-    .step(data-title='Step Four', data-file='', data-highlight='')
-      include four
+      The application requirements are minimal. The only necessary
+      component is a running PostgreSQL database. Rename
+      `.env.example` to `.env` and configure access to your local
+      database. Just remember to specify if you database supports SSL or not.
 
+      Now that the database is configured we can load a
+      survey into it, just by running the app.
+
+      ---
+
+      **See Also:**
+      * [Your Available Phone Numbers](https://www.twilio.com/user/account/phone-numbers/incoming)
+
+  .step(data-file='src/main/java/com/twilio/survey/util/SurveyParser.java', data-highlight='32-74')
+    :markdown
+      ## Create a survey
+
+      In order to perform automated surveys we first need to have some
+      questions to ask. For your convenience, the
+      application's repository already includes one survey that can be
+      loaded into the database. You can modify the questions from the survey by editing the
+      [survey.json](https://github.com/TwilioDevEd/automated-survey-spring/blob/master/survey.json)
+      file located on the root of the repository. Refer to the
+      [Readme File](https://github.com/TwilioDevEd/automated-survey-spring/blob/master/README.md)
+      for more details.
+
+      We want users to take our survey, so next we are going implement
+      the interaction of the caller with the application.
+
+  .step(data-file='src/main/java/com/twilio/survey/controllers/SurveyController.java',
+    data-highlight='24-97')
+    :markdown
+      ## Respond to Twilio's initial request
+
+      Whenever one of [your Twilio phone
+      numbers](https://www.twilio.com/user/account/phone-numbers/incoming)
+      receives a call, Twilio will make an HTTP request to the voice request
+      URL configured under it with the HTTP method specified (either GET
+      or POST).
+
+      For this application Twilio should be configured to make a GET request to
+      the application's `/survey` endpoint. Here the application will find the last inserted
+      survey, and after stating it's name and welcoming the user to it using TwiML's
+      [`<Say>`](https://www.twilio.com/docs/api/twiml/say) verb, it will redirect the call
+      to the first question using the [`redirect`](https://www.twilio.com/docs/api/twiml/redirect).
+      verb.
+
+      Next we will handle the request made after the redirect.
+
+      ---
+
+      **See Also:**
+      * [TwiMLTM Voice: <Redirect>](https://www.twilio.com/docs/api/twiml/redirect)
+      * [Twilio webhooks](https://www.twilio.com/platform/webhooks)
+      * [HTTP methods](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html)
+      * [TwiML Voice: Your Response](https://www.twilio.com/docs/api/twiml/your_response)
+      * [TwiML Voice: <Say>](https://www.twilio.com/docs/api/twiml/say)
+      * [TwiML Voice: <Redirect>](https://www.twilio.com/docs/api/twiml/redirect)
+
+  .step(data-file='src/main/java/com/twilio/survey/controllers/QuestionController.java',
+    data-highlight='27-69')
+    :markdown
+      ## Ask the caller a question
+
+      At this point the Twilio client has made a request for the first
+      question. Once again, we will use the
+      [twilio-php](https://www.twilio.com/docs/php/install) library to
+      generate a response. First we will ask a question, say
+      instructions on how to answer that question and then finally
+      record the caller's answer to the question. It's important to
+      keep in mind that instructions on how to answer a question depend on the
+      type of question we ask. We also need record the answer
+      differently if a given question requires keypad input or voice
+      input.
+
+  .step(data-file='src/main/java/com/twilio/survey/util/QuestionHandler.java',
+    data-highlight='55-99')
+    :markdown
+      ## Creating a TwiMLResponse
+
+      Recording the answer is slightly more involved. If the question
+      is of kind "voice" then we use the
+      [`<Record>`](https://www.twilio.com/docs/api/twiml/record)
+      verb. However, if we expect dialpad input we use the the
+      [`<Gather>`](https://www.twilio.com/docs/api/twiml/gather)
+      verb. Both verbs take an `action` attribute and a `method`
+      attribute. Twilio's client will use both attributes to make a
+      request we can use to store the caller's answer to the question.
+
+      Since we want to create a new resource in our server, the HTTP
+      method will be `POST` for both `<Gather>` and `<Record>`. The
+      `action` URL will be `/save_response?qid=<question_id>`
+      for both TwiML verbs.
+
+      Now that the caller has answered our question we want to store
+      the answer.
+
+      ---
+
+      **See Also:**
+      * [TwiML Voice: <Gather>](https://www.twilio.com/docs/api/twiml/gather)
+      * [TwiML Voice: <Record>](https://www.twilio.com/docs/api/twiml/record)
+
+  .step(data-file='src/main/java/com/twilio/survey/controllers/ResponseController.java',
+    data-highlight='33-91')
+    :markdown
+      ## Store a question's answer
+
+      Now Twilio has made a POST request to the `/save_response?qid=<question_id>` URL.
+      The request includes everything we need to record the
+      caller's answer to our question. Aside from the `<question_id>`
+      parameter, Twilio includes a [wealth of
+      information](https://www.twilio.com/docs/api/twiml/twilio_request)
+      with every request. For this sample application we will store the
+      `RecordingUrl` or `Digits` parameter for voice and
+      yes-no/numeric answers accordingly. For this sample we will also
+      save the `CallSid` so we can uniquely identify a call.
+
+      Most surveys include more than a single question so we must now
+      redirect the user to the next question in this survey using the [redirect
+      verb](* [TwiML Voice: <Redirect>](https://www.twilio.com/docs/api/twiml/redirect)) again.
+
+      If there are no more questions available on the survey, the user will be notified via the
+      [say verb](https://www.twilio.com/docs/api/twiml/say) and then hangup the call using the
+      [hangup verb](https://www.twilio.com/docs/api/twiml/hangup)
+
+      ---
+
+      **See Also:**
+      * [TwiML Voice: Twilio's Request'](https://www.twilio.com/docs/api/twiml/twilio_request)
+      * [TwiML Voice: <Redirect>](https://www.twilio.com/docs/api/twiml/redirect)
+      * [TwiML Voice: <Say>](https://www.twilio.com/docs/api/twiml/say)
+      * [TwiML Voice: <Hangup>](https://www.twilio.com/docs/api/twiml/hangup)
+
+  .step(data-file='src/main/java/com/twilio/survey/controllers/DisplayController.java',
+    data-highlight='30-52')
+    :markdown
+      ## Display the survey results
+
+      For this route we simply query the database through an JPA query and
+      then display the information within a Mustache template. We display
+      a panel for every question on the last survey, and inside every panel we list the
+      responses from different calls.
+
+      You can access this page in the applications root route `/`.
+
+      ---
+
+      **See Also:**
+      * [Mustache templates](https://mustache.github.io/)
+
+  .step
+    :markdown
+      ## Where to next?
+
+      It's done! If you have configured one of your voice-enable Twilio
+      numbers to the application built in this tutorial you should be
+      able to take the survey and see the results under root route of
+      the application. We hope you found this sample application
+      useful.  If you're a Java developer working with Twilio, you
+      might enjoy these other tutorials:
+
+      ### [Click to Call](https://www.twilio.com/docs/howto/walkthrough/appointment-reminders/java/spark)
+      Automate the process of reaching out to your customers in advance of an upcoming appointment.
+
+      ### [How-Tos and Example Code](https://www.twilio.com/docs/howto)
+      Tutorials in different programming languages
+
+      ### Did this help?
+      Thanks for checking out this tutorial! If you have any feedback to share with us,
+      we'd love to hear it. Tweet [@twilio](twitter.com/twilio) to let us know what you think.
