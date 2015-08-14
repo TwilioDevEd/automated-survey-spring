@@ -27,6 +27,14 @@ public class DisplayController {
 
   public DisplayController() {}
 
+  /**
+   * Renders the survey results
+   *
+   * @param model    Empty model where you fill in the data that the template will use
+   * @param request  Standard HttpServletRequest request
+   * @param response Standard HttpServletResponse response
+   * @return returns the template's name
+   */
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String index(Map<String, Object> model, HttpServletRequest request,
       HttpServletResponse response) {

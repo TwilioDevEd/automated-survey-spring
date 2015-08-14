@@ -21,6 +21,10 @@ public class SurveyController {
 
   public SurveyController() {}
 
+  /**
+   * End point that always returns the last survey inserted in the db
+   * and redirects to the first question of that survey
+   */
   @RequestMapping(value = "/survey", method = RequestMethod.GET)
   public void welcome(HttpServletRequest request, HttpServletResponse response) {
     this.surveyService = new SurveyService(surveyRepository);
@@ -48,6 +52,12 @@ public class SurveyController {
     response.setContentType("application/xml");
   }
 
+  /**
+   * Creates the TwiMLResponse for the first question of the survey
+   *
+   * @param survey Survey entity
+   * @return TwiMLResponse
+   */
   private TwiMLResponse getFirstQuestionRedirect(Survey survey) {
     String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
 
@@ -65,6 +75,11 @@ public class SurveyController {
     return twiml;
   }
 
+  /**
+   * Creates a TwiMLResponse for Hangup if no surveys are found on the database
+   *
+   * @return TwiMLResponse
+   */
   private TwiMLResponse getHangupResponse() {
     String errorMessage = "We are sorry, there are no surveys available. Good bye.";
 

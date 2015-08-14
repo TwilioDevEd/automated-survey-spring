@@ -6,6 +6,10 @@ import com.twilio.survey.models.Response;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+/**
+ * Class returns the appropriate Response model
+ * when you call the getResponse() method
+ */
 public class ResponseHandler {
   Question question;
   HttpServletRequest request;

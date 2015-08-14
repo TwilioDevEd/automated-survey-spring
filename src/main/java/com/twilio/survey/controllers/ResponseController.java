@@ -30,6 +30,10 @@ public class ResponseController {
 
   public ResponseController() {}
 
+  /**
+   * End point that saves a question response and redirects the call to the next question,
+   * if one is available.
+   */
   @RequestMapping(value = "/save_response", method = RequestMethod.POST)
   public void readQuestion(HttpServletRequest request, HttpServletResponse response) {
     this.questionService = new QuestionService(questionRepository);
@@ -49,11 +53,14 @@ public class ResponseController {
 
     Response questionResponse = responseHandler.getResponse();
 
+    /** creates the question response on the db */
     responseService.create(questionResponse);
     Survey survey = currentQuestion.getSurvey();
     List<Question> questions = survey.getQuestions();
     int questionIndex = questions.indexOf(currentQuestion);
     TwiMLResponse twiml = new TwiMLResponse();
+
+    /** if there is another question for this survey, redirect to that question */
     if (questionIndex < questions.size() - 1) {
       int nextQuestionNumber = questionIndex + 2;
       Redirect redirect =

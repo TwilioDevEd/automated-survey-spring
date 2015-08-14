@@ -15,6 +15,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 
+/**
+ * Class in charge of parsing the JSON file that contains the list of questions.
+ */
 public class SurveyParser {
   SurveyService surveyService;
   QuestionService questionService;
@@ -26,10 +29,16 @@ public class SurveyParser {
     this.questionService = questionService;
   }
 
-  public void parse(String fileName) {
+  /**
+   * This method is called on app initialization.
+   * It will insert the questions in the DB every time the application starts
+   *
+   * @param filePath path for the .json file
+   */
+  public void parse(String filePath) {
     FileReader reader = null;
     try {
-      reader = new FileReader(fileName);
+      reader = new FileReader(filePath);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }

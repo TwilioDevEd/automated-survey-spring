@@ -24,6 +24,9 @@ public class QuestionController {
 
   public QuestionController() {}
 
+  /**
+   * End point that returns the appropriate question response based on the parameters it receives
+   */
   @RequestMapping(value = "/question", method = RequestMethod.GET)
   public void readQuestion(HttpServletRequest request, HttpServletResponse response) {
     this.surveyService = new SurveyService(surveyRepository);

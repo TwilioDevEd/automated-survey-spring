@@ -21,6 +21,12 @@ public class DBDataSource {
   @Autowired
   private JpaVendorAdapter jpaVendorAdapter;
 
+  /**
+   * Here the data source is defined. It uses AppSetup class to get the database url that
+   * includes username and password
+   *
+   * @return DataSource
+   */
   @ConfigurationProperties(prefix = "spring.datasource")
   @Bean(name = "dBDataSource")
   @Primary

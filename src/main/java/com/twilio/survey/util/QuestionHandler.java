@@ -3,6 +3,10 @@ package com.twilio.survey.util;
 import com.twilio.sdk.verbs.*;
 import com.twilio.survey.models.Question;
 
+/**
+ * Class responsible of returning the appropriate TwiMLResponse based on the question
+ * it receives
+ */
 public class QuestionHandler {
   Question question;
 
@@ -10,6 +14,9 @@ public class QuestionHandler {
     this.question = question;
   }
 
+  /**
+   * Static method that returns a generic TwiMLResponse when an non existent question is requested
+   */
   public static TwiMLResponse getHangupResponse() {
     String errorMessage =
         "We are sorry, there are no more questions available for this survey. Good bye.";
@@ -27,6 +34,10 @@ public class QuestionHandler {
     return twiml;
   }
 
+  /**
+   * Bases on the question's type, a specific method is called. This method will construct
+   * the specific TwiMLResponse
+   */
   public TwiMLResponse getTwilioResponse() {
     TwiMLResponse response = new TwiMLResponse();
     switch (question.getType()) {
