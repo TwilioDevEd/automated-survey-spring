@@ -1,9 +1,6 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.Redirect;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
+import com.twilio.sdk.verbs.*;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
@@ -28,12 +25,36 @@ public class SurveyController {
   public void welcome(HttpServletRequest request, HttpServletResponse response) {
     this.surveyService = new SurveyService(surveyRepository);
 
-    Survey lastSurvey = surveyService.findLast();
-    String welcomeMessage = "Welcome to the " + lastSurvey.getTitle() + " survey";
+    Survey lastSurvey;
+    try {
+      lastSurvey = surveyService.findLast();
+    } catch (IndexOutOfBoundsException e) {
+      lastSurvey = null;
+    }
+
+    if (lastSurvey != null) {
+      try {
+        response.getWriter().print(getFirstQuestionRedirect(lastSurvey).toEscapedXML());
+      } catch (IOException e) {
+        System.out.println("Couldn't write Twilio's response to XML");
+      }
+    }
+    else {
+      try {
+        response.getWriter().print(getHangupResponse().toEscapedXML());
+      } catch (IOException e) {
+        System.out.println("Couldn't write Twilio's response to XML");
+      }
+    }
+    response.setContentType("application/xml");
+  }
+
+  private TwiMLResponse getFirstQuestionRedirect (Survey survey) {
+    String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
 
     TwiMLResponse twiml = new TwiMLResponse();
     Say say = new Say(welcomeMessage);
-    Redirect redirect = new Redirect("/question?survey=" + lastSurvey.getId() + "&question=1");
+    Redirect redirect = new Redirect("/question?survey=" + survey.getId() + "&question=1");
     redirect.setMethod("GET");
     try {
       twiml.append(say);
@@ -42,11 +63,22 @@ public class SurveyController {
       System.out.println("Couldn't append say or redirect to Twilio's response");
     }
 
+    return twiml;
+  }
+
+  private TwiMLResponse getHangupResponse() {
+    String errorMessage = "We are sorry, there are no surveys available. Good bye.";
+
+    TwiMLResponse twiml = new TwiMLResponse();
+    Say say = new Say(errorMessage);
+    Hangup hangup = new Hangup();
     try {
-      response.getWriter().print(twiml.toEscapedXML());
-    } catch (IOException e) {
-      System.out.println("Couldn't write Twilio's response to XML");
+      twiml.append(say);
+      twiml.append(hangup);
+    } catch (TwiMLException e) {
+      System.out.println("Couldn't append say or redirect to Twilio's response");
     }
-    response.setContentType("application/xml");
+
+    return twiml;
   }
 }

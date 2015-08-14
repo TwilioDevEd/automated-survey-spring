@@ -1,8 +1,6 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.Hangup;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
+import com.twilio.sdk.verbs.*;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
@@ -39,36 +37,32 @@ public class QuestionController {
     } catch (NumberFormatException e) {
       System.out.println("Numbers wrongly formatted, unable to parse");
     }
-
+    
     Survey survey = surveyService.find(surveyId);
     List<Question> questions = survey.getQuestions();
 
     if (questionNumber <= questions.size()) {
-      Question currentQuestion = questions.get(questionNumber - 1);
-      QuestionHandler questionHandler = new QuestionHandler(currentQuestion);
-      TwiMLResponse twiml = questionHandler.getTwilioResponse();
-
-      response.setContentType("application/xml");
       try {
-        response.getWriter().print(twiml.toEscapedXML());
+        response.getWriter().print(getQuestionResponse(questions, questionNumber).toEscapedXML());
       } catch (IOException e) {
         System.out.println("Couldn't write Twilio's response to XML");
       }
     }
     else {
-      TwiMLResponse twiml = new TwiMLResponse();
-      Hangup hangup = new Hangup();
       try {
-        twiml.append(hangup);
-      } catch (TwiMLException e) {
-        System.out.println("Couldn't append verb to Twilio's response");
-      }
-      response.setContentType("application/xml");
-      try {
-        response.getWriter().print(twiml.toEscapedXML());
+        response.getWriter().print(QuestionHandler.getHangupResponse().toEscapedXML());
       } catch (IOException e) {
         System.out.println("Couldn't write Twilio's response to XML");
       }
     }
+    response.setContentType("application/xml");
+  }
+
+  private TwiMLResponse getQuestionResponse (List<Question> questions, int questionNumber) {
+    Question currentQuestion = questions.get(questionNumber - 1);
+    QuestionHandler questionHandler = new QuestionHandler(currentQuestion);
+    TwiMLResponse twiml = questionHandler.getTwilioResponse();
+
+    return twiml;
   }
 }

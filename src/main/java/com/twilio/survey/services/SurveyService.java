@@ -42,7 +42,7 @@ public class SurveyService {
     return surveyRepository.findOne(id);
   }
 
-  public Survey findLast() {
+  public Survey findLast() throws IndexOutOfBoundsException {
     return surveyRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0);
   }
 

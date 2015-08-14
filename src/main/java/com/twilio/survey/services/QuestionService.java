@@ -42,7 +42,7 @@ public class QuestionService {
     return questionRepository.findOne(id);
   }
 
-  public Question findFirst(Survey survey) {
+  public Question findFirst(Survey survey) throws IndexOutOfBoundsException {
     return questionRepository.findAll(new Sort(Sort.Direction.ASC, "id")).get(0);
   }
 }
