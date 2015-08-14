@@ -10,6 +10,23 @@ public class QuestionHandler {
     this.question = question;
   }
 
+  public static TwiMLResponse getHangupResponse() {
+    String errorMessage =
+        "We are sorry, there are no more questions available for this survey. Good bye.";
+
+    TwiMLResponse twiml = new TwiMLResponse();
+    Say say = new Say(errorMessage);
+    Hangup hangup = new Hangup();
+    try {
+      twiml.append(say);
+      twiml.append(hangup);
+    } catch (TwiMLException e) {
+      System.out.println("Couldn't append say or redirect to Twilio's response");
+    }
+
+    return twiml;
+  }
+
   public TwiMLResponse getTwilioResponse() {
     TwiMLResponse response = new TwiMLResponse();
     switch (question.getType()) {
@@ -25,7 +42,8 @@ public class QuestionHandler {
   }
 
   private TwiMLResponse getVoiceResponse(TwiMLResponse response) {
-    String defaultMessage = "Record your answer after the beep and press the pound key when you are done.";
+    String defaultMessage =
+        "Record your answer after the beep and press the pound key when you are done.";
     Say say = new Say(defaultMessage);
     Say questionSay = new Say(question.getBody());
     Pause pause = new Pause();
@@ -47,7 +65,8 @@ public class QuestionHandler {
   }
 
   private TwiMLResponse getNumericResponse(TwiMLResponse response) {
-    String defaultMessage = "For the next question select a number with the dial pad and then press the pound key";
+    String defaultMessage =
+        "For the next question select a number with the dial pad and then press the pound key";
     Say say = new Say(defaultMessage);
     Say questionSay = new Say(question.getBody());
     Pause pause = new Pause();
@@ -69,7 +88,8 @@ public class QuestionHandler {
   }
 
   private TwiMLResponse getYesNoResponse(TwiMLResponse response) {
-    String defaultMessage = "For the next question, press 1 for yes, and 0 for no. Then press the pound key.";
+    String defaultMessage =
+        "For the next question, press 1 for yes, and 0 for no. Then press the pound key.";
     Say say = new Say(defaultMessage);
     Say questionSay = new Say(question.getBody());
     Pause pause = new Pause();
@@ -88,21 +108,5 @@ public class QuestionHandler {
     }
     System.out.println(response.toEscapedXML());
     return response;
-  }
-
-  public static TwiMLResponse getHangupResponse() {
-    String errorMessage = "We are sorry, there are no more questions available for this survey. Good bye.";
-
-    TwiMLResponse twiml = new TwiMLResponse();
-    Say say = new Say(errorMessage);
-    Hangup hangup = new Hangup();
-    try {
-      twiml.append(say);
-      twiml.append(hangup);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or redirect to Twilio's response");
-    }
-
-    return twiml;
   }
 }

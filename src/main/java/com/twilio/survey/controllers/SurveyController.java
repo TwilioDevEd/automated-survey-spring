@@ -38,8 +38,7 @@ public class SurveyController {
       } catch (IOException e) {
         System.out.println("Couldn't write Twilio's response to XML");
       }
-    }
-    else {
+    } else {
       try {
         response.getWriter().print(getHangupResponse().toEscapedXML());
       } catch (IOException e) {
@@ -49,7 +48,7 @@ public class SurveyController {
     response.setContentType("application/xml");
   }
 
-  private TwiMLResponse getFirstQuestionRedirect (Survey survey) {
+  private TwiMLResponse getFirstQuestionRedirect(Survey survey) {
     String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
 
     TwiMLResponse twiml = new TwiMLResponse();

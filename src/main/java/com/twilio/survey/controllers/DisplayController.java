@@ -1,11 +1,6 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.Redirect;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
 import com.twilio.survey.models.Question;
-import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.repositories.SurveyRepository;
@@ -18,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +28,8 @@ public class DisplayController {
   public DisplayController() {}
 
   @RequestMapping(value = "/", method = RequestMethod.GET)
-  public String index(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {
+  public String index(Map<String, Object> model, HttpServletRequest request,
+      HttpServletResponse response) {
     this.surveyService = new SurveyService(surveyRepository);
     this.responseService = new ResponseService(responseRepository);
 

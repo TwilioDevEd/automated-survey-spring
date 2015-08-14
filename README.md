@@ -47,7 +47,7 @@ After this you can expose the application to the wider Internet by
 running (port 8080 is the default for Spring):
 
 ```
-ngrok http 8080
+ngrok 8080
 ```
 
 #### Configuring Twilio's webhooks

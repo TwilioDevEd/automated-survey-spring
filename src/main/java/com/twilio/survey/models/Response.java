@@ -2,7 +2,6 @@ package com.twilio.survey.models;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "responses")
@@ -25,7 +24,9 @@ public class Response {
   @Column(name = "date")
   private Date date;
 
-  /** The next three field are necessary for Mustache templating engine */
+  /**
+   * The next three field are necessary for Mustache templating engine
+   */
   @Column(name = "isVoice")
   private boolean isVoice;
 
@@ -47,11 +48,9 @@ public class Response {
     this.isYesNo = false;
     if (question.getType().compareTo("voice") == 0) {
       this.isVoice = true;
-    }
-    else if(question.getType().compareTo("numeric") == 0) {
+    } else if (question.getType().compareTo("numeric") == 0) {
       this.isNumeric = true;
-    }
-    else if(question.getType().compareTo("yes-no") == 0) {
+    } else if (question.getType().compareTo("yes-no") == 0) {
       this.isYesNo = true;
     }
   }

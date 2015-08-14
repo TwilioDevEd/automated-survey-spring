@@ -60,7 +60,8 @@ public class ResponseServiceTest {
     surveyService.create(survey);
     Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
     questionService.create(question);
-    Response response = new Response("This responds the question", "CALL_SID", question, new Date());
+    Response response =
+        new Response("This responds the question", "CALL_SID", question, new Date());
     responseService.create(response);
 
     assertThat(questionService.count(), is(1L));
@@ -74,7 +75,8 @@ public class ResponseServiceTest {
     surveyService.create(survey);
     Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
     questionService.create(question);
-    Response response = new Response("This responds the question", "CALL_SID", question, new Date());
+    Response response =
+        new Response("This responds the question", "CALL_SID", question, new Date());
     responseService.create(response);
 
     assertThat(responseService.count(), is(1L));
@@ -92,13 +94,15 @@ public class ResponseServiceTest {
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
     questionService.create(question1);
-    Response response1 = new Response("This responds the question", "CALL_SID", question1, new Date());
+    Response response1 =
+        new Response("This responds the question", "CALL_SID", question1, new Date());
     responseService.create(response1);
     Survey survey2 = new Survey("New Title Question2", new Date());
     surveyService.create(survey2);
     Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
     questionService.create(question2);
-    Response response2 = new Response("This responds the question", "CALL_SID", question2, new Date());
+    Response response2 =
+        new Response("This responds the question", "CALL_SID", question2, new Date());
     responseService.create(response2);
 
     assertThat(responseService.findAll().size(), is(2));
@@ -112,13 +116,15 @@ public class ResponseServiceTest {
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
     questionService.create(question1);
-    Response response1 = new Response("This responds the question", "CALL_SID", question1, new Date());
+    Response response1 =
+        new Response("This responds the question", "CALL_SID", question1, new Date());
     responseService.create(response1);
     Survey survey2 = new Survey("New Title Question2", new Date());
     surveyService.create(survey2);
     Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
     questionService.create(question2);
-    Response response2 = new Response("This responds the question", "CALL_SID", question2, new Date());
+    Response response2 =
+        new Response("This responds the question", "CALL_SID", question2, new Date());
     responseService.create(response2);
 
     assertThat(responseService.count(), is(2L));
@@ -130,9 +136,11 @@ public class ResponseServiceTest {
     surveyService.create(survey);
     Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
     questionService.create(question);
-    Response response = new Response("This responds the question", "CALL_SID", question, new Date());
+    Response response =
+        new Response("This responds the question", "CALL_SID", question, new Date());
     responseService.create(response);
 
-    assertThat(responseService.find(response.getId()).getResponse(), is("This responds the question"));
+    assertThat(responseService.find(response.getId()).getResponse(),
+        is("This responds the question"));
   }
 }

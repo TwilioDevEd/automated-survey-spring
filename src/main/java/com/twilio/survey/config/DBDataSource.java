@@ -28,8 +28,7 @@ public class DBDataSource {
     AppSetup appSetup = new AppSetup();
     Map<String, String> params = appSetup.getParamsFromDBURL(appSetup.getDatabaseURL());
 
-    return DataSourceBuilder.create()
-        .url(params.get("url")).type(PGPoolingDataSource.class)
+    return DataSourceBuilder.create().url(params.get("url")).type(PGPoolingDataSource.class)
         .driverClassName("org.postgresql.Driver").build();
   }
 

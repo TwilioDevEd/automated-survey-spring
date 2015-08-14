@@ -5,7 +5,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
-import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.ResponseRepository;
@@ -25,6 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -34,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class DisplayControllerTest {
+public class ResponseControllerTest {
   @Value("${local.server.port}")
   int port;
   @Autowired
@@ -59,86 +60,56 @@ public class DisplayControllerTest {
     questionService = new QuestionService(questionRepository);
     surveyService = new SurveyService(surveyRepository);
     responseService = new ResponseService(responseRepository);
+    responseService.deleteAll();
     questionService.deleteAll();
     surveyService.deleteAll();
   }
 
   @Test
-  public void showQuestions() {
-    assertThat(questionService.count(), is(0L));
-
+  public void saveResponseTest() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
-    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
+    Question question = new Question("Question Body", "voice", survey, new Date());
     questionService.create(question);
 
     HttpResponse<String> stringResponse = null;
+    String requestPath = "http://localhost:" + port + "/save_response?qid=" + question.getId();
+    Map<String, Object> params = new HashMap<>();
+    params.put("RecordingUrl", "http://recording_url.com");
+    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
+
     try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
+      stringResponse = Unirest.post(requestPath).fields(params).asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
-    assertTrue(stringResponse.getBody().contains("New Title Survey"));
-    assertTrue(stringResponse.getBody().contains("Question Body"));
+    assertThat(responseService.count(), is(1L));
+    assertThat(responseService.findAll().get(0).getResponse(), is("http://recording_url.com"));
+    assertTrue(stringResponse.getBody().contains("Tank you for taking the"));
+    assertTrue(stringResponse.getBody().contains("Hangup"));
   }
 
   @Test
-  public void showResponses() {
+  public void saveResponseRedirectTest() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
-    Question question = new Question("Numeric Question", "numeric", survey, new Date());
-    questionService.create(question);
-    Response response = new Response("test number", "CALL_SID", question, new Date());
-    responseService.create(response);
+    Question question1 = new Question("Question Body", "voice", survey, new Date());
+    questionService.create(question1);
+    Question question2 = new Question("Question Body2", "numeric", survey, new Date());
+    questionService.create(question2);
 
     HttpResponse<String> stringResponse = null;
+    String requestPath = "http://localhost:" + port + "/save_response?qid=" + question1.getId();
+    Map<String, Object> params = new HashMap<>();
+    params.put("RecordingUrl", "http://recording_url.com");
+    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
 
     try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
+      stringResponse = Unirest.post(requestPath).fields(params).asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
-
-    assertTrue(stringResponse.getBody().contains("Response: test number"));
-  }
-
-  @Test
-  public void showVoiceResponses() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Voice Question", "voice", survey, new Date());
-    questionService.create(question);
-    Response response = new Response("http://recording_url", "CALL_SID", question, new Date());
-    responseService.create(response);
-
-    HttpResponse<String> stringResponse = null;
-
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-
-    assertTrue(stringResponse.getBody().contains("http://recording_url"));
-  }
-
-  @Test
-  public void showYesNoResponses() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("YesNo Question", "yes-no", survey, new Date());
-    questionService.create(question);
-    Response response = new Response("0", "CALL_SID", question, new Date());
-    responseService.create(response);
-
-    HttpResponse<String> stringResponse = null;
-
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-
-    assertTrue(stringResponse.getBody().contains("(1: YES, 0: NO) Response: 0"));
+    assertThat(responseService.count(), is(1L));
+    //assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId() + "&question=2"));
   }
 }

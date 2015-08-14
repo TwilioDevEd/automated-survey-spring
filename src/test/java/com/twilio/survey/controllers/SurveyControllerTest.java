@@ -4,13 +4,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
-import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
-import com.twilio.survey.repositories.QuestionRepository;
-import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.repositories.SurveyRepository;
-import com.twilio.survey.services.QuestionService;
-import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
 import org.junit.After;
 import org.junit.Before;
@@ -25,8 +20,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,46 +27,47 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
 public class SurveyControllerTest {
-    @Autowired
-    private SurveyRepository surveyRepository;
-    private SurveyService surveyService;
+  @Value("${local.server.port}")
+  int port;
+  @Autowired
+  private SurveyRepository surveyRepository;
+  private SurveyService surveyService;
 
-    @Value("${local.server.port}") int port;
+  @After
+  public void after() {
+    surveyService.deleteAll();
+  }
 
-    @After
-    public void after() {
-        surveyService.deleteAll();
+  @Before
+  public void before() {
+    surveyService = new SurveyService(surveyRepository);
+    surveyService.deleteAll();
+  }
+
+  @Test
+  public void getFirstSurvey() {
+    Survey survey = new Survey("New Title Survey", new Date());
+    surveyService.create(survey);
+
+    HttpResponse<String> stringResponse = null;
+    try {
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
     }
+    assertTrue(stringResponse.getBody().contains("New Title Survey"));
+    assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
+  }
 
-    @Before
-    public void before() {
-        surveyService = new SurveyService(surveyRepository);
-        surveyService.deleteAll();
+  @Test
+  public void getHangupOnNoSurvey() {
+    HttpResponse<String> stringResponse = null;
+    try {
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
     }
-
-    @Test
-    public void getFirstSurvey() {
-        Survey survey = new Survey("New Title Survey", new Date());
-        surveyService.create(survey);
-
-        HttpResponse<String> stringResponse = null;
-        try {
-            stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-        assertTrue(stringResponse.getBody().contains("New Title Survey"));
-        assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
-    }
-
-    @Test
-    public void getHangupOnNoSurvey() {
-        HttpResponse<String> stringResponse = null;
-        try {
-            stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-        assertTrue(stringResponse.getBody().contains("We are sorry, there are no surveys available. Good bye."));
-    }
+    assertTrue(stringResponse.getBody()
+        .contains("We are sorry, there are no surveys available. Good bye."));
+  }
 }

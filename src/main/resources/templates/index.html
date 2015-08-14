@@ -42,6 +42,7 @@
 </nav>
 <div class="container">
     <h1>Results for survey: {{surveyTitle}}</h1>
+
     <div class="col-md-8">
         <ul class="list-unstyled">
             <li>
@@ -57,7 +58,7 @@
                             <li class="list-group-item">Date: {{date}}</li>
                             <li class="list-group-item">Call SID: {{callSid}}</li>
                             <li class="list-group-item">
-                            {{#isVoice}}
+                                {{#isVoice}}
                                 <div class="voice-response">
                                     <span class="voice-response-text">Response:</span>
                                     <audio controls>
@@ -65,13 +66,13 @@
                                         Your browser does not support the audio tag.
                                     </audio>
                                 </div>
-                            {{/isVoice}}
-                            {{#isNumeric}}
+                                {{/isVoice}}
+                                {{#isNumeric}}
                                 Response: {{response}}
-                            {{/isNumeric}}
-                            {{#isYesNo}}
+                                {{/isNumeric}}
+                                {{#isYesNo}}
                                 (1: YES, 0: NO) Response: {{response}}
-                            {{/isYesNo}}
+                                {{/isYesNo}}
                             </li>
                         </ol>
                     </div>

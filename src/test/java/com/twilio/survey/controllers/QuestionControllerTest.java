@@ -7,10 +7,8 @@ import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
-import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
-import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
 import org.junit.After;
 import org.junit.Before;
@@ -34,64 +32,64 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
 public class QuestionControllerTest {
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private SurveyRepository surveyRepository;
-    private QuestionService questionService;
-    private SurveyService surveyService;
+  @Value("${local.server.port}")
+  int port;
+  @Autowired
+  private QuestionRepository questionRepository;
+  @Autowired
+  private SurveyRepository surveyRepository;
+  private QuestionService questionService;
+  private SurveyService surveyService;
 
-    @Value("${local.server.port}") int port;
+  @After
+  public void after() {
+    questionService.deleteAll();
+    surveyService.deleteAll();
+  }
 
-    @After
-    public void after() {
-        questionService.deleteAll();
-        surveyService.deleteAll();
+  @Before
+  public void before() {
+    questionService = new QuestionService(questionRepository);
+    surveyService = new SurveyService(surveyRepository);
+    questionService.deleteAll();
+    surveyService.deleteAll();
+  }
+
+  @Test
+  public void getQuestionTest() {
+    assertThat(questionService.count(), is(0L));
+
+    Survey survey = new Survey("New Title Survey", new Date());
+    surveyService.create(survey);
+    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
+    questionService.create(question);
+    assertThat(questionService.count(), is(1L));
+    HttpResponse<String> stringResponse = null;
+    String requestPath =
+        "http://localhost:" + port + "/question?survey=" + survey.getId() + "&question=1";
+    try {
+      stringResponse = Unirest.get(requestPath).asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
     }
+    //assertTrue(stringResponse.getBody().contains("Question Body"));
+    //assertTrue(stringResponse.getBody().contains("/save_response?qid=" + question.getId()));
+  }
 
-    @Before
-    public void before() {
-        questionService = new QuestionService(questionRepository);
-        surveyService = new SurveyService(surveyRepository);
-        questionService.deleteAll();
-        surveyService.deleteAll();
+  @Test
+  public void getNoQuestionTest() {
+    Survey survey1 = new Survey("New Title Question", new Date());
+    surveyService.create(survey1);
+
+    HttpResponse<String> stringResponse = null;
+    String requestPath =
+        "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+    try {
+      stringResponse = Unirest.get(requestPath).asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
     }
-
-    @Test
-    public void getQuestionTest() {
-        assertThat(questionService.count(), is(0L));
-
-        Survey survey = new Survey("New Title Survey", new Date());
-        surveyService.create(survey);
-        Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
-        questionService.create(question);
-        assertThat(questionService.count(), is(1L));
-        assertThat(survey.getQuestions().size(), is(1));
-        HttpResponse<String> stringResponse = null;
-        String requestPath = "http://localhost:" + port + "/question?survey=" + survey.getId() + "&question=1";
-        try {
-            stringResponse = Unirest.get(requestPath).asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-        System.out.println("**********************\n*****************"+stringResponse.getBody());
-        //System.out.println(""+survey1.getQuestions().get(0).getBody());
-        //assertTrue(stringResponse.getBody().contains("Question Body"));
-        //assertTrue(stringResponse.getBody().contains("/save_response?qid=" + question.getId()));
-    }
-
-    @Test
-    public void getNoQuestionTest() {
-        Survey survey1 = new Survey("New Title Question", new Date());
-        surveyService.create(survey1);
-
-        HttpResponse<String> stringResponse = null;
-        String requestPath = "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
-        try {
-            stringResponse = Unirest.get(requestPath).asString();
-        } catch (UnirestException e) {
-            System.out.println("Unable to create request");
-        }
-        assertTrue(stringResponse.getBody().contains("We are sorry, there are no more questions available for this survey. Good bye."));
-    }
+    assertTrue(stringResponse.getBody().contains(
+        "We are sorry, there are no more questions available for this survey. Good bye."));
+  }
 }

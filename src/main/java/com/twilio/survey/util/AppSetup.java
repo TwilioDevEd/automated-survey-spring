@@ -30,8 +30,9 @@ public class AppSetup {
       password = "";
     }
 
-    String dBUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath() +
-        "?user=" + username + "&password=" + password;
+    String dBUrl =
+        "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath() +
+            "?user=" + username + "&password=" + password;
     if (getSslEnabledDb()) {
       dBUrl += "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 
@@ -59,8 +60,7 @@ public class AppSetup {
     String ssl = env.get("TWILIO_DISABLE_DB_SSL");
     if (ssl != null && ssl.compareToIgnoreCase("true") == 0) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   }

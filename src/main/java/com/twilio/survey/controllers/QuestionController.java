@@ -1,6 +1,6 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.*;
+import com.twilio.sdk.verbs.TwiMLResponse;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
@@ -37,7 +37,7 @@ public class QuestionController {
     } catch (NumberFormatException e) {
       System.out.println("Numbers wrongly formatted, unable to parse");
     }
-    
+
     Survey survey = surveyService.find(surveyId);
     List<Question> questions = survey.getQuestions();
 
@@ -47,8 +47,7 @@ public class QuestionController {
       } catch (IOException e) {
         System.out.println("Couldn't write Twilio's response to XML");
       }
-    }
-    else {
+    } else {
       try {
         response.getWriter().print(QuestionHandler.getHangupResponse().toEscapedXML());
       } catch (IOException e) {
@@ -58,7 +57,7 @@ public class QuestionController {
     response.setContentType("application/xml");
   }
 
-  private TwiMLResponse getQuestionResponse (List<Question> questions, int questionNumber) {
+  private TwiMLResponse getQuestionResponse(List<Question> questions, int questionNumber) {
     Question currentQuestion = questions.get(questionNumber - 1);
     QuestionHandler questionHandler = new QuestionHandler(currentQuestion);
     TwiMLResponse twiml = questionHandler.getTwilioResponse();

@@ -1,6 +1,5 @@
 package com.twilio.survey.util;
 
-import com.twilio.sdk.verbs.*;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Response;
 

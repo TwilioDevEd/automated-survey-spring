@@ -6,10 +6,8 @@ import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.ResponseRepository;
-import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
-import com.twilio.survey.services.SurveyService;
 import com.twilio.survey.util.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,15 +56,15 @@ public class ResponseController {
     TwiMLResponse twiml = new TwiMLResponse();
     if (questionIndex < questions.size() - 1) {
       int nextQuestionNumber = questionIndex + 2;
-      Redirect redirect = new Redirect("/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber);
+      Redirect redirect =
+          new Redirect("/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber);
       redirect.setMethod("GET");
       try {
         twiml.append(redirect);
       } catch (TwiMLException e) {
         System.out.println("Couldn't append redirect to Twilio's response");
       }
-    }
-    else {
+    } else {
       Say say = new Say("Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
       Hangup hangup = new Hangup();
       try {

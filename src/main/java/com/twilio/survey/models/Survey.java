@@ -7,20 +7,17 @@ import java.util.List;
 @Entity
 @Table(name = "surveys")
 public class Survey {
+  @OneToMany(mappedBy = "survey")
+  @OrderBy("id ASC")
+  List<Question> questions;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
-
   @Column(name = "title")
   private String title;
-
   @Column(name = "date")
   private Date date;
-
-  @OneToMany(mappedBy="survey")
-  @OrderBy("id ASC")
-  List<Question> questions;
 
   public Survey() {}
 
