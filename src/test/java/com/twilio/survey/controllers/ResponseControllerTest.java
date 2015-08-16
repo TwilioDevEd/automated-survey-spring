@@ -88,28 +88,4 @@ public class ResponseControllerTest {
     assertTrue(stringResponse.getBody().contains("Tank you for taking the"));
     assertTrue(stringResponse.getBody().contains("Hangup"));
   }
-
-  @Test
-  public void saveResponseRedirectTest() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question1 = new Question("Question Body", "voice", survey, new Date());
-    questionService.create(question1);
-    Question question2 = new Question("Question Body2", "numeric", survey, new Date());
-    questionService.create(question2);
-
-    HttpResponse<String> stringResponse = null;
-    String requestPath = "http://localhost:" + port + "/save_response?qid=" + question1.getId();
-    Map<String, Object> params = new HashMap<>();
-    params.put("RecordingUrl", "http://recording_url.com");
-    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
-
-    try {
-      stringResponse = Unirest.post(requestPath).fields(params).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertThat(responseService.count(), is(1L));
-    //assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId() + "&question=2"));
-  }
 }

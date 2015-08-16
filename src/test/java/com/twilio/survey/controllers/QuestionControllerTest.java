@@ -56,27 +56,6 @@ public class QuestionControllerTest {
   }
 
   @Test
-  public void getQuestionTest() {
-    assertThat(questionService.count(), is(0L));
-
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
-    questionService.create(question);
-    assertThat(questionService.count(), is(1L));
-    HttpResponse<String> stringResponse = null;
-    String requestPath =
-        "http://localhost:" + port + "/question?survey=" + survey.getId() + "&question=1";
-    try {
-      stringResponse = Unirest.get(requestPath).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    //assertTrue(stringResponse.getBody().contains("Question Body"));
-    //assertTrue(stringResponse.getBody().contains("/save_response?qid=" + question.getId()));
-  }
-
-  @Test
   public void getNoQuestionTest() {
     Survey survey1 = new Survey("New Title Question", new Date());
     surveyService.create(survey1);
