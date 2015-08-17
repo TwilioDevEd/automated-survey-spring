@@ -1,6 +1,6 @@
 {
     "title": "Automated Surveys Spring",
     "repo": "TwilioDevEd/automated-survey-spring",
-    "description": "Learn to implement appointment reminders in your web app with Twilio. Automated surveys allow you to take surveys and store the answers on a server when calling a Twilio number.",
+    "description": "Learn to implement automated surveys in your Spring web app with Twilio.",
     "heroku": true
 }

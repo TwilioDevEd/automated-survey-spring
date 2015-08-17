@@ -9,20 +9,21 @@
 .wrapper {
   height:100%;
   width:100%;
-}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Automated Surveys Spring"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Automated Surveys Spring</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement appointment reminders in your web app with Twilio. Automated surveys allow you to take surveys and store the answers on a server when calling a Twilio number.</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="Introduction" class="chapter"><div data-file="src/main/java/com/twilio/survey/SurveyJavaApplication.java" data-highlight="13-36" class="step"><h2 id="about-this-application">About this application</h2>
-<p>  This <a href="http://projects.spring.io/spring-boot/">Spring Boot</a> web application performs
-  automated phone surveys using Twilio&#39;s voice API and TwiML. In
-  addition to that, the application also displays the survey
-  results. The majority of the application&#39;s routes will be
-  accessed by Twilio itself since survey-takers will interact with
-  the application through the phone, not through the
-  web. Questions in surveys might be voice responses, numeric
-  responses or yes-no responses. A limitation in this sample
-  application is that it can only perform the first survey stored
-  the database. The source for the application <a href="https://github.com/TwilioDevEd/automated-survey-spring">can be found in
+}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Automated Surveys Spring"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Automated Surveys Spring</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement automated surveys in your Spring web app with Twilio.</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="Introduction" class="chapter"><div data-file="src/main/java/com/twilio/survey/SurveyJavaApplication.java" data-highlight="13-36" class="step"><h2 id="about-this-application">About this application</h2>
+<p>  This <a href="http://projects.spring.io/spring-boot/">Spring Boot</a> web
+  application performs automated phone surveys using Twilio&#39;s
+  voice API and TwiML. In addition to that, the application also
+  displays the survey results. The majority of the application&#39;s
+  routes will be accessed by Twilio itself since survey-takers
+  will interact with the application through the phone, not
+  through the web. Questions in surveys might be voice
+  responses, numeric responses or yes-no responses. A limitation
+  in this sample application is that it can only take answers for the
+  last survey stored the database. The source for the
+  application <a href="https://github.com/TwilioDevEd/automated-survey-spring">can be found in
   GitHub.</a></p>
 <p>  In this tutorial, we&#39;ll highlight the code that interacts with
-  Twilio and in turn makes the application tick.  <a href="https://github.com/TwilioDevEd/automated-survey-laravel/blob/master/readme.md">Check out the project
+  Twilio and in turn makes the application tick.  <a href="https://github.com/TwilioDevEd/automated-survey-spring/blob/master/README.md">Check out the project
   README on
   GitHub</a>
   to see how to run the code yourself.</p>
@@ -39,10 +40,13 @@
 </div><div data-file=".env.example" class="step"><h2 id="configure-the-application">Configure the application</h2>
 <p>The application requirements are minimal. The only necessary
 component is a running PostgreSQL database. Rename
-<code>.env.example</code> to <code>.env</code> and configure access to your local
+<code>.env.example</code> to <code>.env</code> to configure access to your local
 database. Just remember to specify if you database supports SSL or not.</p>
-<p>Now that the database is configured we can load a
-survey into it, just by running the app.</p>
+<p>Take into account that the <code>DATABASE_URL</code> variables uses
+Heroku&#39;s URL format instead of JDBC&#39;s URL format. Check
+<a href="https://devcenter.heroku.com/articles/connecting-to-relational-databases-on-heroku-with-java#using-the-database_url-in-spring-with-java-configuration">Heroku&#39;s Java
+Documentation</a>
+to see how this works.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
@@ -50,13 +54,13 @@ survey into it, just by running the app.</p>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/util/SurveyParser.java" data-highlight="32-74" class="step"><h2 id="create-a-survey">Create a survey</h2>
 <p>In order to perform automated surveys we first need to have some
-questions to ask. For your convenience, the
-application&#39;s repository already includes one survey that can be
-loaded into the database. You can modify the questions from the survey by editing the
+questions to ask. For your convenience, the application&#39;s
+repository already includes one survey that can be loaded into
+the database. If the database is configured correctly this
+survey will be loaded into the database when the app starts.</p>
+<p>You can modify the questions from the survey by editing the
 <a href="https://github.com/TwilioDevEd/automated-survey-spring/blob/master/survey.json">survey.json</a>
-file located on the root of the repository. Refer to the
-<a href="https://github.com/TwilioDevEd/automated-survey-spring/blob/master/README.md">Readme File</a>
-for more details.</p>
+file located in the root of the repository and re-running the app.</p>
 <p>We want users to take our survey, so next we are going implement
 the interaction of the caller with the application.</p>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/SurveyController.java" data-highlight="24-97" class="step"><h2 id="respond-to-twilio-s-initial-request">Respond to Twilio&#39;s initial request</h2>
@@ -67,9 +71,9 @@ URL configured under it with the HTTP method specified (either GET
 or POST).</p>
 <p>For this application Twilio should be configured to make a GET request to
 the application&#39;s <code>/survey</code> endpoint. Here the application will find the last inserted
-survey, and after stating it&#39;s name and welcoming the user to it using TwiML&#39;s
+survey, and after stating its name and welcoming the user to it using TwiML&#39;s
 <a href="https://www.twilio.com/docs/api/twiml/say"><code>&lt;Say&gt;</code></a> verb, it will redirect the call
-to the first question using the <a href="https://www.twilio.com/docs/api/twiml/redirect"><code>redirect</code></a>.
+to the first question using the <a href="https://www.twilio.com/docs/api/twiml/redirect"><code>&lt;Redirect&gt;</code></a>.
 verb.</p>
 <p>Next we will handle the request made after the redirect.</p>
 <hr>
@@ -84,16 +88,16 @@ verb.</p>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/QuestionController.java" data-highlight="27-69" class="step"><h2 id="ask-the-caller-a-question">Ask the caller a question</h2>
 <p>At this point the Twilio client has made a request for the first
-question. Once again, we will use the
-<a href="https://www.twilio.com/docs/php/install">twilio-php</a> library to
-generate a response. First we will ask a question, say
-instructions on how to answer that question and then finally
+question. We will use the
+<a href="https://github.com/twilio/twilio-java">twilio-java</a> library to
+generate a response. First we will ask a question, then say
+instructions on how to answer that question and finally
 record the caller&#39;s answer to the question. It&#39;s important to
 keep in mind that instructions on how to answer a question depend on the
 type of question we ask. We also need record the answer
 differently if a given question requires keypad input or voice
 input.</p>
-</div><div data-file="src/main/java/com/twilio/survey/util/QuestionHandler.java" data-highlight="55-99" class="step"><h2 id="creating-a-twimlresponse">Creating a TwiMLResponse</h2>
+</div><div data-file="src/main/java/com/twilio/survey/util/QuestionHandler.java" data-highlight="55-99" class="step"><h2 id="record-the-caller-s-response">Record the caller&#39;s response</h2>
 <p>Recording the answer is slightly more involved. If the question
 is of kind &quot;voice&quot; then we use the
 <a href="https://www.twilio.com/docs/api/twiml/record"><code>&lt;Record&gt;</code></a>
@@ -115,34 +119,36 @@ the answer.</p>
 <li><a href="https://www.twilio.com/docs/api/twiml/record">TwiML Voice: &lt;Record&gt;</a></li>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/ResponseController.java" data-highlight="33-91" class="step"><h2 id="store-a-question-s-answer">Store a question&#39;s answer</h2>
-<p>Now Twilio has made a POST request to the <code>/save_response?qid=&lt;question_id&gt;</code> URL.
-The request includes everything we need to record the
-caller&#39;s answer to our question. Aside from the <code>&lt;question_id&gt;</code>
-parameter, Twilio includes a <a href="https://www.twilio.com/docs/api/twiml/twilio_request">wealth of
+<p>Now Twilio has made a POST request to the
+<code>/save_response?qid=&lt;question_id&gt;</code> URL.  The request includes
+everything we need to record the caller&#39;s answer to our
+question. Aside from the <code>&lt;question_id&gt;</code> parameter, Twilio
+includes a <a href="https://www.twilio.com/docs/api/twiml/twilio_request">wealth of
 information</a>
-with every request. For this sample application we will store the
-<code>RecordingUrl</code> or <code>Digits</code> parameter for voice and
+with every request. For this sample application we will store
+the <code>RecordingUrl</code> or <code>Digits</code> parameter for voice and
 yes-no/numeric answers accordingly. For this sample we will also
 save the <code>CallSid</code> so we can uniquely identify a call.</p>
 <p>Most surveys include more than a single question so we must now
-redirect the user to the next question in this survey using the <a href="* [TwiML Voice: &lt;Redirect&gt;](https://www.twilio.com/docs/api/twiml/redirect">redirect
-verb</a>) again.</p>
+redirect the user to the next question in this survey using the
+<a href="https://www.twilio.com/docs/api/twiml/redirect">&lt;Redirect&gt;</a> verb
+again.</p>
 <p>If there are no more questions available on the survey, the user will be notified via the
 <a href="https://www.twilio.com/docs/api/twiml/say">say verb</a> and then hangup the call using the
 <a href="https://www.twilio.com/docs/api/twiml/hangup">hangup verb</a></p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
-<li><a href="https://www.twilio.com/docs/api/twiml/twilio_request">TwiML Voice: Twilio&#39;s Request&#39;</a></li>
+<li><a href="https://www.twilio.com/docs/api/twiml/twilio_request">TwiML Voice: Twilio&#39;s Request</a></li>
 <li><a href="https://www.twilio.com/docs/api/twiml/redirect">TwiML Voice: &lt;Redirect&gt;</a></li>
 <li><a href="https://www.twilio.com/docs/api/twiml/say">TwiML Voice: &lt;Say&gt;</a></li>
 <li><a href="https://www.twilio.com/docs/api/twiml/hangup">TwiML Voice: &lt;Hangup&gt;</a></li>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/DisplayController.java" data-highlight="30-52" class="step"><h2 id="display-the-survey-results">Display the survey results</h2>
-<p>For this route we simply query the database through an JPA query and
-then display the information within a Mustache template. We display
-a panel for every question on the last survey, and inside every panel we list the
-responses from different calls.</p>
+<p>For this route we simply query the database using a JPA query
+and then display the information within a Mustache template. We
+display a panel for every question on the last survey, and
+inside every panel we list the responses from different calls.</p>
 <p>You can access this page in the applications root route <code>/</code>.</p>
 <hr>
 <p><strong>See Also:</strong></p>
@@ -152,11 +158,11 @@ responses from different calls.</p>
 </div><div class="step"><h2 id="where-to-next-">Where to next?</h2>
 <p>It&#39;s done! If you have configured one of your voice-enable Twilio
 numbers to the application built in this tutorial you should be
-able to take the survey and see the results under root route of
+able to take the survey and see the results under the root route of
 the application. We hope you found this sample application
 useful.  If you&#39;re a Java developer working with Twilio, you
 might enjoy these other tutorials:</p>
-<h3 id="-click-to-call-https-www-twilio-com-docs-howto-walkthrough-appointment-reminders-java-spark-"><a href="https://www.twilio.com/docs/howto/walkthrough/appointment-reminders/java/spark">Click to Call</a></h3>
+<h3 id="-appointment-reminders-https-www-twilio-com-docs-howto-walkthrough-appointment-reminders-java-spark-"><a href="https://www.twilio.com/docs/howto/walkthrough/appointment-reminders/java/spark">Appointment Reminders</a></h3>
 <p>Automate the process of reaching out to your customers in advance of an upcoming appointment.</p>
 <h3 id="-how-tos-and-example-code-https-www-twilio-com-docs-howto-"><a href="https://www.twilio.com/docs/howto">How-Tos and Example Code</a></h3>
 <p>Tutorials in different programming languages</p>
@@ -165,7 +171,7 @@ might enjoy these other tutorials:</p>
 we&#39;d love to hear it. Tweet <a href="twitter.com/twilio">@twilio</a> to let us know what you think.</p>
 </div></div>
 <div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="src/main/java/com/twilio/survey/SurveyJavaApplication.java" data-mode="java">cGFja2FnZSBjb20udHdpbGlvLnN1cnZleTsKCmltcG9ydCBjb20udHdpbGlvLnN1cnZleS5yZXBvc2l0b3JpZXMuUXVlc3Rpb25SZXBvc2l0b3J5OwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkucmVwb3NpdG9yaWVzLlN1cnZleVJlcG9zaXRvcnk7CmltcG9ydCBjb20udHdpbGlvLnN1cnZleS5zZXJ2aWNlcy5RdWVzdGlvblNlcnZpY2U7CmltcG9ydCBjb20udHdpbGlvLnN1cnZleS5zZXJ2aWNlcy5TdXJ2ZXlTZXJ2aWNlOwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkudXRpbC5TdXJ2ZXlQYXJzZXI7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLmJlYW5zLmZhY3RvcnkuYW5ub3RhdGlvbi5BdXRvd2lyZWQ7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLmJvb3QuQ29tbWFuZExpbmVSdW5uZXI7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLmJvb3QuU3ByaW5nQXBwbGljYXRpb247CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLmJvb3QuYXV0b2NvbmZpZ3VyZS5TcHJpbmdCb290QXBwbGljYXRpb247CgpAU3ByaW5nQm9vdEFwcGxpY2F0aW9uCnB1YmxpYyBjbGFzcyBTdXJ2ZXlKYXZhQXBwbGljYXRpb24gaW1wbGVtZW50cyBDb21tYW5kTGluZVJ1bm5lciB7CiAgQEF1dG93aXJlZAogIHByaXZhdGUgUXVlc3Rpb25SZXBvc2l0b3J5IHF1ZXN0aW9uUmVwb3NpdG9yeTsKICBAQXV0b3dpcmVkCiAgcHJpdmF0ZSBTdXJ2ZXlSZXBvc2l0b3J5IHN1cnZleVJlcG9zaXRvcnk7CgogIHB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsKICAgIFNwcmluZ0FwcGxpY2F0aW9uLnJ1bihTdXJ2ZXlKYXZhQXBwbGljYXRpb24uY2xhc3MsIGFyZ3MpOwogIH0KCiAgLyoqCiAgICogTWV0aG9kIHRoYXQgcnVucyBvbiBhcHAgaW5pdGlhbGl6YXRpb24uIEl0IHdpbGwgcGFyc2UgYW5kIGluc2VydCB0aGUgcXVlc3Rpb25zIGluIHRoZSBEQgogICAqIG9uIGV2ZXJ5IGFwcCBpbml0aWFsaXphdGlvbgogICAqLwogIEBPdmVycmlkZQogIHB1YmxpYyB2b2lkIHJ1bihTdHJpbmcuLi4gc3RyaW5ncykgdGhyb3dzIEV4Y2VwdGlvbiB7CiAgICBTdXJ2ZXlTZXJ2aWNlIHN1cnZleVNlcnZpY2UgPSBuZXcgU3VydmV5U2VydmljZShzdXJ2ZXlSZXBvc2l0b3J5KTsKICAgIFF1ZXN0aW9uU2VydmljZSBxdWVzdGlvblNlcnZpY2UgPSBuZXcgUXVlc3Rpb25TZXJ2aWNlKHF1ZXN0aW9uUmVwb3NpdG9yeSk7CgogICAgU3VydmV5UGFyc2VyIHN1cnZleVBhcnNlciA9IG5ldyBTdXJ2ZXlQYXJzZXIoc3VydmV5U2VydmljZSwgcXVlc3Rpb25TZXJ2aWNlKTsKICAgIHN1cnZleVBhcnNlci5wYXJzZSgic3VydmV5Lmpzb24iKTsKICB9Cn0K</textarea>
-<textarea class="saurus-file" data-file=".env.example" data-mode="text">IyBFbnZpcm9ubWVudCB2YXJpYWJsZXMgZm9yIGF1dG9tYXRlZC1zdXJ2ZXktc3ByaW5nCgojIEFwcCBzZXR0aW5ncwpEQVRBQkFTRV9VUkw9amRiYzpwb3N0Z3Jlc3FsOi8vdXNlcm5hbWU6cGFzc3dvcmRAbG9jYWxob3N0OjU0MzIvZGF0YWJhc2VfbmFtZQoKIyBEaXNhYmxlIFBvc3RncmVzIFNTTCAobXVzdCBzZXQgdGhpcyBvbmUgaWYgZGF0YWJhc2UgZG9lc24ndCBoYXZlIFNTTCBlbmFibGVkKQpUV0lMSU9fRElTQUJMRV9EQl9TU0w9dHJ1ZQoKIyBUd2lsaW8gc2V0dGluZ3MKVFdJTElPX0FDQ09VTlRfU0lEPQpUV0lMSU9fQVVUSF9UT0tFTj0KVFdJTElPX05VTUJFUj0=</textarea>
+<textarea class="saurus-file" data-file=".env.example" data-mode="text">IyBFbnZpcm9ubWVudCB2YXJpYWJsZXMgZm9yIGF1dG9tYXRlZC1zdXJ2ZXktc3ByaW5nCgojIEFwcCBzZXR0aW5ncwpEQVRBQkFTRV9VUkw9cG9zdGdyZXM6Ly91c2VybmFtZTpwYXNzd29yZEBsb2NhbGhvc3Q6NTQzMi9kYXRhYmFzZV9uYW1lCgojIERpc2FibGUgUG9zdGdyZXMgU1NMIChtdXN0IHNldCB0aGlzIG9uZSBpZiBkYXRhYmFzZSBkb2Vzbid0IGhhdmUgU1NMIGVuYWJsZWQpClRXSUxJT19ESVNBQkxFX0RCX1NTTD10cnVlCgojIFR3aWxpbyBzZXR0aW5ncwpUV0lMSU9fQUNDT1VOVF9TSUQ9ClRXSUxJT19BVVRIX1RPS0VOPQpUV0lMSU9fTlVNQkVSPQo=</textarea>
 <textarea class="saurus-file" data-file="src/main/java/com/twilio/survey/util/SurveyParser.java" data-mode="java">cGFja2FnZSBjb20udHdpbGlvLnN1cnZleS51dGlsOwoKaW1wb3J0IGNvbS50d2lsaW8uc3VydmV5Lm1vZGVscy5RdWVzdGlvbjsKaW1wb3J0IGNvbS50d2lsaW8uc3VydmV5Lm1vZGVscy5TdXJ2ZXk7CmltcG9ydCBjb20udHdpbGlvLnN1cnZleS5zZXJ2aWNlcy5RdWVzdGlvblNlcnZpY2U7CmltcG9ydCBjb20udHdpbGlvLnN1cnZleS5zZXJ2aWNlcy5TdXJ2ZXlTZXJ2aWNlOwppbXBvcnQgb3JnLmpzb24uc2ltcGxlLkpTT05BcnJheTsKaW1wb3J0IG9yZy5qc29uLnNpbXBsZS5KU09OT2JqZWN0OwppbXBvcnQgb3JnLmpzb24uc2ltcGxlLnBhcnNlci5KU09OUGFyc2VyOwppbXBvcnQgb3JnLmpzb24uc2ltcGxlLnBhcnNlci5QYXJzZUV4Y2VwdGlvbjsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsudHJhbnNhY3Rpb24uYW5ub3RhdGlvbi5UcmFuc2FjdGlvbmFsOwoKaW1wb3J0IGphdmEuaW8uRmlsZU5vdEZvdW5kRXhjZXB0aW9uOwppbXBvcnQgamF2YS5pby5GaWxlUmVhZGVyOwppbXBvcnQgamF2YS5pby5JT0V4Y2VwdGlvbjsKaW1wb3J0IGphdmEudXRpbC5EYXRlOwoKLyoqCiAqIENsYXNzIGluIGNoYXJnZSBvZiBwYXJzaW5nIHRoZSBKU09OIGZpbGUgdGhhdCBjb250YWlucyB0aGUgbGlzdCBvZiBxdWVzdGlvbnMuCiAqLwpwdWJsaWMgY2xhc3MgU3VydmV5UGFyc2VyIHsKICBTdXJ2ZXlTZXJ2aWNlIHN1cnZleVNlcnZpY2U7CiAgUXVlc3Rpb25TZXJ2aWNlIHF1ZXN0aW9uU2VydmljZTsKCiAgcHVibGljIFN1cnZleVBhcnNlcigpIHt9CgogIHB1YmxpYyBTdXJ2ZXlQYXJzZXIoU3VydmV5U2VydmljZSBzdXJ2ZXlTZXJ2aWNlLCBRdWVzdGlvblNlcnZpY2UgcXVlc3Rpb25TZXJ2aWNlKSB7CiAgICB0aGlzLnN1cnZleVNlcnZpY2UgPSBzdXJ2ZXlTZXJ2aWNlOwogICAgdGhpcy5xdWVzdGlvblNlcnZpY2UgPSBxdWVzdGlvblNlcnZpY2U7CiAgfQoKICAvKioKICAgKiBUaGlzIG1ldGhvZCBpcyBjYWxsZWQgb24gYXBwIGluaXRpYWxpemF0aW9uLgogICAqIEl0IHdpbGwgaW5zZXJ0IHRoZSBxdWVzdGlvbnMgaW4gdGhlIERCIGV2ZXJ5IHRpbWUgdGhlIGFwcGxpY2F0aW9uIHN0YXJ0cwogICAqCiAgICogQHBhcmFtIGZpbGVQYXRoIHBhdGggZm9yIHRoZSAuanNvbiBmaWxlCiAgICovCiAgcHVibGljIHZvaWQgcGFyc2UoU3RyaW5nIGZpbGVQYXRoKSB7CiAgICBGaWxlUmVhZGVyIHJlYWRlciA9IG51bGw7CiAgICB0cnkgewogICAgICByZWFkZXIgPSBuZXcgRmlsZVJlYWRlcihmaWxlUGF0aCk7CiAgICB9IGNhdGNoIChGaWxlTm90Rm91bmRFeGNlcHRpb24gZSkgewogICAgICBlLnByaW50U3RhY2tUcmFjZSgpOwogICAgfQogICAgSlNPTlBhcnNlciBqc29uUGFyc2VyID0gbmV3IEpTT05QYXJzZXIoKTsKICAgIEpTT05PYmplY3QganNvbk9iamVjdCA9IG51bGw7CiAgICB0cnkgewogICAgICBqc29uT2JqZWN0ID0gKEpTT05PYmplY3QpIGpzb25QYXJzZXIucGFyc2UocmVhZGVyKTsKICAgIH0gY2F0Y2ggKElPRXhjZXB0aW9uIGUpIHsKICAgICAgU3lzdGVtLm91dC5wcmludGxuKCJFcnJvciByZWFkaW5nIGZyb20gc3VydmV5IGZpbGUiKTsKICAgIH0gY2F0Y2ggKFBhcnNlRXhjZXB0aW9uIGUpIHsKICAgICAgU3lzdGVtLm91dC5wcmludGxuKCJFcnJvciB3aGlsZSBwYXJzaW5nIEpTT04gc3VydmV5IGZpbGUiKTsKICAgIH0KCiAgICBTdHJpbmcgdGl0bGUgPSAoU3RyaW5nKSBqc29uT2JqZWN0LmdldCgidGl0bGUiKTsKICAgIEpTT05BcnJheSBxdWVzdGlvbnMgPSAoSlNPTkFycmF5KSBqc29uT2JqZWN0LmdldCgicXVlc3Rpb25zIik7CgogICAgaW5zZXJ0U3VydmV5SW50b0RiKHRpdGxlLCBxdWVzdGlvbnMpOwogIH0KCiAgQFRyYW5zYWN0aW9uYWwKICBwcml2YXRlIHZvaWQgaW5zZXJ0U3VydmV5SW50b0RiKFN0cmluZyB0aXRsZSwgSlNPTkFycmF5IHF1ZXN0aW9ucykgewogICAgU3VydmV5IHN1cnZleSA9IG5ldyBTdXJ2ZXkodGl0bGUsIG5ldyBEYXRlKCkpOwogICAgc3VydmV5U2VydmljZS5jcmVhdGUoc3VydmV5KTsKICAgIFF1ZXN0aW9uIG5ld1F1ZXN0aW9uOwoKICAgIGZvciAoT2JqZWN0IHF1ZXN0aW9uIDogcXVlc3Rpb25zKSB7CiAgICAgIEpTT05PYmplY3Qgb2JqID0gKEpTT05PYmplY3QpIHF1ZXN0aW9uOwogICAgICBTdHJpbmcgYm9keSA9IChTdHJpbmcpIG9iai5nZXQoImJvZHkiKTsKICAgICAgU3RyaW5nIHR5cGUgPSAoU3RyaW5nKSBvYmouZ2V0KCJ0eXBlIik7CiAgICAgIG5ld1F1ZXN0aW9uID0gbmV3IFF1ZXN0aW9uKGJvZHksIHR5cGUsIHN1cnZleSwgbmV3IERhdGUoKSk7CiAgICAgIHF1ZXN0aW9uU2VydmljZS5jcmVhdGUobmV3UXVlc3Rpb24pOwogICAgfQogIH0KfQo=</textarea>
 <textarea class="saurus-file" data-file="src/main/java/com/twilio/survey/controllers/SurveyController.java" data-mode="java">cGFja2FnZSBjb20udHdpbGlvLnN1cnZleS5jb250cm9sbGVyczsKCmltcG9ydCBjb20udHdpbGlvLnNkay52ZXJicy4qOwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkubW9kZWxzLlN1cnZleTsKaW1wb3J0IGNvbS50d2lsaW8uc3VydmV5LnJlcG9zaXRvcmllcy5TdXJ2ZXlSZXBvc2l0b3J5OwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkuc2VydmljZXMuU3VydmV5U2VydmljZTsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYmVhbnMuZmFjdG9yeS5hbm5vdGF0aW9uLkF1dG93aXJlZDsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuc3RlcmVvdHlwZS5Db250cm9sbGVyOwppbXBvcnQgb3JnLnNwcmluZ2ZyYW1ld29yay53ZWIuYmluZC5hbm5vdGF0aW9uLlJlcXVlc3RNYXBwaW5nOwppbXBvcnQgb3JnLnNwcmluZ2ZyYW1ld29yay53ZWIuYmluZC5hbm5vdGF0aW9uLlJlcXVlc3RNZXRob2Q7CgppbXBvcnQgamF2YXguc2VydmxldC5odHRwLkh0dHBTZXJ2bGV0UmVxdWVzdDsKaW1wb3J0IGphdmF4LnNlcnZsZXQuaHR0cC5IdHRwU2VydmxldFJlc3BvbnNlOwppbXBvcnQgamF2YS5pby5JT0V4Y2VwdGlvbjsKCkBDb250cm9sbGVyCnB1YmxpYyBjbGFzcyBTdXJ2ZXlDb250cm9sbGVyIHsKICBAQXV0b3dpcmVkCiAgcHJpdmF0ZSBTdXJ2ZXlSZXBvc2l0b3J5IHN1cnZleVJlcG9zaXRvcnk7CiAgcHJpdmF0ZSBTdXJ2ZXlTZXJ2aWNlIHN1cnZleVNlcnZpY2U7CgogIHB1YmxpYyBTdXJ2ZXlDb250cm9sbGVyKCkge30KCiAgLyoqCiAgICogRW5kIHBvaW50IHRoYXQgYWx3YXlzIHJldHVybnMgdGhlIGxhc3Qgc3VydmV5IGluc2VydGVkIGluIHRoZSBkYgogICAqIGFuZCByZWRpcmVjdHMgdG8gdGhlIGZpcnN0IHF1ZXN0aW9uIG9mIHRoYXQgc3VydmV5CiAgICovCiAgQFJlcXVlc3RNYXBwaW5nKHZhbHVlID0gIi9zdXJ2ZXkiLCBtZXRob2QgPSBSZXF1ZXN0TWV0aG9kLkdFVCkKICBwdWJsaWMgdm9pZCB3ZWxjb21lKEh0dHBTZXJ2bGV0UmVxdWVzdCByZXF1ZXN0LCBIdHRwU2VydmxldFJlc3BvbnNlIHJlc3BvbnNlKSB7CiAgICB0aGlzLnN1cnZleVNlcnZpY2UgPSBuZXcgU3VydmV5U2VydmljZShzdXJ2ZXlSZXBvc2l0b3J5KTsKCiAgICBTdXJ2ZXkgbGFzdFN1cnZleTsKICAgIHRyeSB7CiAgICAgIGxhc3RTdXJ2ZXkgPSBzdXJ2ZXlTZXJ2aWNlLmZpbmRMYXN0KCk7CiAgICB9IGNhdGNoIChJbmRleE91dE9mQm91bmRzRXhjZXB0aW9uIGUpIHsKICAgICAgbGFzdFN1cnZleSA9IG51bGw7CiAgICB9CgogICAgaWYgKGxhc3RTdXJ2ZXkgIT0gbnVsbCkgewogICAgICB0cnkgewogICAgICAgIHJlc3BvbnNlLmdldFdyaXRlcigpLnByaW50KGdldEZpcnN0UXVlc3Rpb25SZWRpcmVjdChsYXN0U3VydmV5KS50b0VzY2FwZWRYTUwoKSk7CiAgICAgIH0gY2F0Y2ggKElPRXhjZXB0aW9uIGUpIHsKICAgICAgICBTeXN0ZW0ub3V0LnByaW50bG4oIkNvdWxkbid0IHdyaXRlIFR3aWxpbydzIHJlc3BvbnNlIHRvIFhNTCIpOwogICAgICB9CiAgICB9IGVsc2UgewogICAgICB0cnkgewogICAgICAgIHJlc3BvbnNlLmdldFdyaXRlcigpLnByaW50KGdldEhhbmd1cFJlc3BvbnNlKCkudG9Fc2NhcGVkWE1MKCkpOwogICAgICB9IGNhdGNoIChJT0V4Y2VwdGlvbiBlKSB7CiAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKCJDb3VsZG4ndCB3cml0ZSBUd2lsaW8ncyByZXNwb25zZSB0byBYTUwiKTsKICAgICAgfQogICAgfQogICAgcmVzcG9uc2Uuc2V0Q29udGVudFR5cGUoImFwcGxpY2F0aW9uL3htbCIpOwogIH0KCiAgLyoqCiAgICogQ3JlYXRlcyB0aGUgVHdpTUxSZXNwb25zZSBmb3IgdGhlIGZpcnN0IHF1ZXN0aW9uIG9mIHRoZSBzdXJ2ZXkKICAgKgogICAqIEBwYXJhbSBzdXJ2ZXkgU3VydmV5IGVudGl0eQogICAqIEByZXR1cm4gVHdpTUxSZXNwb25zZQogICAqLwogIHByaXZhdGUgVHdpTUxSZXNwb25zZSBnZXRGaXJzdFF1ZXN0aW9uUmVkaXJlY3QoU3VydmV5IHN1cnZleSkgewogICAgU3RyaW5nIHdlbGNvbWVNZXNzYWdlID0gIldlbGNvbWUgdG8gdGhlICIgKyBzdXJ2ZXkuZ2V0VGl0bGUoKSArICIgc3VydmV5IjsKCiAgICBUd2lNTFJlc3BvbnNlIHR3aW1sID0gbmV3IFR3aU1MUmVzcG9uc2UoKTsKICAgIFNheSBzYXkgPSBuZXcgU2F5KHdlbGNvbWVNZXNzYWdlKTsKICAgIFJlZGlyZWN0IHJlZGlyZWN0ID0gbmV3IFJlZGlyZWN0KCIvcXVlc3Rpb24/c3VydmV5PSIgKyBzdXJ2ZXkuZ2V0SWQoKSArICImcXVlc3Rpb249MSIpOwogICAgcmVkaXJlY3Quc2V0TWV0aG9kKCJHRVQiKTsKICAgIHRyeSB7CiAgICAgIHR3aW1sLmFwcGVuZChzYXkpOwogICAgICB0d2ltbC5hcHBlbmQocmVkaXJlY3QpOwogICAgfSBjYXRjaCAoVHdpTUxFeGNlcHRpb24gZSkgewogICAgICBTeXN0ZW0ub3V0LnByaW50bG4oIkNvdWxkbid0IGFwcGVuZCBzYXkgb3IgcmVkaXJlY3QgdG8gVHdpbGlvJ3MgcmVzcG9uc2UiKTsKICAgIH0KCiAgICByZXR1cm4gdHdpbWw7CiAgfQoKICAvKioKICAgKiBDcmVhdGVzIGEgVHdpTUxSZXNwb25zZSBmb3IgSGFuZ3VwIGlmIG5vIHN1cnZleXMgYXJlIGZvdW5kIG9uIHRoZSBkYXRhYmFzZQogICAqCiAgICogQHJldHVybiBUd2lNTFJlc3BvbnNlCiAgICovCiAgcHJpdmF0ZSBUd2lNTFJlc3BvbnNlIGdldEhhbmd1cFJlc3BvbnNlKCkgewogICAgU3RyaW5nIGVycm9yTWVzc2FnZSA9ICJXZSBhcmUgc29ycnksIHRoZXJlIGFyZSBubyBzdXJ2ZXlzIGF2YWlsYWJsZS4gR29vZCBieWUuIjsKCiAgICBUd2lNTFJlc3BvbnNlIHR3aW1sID0gbmV3IFR3aU1MUmVzcG9uc2UoKTsKICAgIFNheSBzYXkgPSBuZXcgU2F5KGVycm9yTWVzc2FnZSk7CiAgICBIYW5ndXAgaGFuZ3VwID0gbmV3IEhhbmd1cCgpOwogICAgdHJ5IHsKICAgICAgdHdpbWwuYXBwZW5kKHNheSk7CiAgICAgIHR3aW1sLmFwcGVuZChoYW5ndXApOwogICAgfSBjYXRjaCAoVHdpTUxFeGNlcHRpb24gZSkgewogICAgICBTeXN0ZW0ub3V0LnByaW50bG4oIkNvdWxkbid0IGFwcGVuZCBzYXkgb3IgcmVkaXJlY3QgdG8gVHdpbGlvJ3MgcmVzcG9uc2UiKTsKICAgIH0KCiAgICByZXR1cm4gdHdpbWw7CiAgfQp9Cg==</textarea>
 <textarea class="saurus-file" data-file="src/main/java/com/twilio/survey/controllers/QuestionController.java" data-mode="java">cGFja2FnZSBjb20udHdpbGlvLnN1cnZleS5jb250cm9sbGVyczsKCmltcG9ydCBjb20udHdpbGlvLnNkay52ZXJicy5Ud2lNTFJlc3BvbnNlOwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkubW9kZWxzLlF1ZXN0aW9uOwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkubW9kZWxzLlN1cnZleTsKaW1wb3J0IGNvbS50d2lsaW8uc3VydmV5LnJlcG9zaXRvcmllcy5TdXJ2ZXlSZXBvc2l0b3J5OwppbXBvcnQgY29tLnR3aWxpby5zdXJ2ZXkuc2VydmljZXMuU3VydmV5U2VydmljZTsKaW1wb3J0IGNvbS50d2lsaW8uc3VydmV5LnV0aWwuUXVlc3Rpb25IYW5kbGVyOwppbXBvcnQgb3JnLnNwcmluZ2ZyYW1ld29yay5iZWFucy5mYWN0b3J5LmFubm90YXRpb24uQXV0b3dpcmVkOwppbXBvcnQgb3JnLnNwcmluZ2ZyYW1ld29yay5zdGVyZW90eXBlLkNvbnRyb2xsZXI7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLndlYi5iaW5kLmFubm90YXRpb24uUmVxdWVzdE1hcHBpbmc7CmltcG9ydCBvcmcuc3ByaW5nZnJhbWV3b3JrLndlYi5iaW5kLmFubm90YXRpb24uUmVxdWVzdE1ldGhvZDsKCmltcG9ydCBqYXZheC5zZXJ2bGV0Lmh0dHAuSHR0cFNlcnZsZXRSZXF1ZXN0OwppbXBvcnQgamF2YXguc2VydmxldC5odHRwLkh0dHBTZXJ2bGV0UmVzcG9uc2U7CmltcG9ydCBqYXZhLmlvLklPRXhjZXB0aW9uOwppbXBvcnQgamF2YS51dGlsLkxpc3Q7CgpAQ29udHJvbGxlcgpwdWJsaWMgY2xhc3MgUXVlc3Rpb25Db250cm9sbGVyIHsKICBAQXV0b3dpcmVkCiAgcHJpdmF0ZSBTdXJ2ZXlSZXBvc2l0b3J5IHN1cnZleVJlcG9zaXRvcnk7CiAgcHJpdmF0ZSBTdXJ2ZXlTZXJ2aWNlIHN1cnZleVNlcnZpY2U7CgogIHB1YmxpYyBRdWVzdGlvbkNvbnRyb2xsZXIoKSB7fQoKICAvKioKICAgKiBFbmQgcG9pbnQgdGhhdCByZXR1cm5zIHRoZSBhcHByb3ByaWF0ZSBxdWVzdGlvbiByZXNwb25zZSBiYXNlZCBvbiB0aGUgcGFyYW1ldGVycyBpdCByZWNlaXZlcwogICAqLwogIEBSZXF1ZXN0TWFwcGluZyh2YWx1ZSA9ICIvcXVlc3Rpb24iLCBtZXRob2QgPSBSZXF1ZXN0TWV0aG9kLkdFVCkKICBwdWJsaWMgdm9pZCByZWFkUXVlc3Rpb24oSHR0cFNlcnZsZXRSZXF1ZXN0IHJlcXVlc3QsIEh0dHBTZXJ2bGV0UmVzcG9uc2UgcmVzcG9uc2UpIHsKICAgIHRoaXMuc3VydmV5U2VydmljZSA9IG5ldyBTdXJ2ZXlTZXJ2aWNlKHN1cnZleVJlcG9zaXRvcnkpOwoKICAgIExvbmcgc3VydmV5SWQgPSBudWxsOwogICAgaW50IHF1ZXN0aW9uTnVtYmVyID0gMDsKCiAgICB0cnkgewogICAgICBzdXJ2ZXlJZCA9IExvbmcucGFyc2VMb25nKHJlcXVlc3QuZ2V0UGFyYW1ldGVyKCJzdXJ2ZXkiKSk7CiAgICAgIHF1ZXN0aW9uTnVtYmVyID0gSW50ZWdlci5wYXJzZUludChyZXF1ZXN0LmdldFBhcmFtZXRlcigicXVlc3Rpb24iKSk7CiAgICB9IGNhdGNoIChOdW1iZXJGb3JtYXRFeGNlcHRpb24gZSkgewogICAgICBTeXN0ZW0ub3V0LnByaW50bG4oIk51bWJlcnMgd3JvbmdseSBmb3JtYXR0ZWQsIHVuYWJsZSB0byBwYXJzZSIpOwogICAgfQoKICAgIFN1cnZleSBzdXJ2ZXkgPSBzdXJ2ZXlTZXJ2aWNlLmZpbmQoc3VydmV5SWQpOwogICAgTGlzdDxRdWVzdGlvbj4gcXVlc3Rpb25zID0gc3VydmV5LmdldFF1ZXN0aW9ucygpOwoKICAgIGlmIChxdWVzdGlvbk51bWJlciA8PSBxdWVzdGlvbnMuc2l6ZSgpKSB7CiAgICAgIHRyeSB7CiAgICAgICAgcmVzcG9uc2UuZ2V0V3JpdGVyKCkucHJpbnQoZ2V0UXVlc3Rpb25SZXNwb25zZShxdWVzdGlvbnMsIHF1ZXN0aW9uTnVtYmVyKS50b0VzY2FwZWRYTUwoKSk7CiAgICAgIH0gY2F0Y2ggKElPRXhjZXB0aW9uIGUpIHsKICAgICAgICBTeXN0ZW0ub3V0LnByaW50bG4oIkNvdWxkbid0IHdyaXRlIFR3aWxpbydzIHJlc3BvbnNlIHRvIFhNTCIpOwogICAgICB9CiAgICB9IGVsc2UgewogICAgICB0cnkgewogICAgICAgIHJlc3BvbnNlLmdldFdyaXRlcigpLnByaW50KFF1ZXN0aW9uSGFuZGxlci5nZXRIYW5ndXBSZXNwb25zZSgpLnRvRXNjYXBlZFhNTCgpKTsKICAgICAgfSBjYXRjaCAoSU9FeGNlcHRpb24gZSkgewogICAgICAgIFN5c3RlbS5vdXQucHJpbnRsbigiQ291bGRuJ3Qgd3JpdGUgVHdpbGlvJ3MgcmVzcG9uc2UgdG8gWE1MIik7CiAgICAgIH0KICAgIH0KICAgIHJlc3BvbnNlLnNldENvbnRlbnRUeXBlKCJhcHBsaWNhdGlvbi94bWwiKTsKICB9CgogIHByaXZhdGUgVHdpTUxSZXNwb25zZSBnZXRRdWVzdGlvblJlc3BvbnNlKExpc3Q8UXVlc3Rpb24+IHF1ZXN0aW9ucywgaW50IHF1ZXN0aW9uTnVtYmVyKSB7CiAgICBRdWVzdGlvbiBjdXJyZW50UXVlc3Rpb24gPSBxdWVzdGlvbnMuZ2V0KHF1ZXN0aW9uTnVtYmVyIC0gMSk7CiAgICBRdWVzdGlvbkhhbmRsZXIgcXVlc3Rpb25IYW5kbGVyID0gbmV3IFF1ZXN0aW9uSGFuZGxlcihjdXJyZW50UXVlc3Rpb24pOwogICAgVHdpTUxSZXNwb25zZSB0d2ltbCA9IHF1ZXN0aW9uSGFuZGxlci5nZXRUd2lsaW9SZXNwb25zZSgpOwoKICAgIHJldHVybiB0d2ltbDsKICB9Cn0K</textarea>
