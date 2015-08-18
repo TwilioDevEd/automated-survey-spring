@@ -8,7 +8,7 @@
 
 ## Requirements
 
-In order to run this application, you need to install gradle and Oracle's JDK (Tested with JDK7)
+In order to run this application, you need to install Oracle's JDK (Tested with JDK7)
 
 ## Database setup
 
@@ -28,7 +28,7 @@ If you already have Gradle installed, you should be able to run the application 
 install all dependencies and build the application. If no other port is specified, the app will run in port `8080`.
 
 If you don't have gradle installed, you can use the Gradle Wrapper included in this project. Just go to the root directory
-of the project and prepend any gradle task with the executable `gradlew`. So you can run the application by doing
+of the project and prepend any gradle task with the executable `./gradlew`. So you can run the application by doing
 this in the root directory of the project:
 
 ```
@@ -50,7 +50,7 @@ cloned the repository using git or where you unpacked a copy of the project.
  
 ![Import gradle project](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/intellij_select_gradle.png)
 
-* Now you must configure your project, you should select the options to match what you can see in
+* Now you must configure your project. You should select the options to match what you can see in
 the next screenshot. The Gradle JVM field depends on your local java installation.
 
 ![Configure gradle project](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/intellij_configure_project.png)
@@ -64,9 +64,13 @@ configurations` button under the run menu:
 * In this menu you must select the Application option from the left sidebar. Then you must fill in
 the necessary information for your application to run as shown in the next screenshots:
 
+First, you have to select the main class for the project.
+
 ![Select main class](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/intellij_select_main_class.png)
 
 ![Select main class menu](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/intellij_select_main_class_menu.png)
+
+Then, you must set the required environment variables for the application to run.
 
 ![Set environment variables](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/intellij_set_environment_variables.png)
 
