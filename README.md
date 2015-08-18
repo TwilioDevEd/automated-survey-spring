@@ -88,6 +88,41 @@ project explorer, and right click on it. There you can select to run the applica
 
 ![Run application](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/intellij_run_application.png)
 
+Then you application will be running on `port 8080` by default.
+
+### Using eclipse
+
+There is an eclipse based IDE for Spring app development [Spring Tool Suite](https://spring.io/tools).
+You can download this IDE if you want to try the eclipse experience with the app.
+
+Also, if you have an existing eclipse installation, you can install the Spring tool suite from the
+eclipse market place [Spring Tool Suite (STS) for
+Eclipse](https://marketplace.eclipse.org/content/spring-tool-suite-sts-eclipse). This will allow you
+to run this spring application with minimal configuration. You will also need a gradle plugin for
+eclipse as this IDE doesn't support Gradle natively. You can install [Buildship Gradle
+Integration](http://marketplace.eclipse.org/content/buildship-gradle-integration) plugin for eclipse
+directly from the eclipse marketplace. 
+
+Once you have this plugins installed, you can import your gradle project from the `File` menu in
+eclipse and follow the steps of importing your project. After that, the only thing left to do is to
+configure how the application will run. You can access the run configuration from the `Run` menu in
+eclipse:
+
+![Run configuration](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/eclipse_run_configurations.png)
+
+A new configuration window will open and there you should configure how the Spring application will
+run. There you can set up the necessary environment variables and even run the application when you
+are done.
+
+![Set environment variables](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/eclipse_set_environment.png)
+
+If you didn't run the application in the previous step, you can run it by right clicking on the
+root of the project explorer and clicking `run as -> Spring Boot App`
+
+![Run application](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/eclipse_run_app.png)
+
+Then you application will be running on `port 8080` by default.
+
 ## Configuring Twilio to call your application
 
 ### Exposing the app via ngrok
