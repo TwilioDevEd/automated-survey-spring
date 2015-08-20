@@ -1,5 +1,5 @@
 {
-    "title": "Automated Surveys Spring",
+    "title": "Automated Surveys in Spring",
     "repo": "TwilioDevEd/automated-survey-spring",
     "description": "Learn to implement automated surveys in your Spring web app with Twilio.",
     "heroku": true

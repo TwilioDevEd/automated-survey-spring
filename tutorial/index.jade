@@ -1,5 +1,5 @@
 .chapter(data-title='Introduction')
-  .step(data-file='src/main/java/com/twilio/survey/SurveyJavaApplication.java',
+  .step(data-file='com/twilio/survey/SurveyJavaApplication.java',
     data-highlight='13-36')
     :markdown
       ## About this application
@@ -54,7 +54,7 @@
       **See Also:**
       * [Your Available Phone Numbers](https://www.twilio.com/user/account/phone-numbers/incoming)
 
-  .step(data-file='src/main/java/com/twilio/survey/util/SurveyParser.java', data-highlight='32-74')
+  .step(data-file='com/twilio/survey/util/SurveyParser.java', data-highlight='32-74')
     :markdown
       ## Create a survey
 
@@ -71,7 +71,7 @@
       We want users to take our survey, so next we are going implement
       the interaction of the caller with the application.
 
-  .step(data-file='src/main/java/com/twilio/survey/controllers/SurveyController.java',
+  .step(data-file='com/twilio/survey/controllers/SurveyController.java',
     data-highlight='24-97')
     :markdown
       ## Respond to Twilio's initial request
@@ -101,7 +101,7 @@
       * [TwiML Voice: <Say>](https://www.twilio.com/docs/api/twiml/say)
       * [TwiML Voice: <Redirect>](https://www.twilio.com/docs/api/twiml/redirect)
 
-  .step(data-file='src/main/java/com/twilio/survey/controllers/QuestionController.java',
+  .step(data-file='com/twilio/survey/controllers/QuestionController.java',
     data-highlight='27-69')
     :markdown
       ## Ask the caller a question
@@ -117,7 +117,7 @@
       differently if a given question requires keypad input or voice
       input.
 
-  .step(data-file='src/main/java/com/twilio/survey/util/QuestionHandler.java',
+  .step(data-file='com/twilio/survey/util/QuestionHandler.java',
     data-highlight='55-99')
     :markdown
       ## Record the caller's response
@@ -145,7 +145,7 @@
       * [TwiML Voice: <Gather>](https://www.twilio.com/docs/api/twiml/gather)
       * [TwiML Voice: <Record>](https://www.twilio.com/docs/api/twiml/record)
 
-  .step(data-file='src/main/java/com/twilio/survey/controllers/ResponseController.java',
+  .step(data-file='com/twilio/survey/controllers/ResponseController.java',
     data-highlight='33-91')
     :markdown
       ## Store a question's answer
@@ -178,7 +178,7 @@
       * [TwiML Voice: <Say>](https://www.twilio.com/docs/api/twiml/say)
       * [TwiML Voice: <Hangup>](https://www.twilio.com/docs/api/twiml/hangup)
 
-  .step(data-file='src/main/java/com/twilio/survey/controllers/DisplayController.java',
+  .step(data-file='com/twilio/survey/controllers/DisplayController.java',
     data-highlight='30-52')
     :markdown
       ## Display the survey results
