@@ -27,6 +27,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -61,6 +62,7 @@ public class DisplayControllerTest {
     responseService = new ResponseService(responseRepository);
     questionService.deleteAll();
     surveyService.deleteAll();
+    responseService.deleteAll();
   }
 
   @Test
@@ -88,7 +90,7 @@ public class DisplayControllerTest {
     surveyService.create(survey);
     Question question = new Question("Numeric Question", "numeric", survey, new Date());
     questionService.create(question);
-    Response response = new Response("test number", "CALL_SID", question, new Date());
+    Response response = new Response("test number", "SESSION_SID", question, new Date());
     responseService.create(response);
 
     HttpResponse<String> stringResponse = null;
@@ -103,12 +105,12 @@ public class DisplayControllerTest {
   }
 
   @Test
-  public void showVoiceResponses() {
+  public void showTextResponses() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
-    Question question = new Question("Voice Question", "voice", survey, new Date());
+    Question question = new Question("Text Question", "text", survey, new Date());
     questionService.create(question);
-    Response response = new Response("http://recording_url", "CALL_SID", question, new Date());
+    Response response = new Response("http://recording_url", "SESSION_SID", question, new Date());
     responseService.create(response);
 
     HttpResponse<String> stringResponse = null;
@@ -128,17 +130,16 @@ public class DisplayControllerTest {
     surveyService.create(survey);
     Question question = new Question("YesNo Question", "yes-no", survey, new Date());
     questionService.create(question);
-    Response response = new Response("0", "CALL_SID", question, new Date());
+    Response response = new Response("0", "SESSION_SID", question, new Date());
     responseService.create(response);
 
     HttpResponse<String> stringResponse = null;
 
     try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
+      stringResponse = Unirest.get("http://localhost:" + port + "/").asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
-
     assertTrue(stringResponse.getBody().contains("(1: YES, 0: NO) Response: 0"));
   }
 }

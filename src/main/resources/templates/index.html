@@ -56,17 +56,17 @@
                         <ol class="list-group">
                             <li class="list-group-item">Answer type: {{type}}</li>
                             <li class="list-group-item">Date: {{date}}</li>
-                            <li class="list-group-item">Call SID: {{callSid}}</li>
+                            <li class="list-group-item">Session SID: {{sessionSid}}</li>
                             <li class="list-group-item">
-                                {{#isVoice}}
-                                <div class="voice-response">
-                                    <span class="voice-response-text">Response:</span>
+                                {{#isText}}
+                                <div class="text-response">
+                                    <span class="text-response-audio">Response:</span>
                                     <audio controls>
                                         <source src="{{response}}" type="audio/mpeg">
                                         Your browser does not support the audio tag.
                                     </audio>
                                 </div>
-                                {{/isVoice}}
+                                {{/isText}}
                                 {{#isNumeric}}
                                 Response: {{response}}
                                 {{/isNumeric}}

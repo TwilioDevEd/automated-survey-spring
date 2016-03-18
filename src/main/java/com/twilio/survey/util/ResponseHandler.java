@@ -21,8 +21,8 @@ public class ResponseHandler {
 
   public Response getResponse() {
     switch (question.getType()) {
-      case "voice":
-        return getVoiceResponse();
+      case "text":
+        return getTextResponse();
       case "numeric":
         return getNumericResponse();
       case "yes-no":
@@ -32,26 +32,26 @@ public class ResponseHandler {
     }
   }
 
-  private Response getVoiceResponse() {
+  private Response getTextResponse() {
     String recordedUrl = request.getParameter("RecordingUrl");
-    String callSid = request.getParameter("CallSid");
-    Response response = new Response(recordedUrl, callSid, question, new Date());
+    String sessionSid = request.getParameter("SessionSid");
+    Response response = new Response(recordedUrl, sessionSid, question, new Date());
 
     return response;
   }
 
   private Response getNumericResponse() {
     String pressedNumber = request.getParameter("Digits");
-    String callSid = request.getParameter("CallSid");
-    Response response = new Response(pressedNumber, callSid, question, new Date());
+    String sessionSid = request.getParameter("SessionSid");
+    Response response = new Response(pressedNumber, sessionSid, question, new Date());
 
     return response;
   }
 
   private Response getYesNoResponse() {
     String pressedNumber = request.getParameter("Digits");
-    String callSid = request.getParameter("CallSid");
-    Response response = new Response(pressedNumber, callSid, question, new Date());
+    String sessionSid = request.getParameter("SessionSid");
+    Response response = new Response(pressedNumber, sessionSid, question, new Date());
 
     return response;
   }

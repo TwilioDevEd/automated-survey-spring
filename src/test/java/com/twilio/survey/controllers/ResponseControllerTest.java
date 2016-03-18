@@ -69,14 +69,14 @@ public class ResponseControllerTest {
   public void saveResponseTest() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
-    Question question = new Question("Question Body", "voice", survey, new Date());
+    Question question = new Question("Question Body", "text", survey, new Date());
     questionService.create(question);
 
     HttpResponse<String> stringResponse = null;
     String requestPath = "http://localhost:" + port + "/save_response?qid=" + question.getId();
     Map<String, Object> params = new HashMap<>();
     params.put("RecordingUrl", "http://recording_url.com");
-    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
+    params.put("SessionSid", "QD&1f1f1h1h1h1j1j1j");
 
     try {
       stringResponse = Unirest.post(requestPath).fields(params).asString();

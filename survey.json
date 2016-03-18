@@ -2,7 +2,7 @@
   "questions": [
     {
       "body": "What is your full name?",
-      "type": "voice"
+      "type": "text"
     },
     {
       "body": "In a scale of 1 to 9, how would you rate the quality of this call?",
@@ -14,11 +14,11 @@
     },
     {
       "body": "What is the model of the phone you own, if you own one?",
-      "type": "voice"
+      "type": "text"
     },
     {
       "body": "Name a Java based framework you know about?",
-      "type": "voice"
+      "type": "text"
     }
   ],
   "title": "Spring"

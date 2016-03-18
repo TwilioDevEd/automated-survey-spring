@@ -41,8 +41,8 @@ public class QuestionHandler {
   public TwiMLResponse getTwilioResponse() {
     TwiMLResponse response = new TwiMLResponse();
     switch (question.getType()) {
-      case "voice":
-        return getVoiceResponse(response);
+      case "text":
+        return getTextResponse(response);
       case "numeric":
         return getNumericResponse(response);
       case "yes-no":
@@ -52,7 +52,7 @@ public class QuestionHandler {
     }
   }
 
-  private TwiMLResponse getVoiceResponse(TwiMLResponse response) {
+  private TwiMLResponse getTextResponse(TwiMLResponse response) {
     String defaultMessage =
         "Record your answer after the beep and press the pound key when you are done.";
     Say say = new Say(defaultMessage);

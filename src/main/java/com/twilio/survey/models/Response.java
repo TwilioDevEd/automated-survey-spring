@@ -14,8 +14,8 @@ public class Response {
   @Column(name = "response")
   private String response;
 
-  @Column(name = "call_sid")
-  private String callSid;
+  @Column(name = "session_sid")
+  private String sessionSid;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "question_id")
@@ -27,8 +27,8 @@ public class Response {
   /**
    * The next three field are necessary for Mustache templating engine
    */
-  @Column(name = "isVoice")
-  private boolean isVoice;
+  @Column(name = "isText")
+  private boolean isText;
 
   @Column(name = "isNumeric")
   private boolean isNumeric;
@@ -38,16 +38,16 @@ public class Response {
 
   public Response() {}
 
-  public Response(String response, String callSid, Question question, Date date) {
+  public Response(String response, String sessionSid, Question question, Date date) {
     this.response = response;
-    this.callSid = callSid;
+    this.sessionSid = sessionSid;
     this.question = question;
     this.date = date;
-    this.isVoice = false;
+    this.isText = false;
     this.isNumeric = false;
     this.isYesNo = false;
-    if (question.getType().compareTo("voice") == 0) {
-      this.isVoice = true;
+    if (question.getType().compareTo("text") == 0) {
+      this.isText = true;
     } else if (question.getType().compareTo("numeric") == 0) {
       this.isNumeric = true;
     } else if (question.getType().compareTo("yes-no") == 0) {
@@ -71,12 +71,12 @@ public class Response {
     this.response = response;
   }
 
-  public String getCallSid() {
-    return callSid;
+  public String getSessionSid() {
+    return sessionSid;
   }
 
-  public void setCallSid(String callSid) {
-    this.callSid = callSid;
+  public void setSessionSid(String sessionSid) {
+    this.sessionSid = sessionSid;
   }
 
   public Question getQuestion() {
@@ -95,12 +95,12 @@ public class Response {
     this.date = date;
   }
 
-  public boolean isVoice() {
-    return isVoice;
+  public boolean isText() {
+    return isText;
   }
 
-  public void setIsVoice(boolean isVoice) {
-    this.isVoice = isVoice;
+  public void setIsText(boolean isText) {
+    this.isText = isText;
   }
 
   public boolean isNumeric() {
