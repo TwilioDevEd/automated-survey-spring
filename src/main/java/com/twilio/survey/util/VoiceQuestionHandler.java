@@ -7,10 +7,10 @@ import com.twilio.survey.models.Question;
  * Class responsible of returning the appropriate TwiMLResponse based on the question
  * it receives
  */
-public class QuestionHandler {
+public class VoiceQuestionHandler {
   Question question;
 
-  public QuestionHandler(Question question) {
+  public VoiceQuestionHandler(Question question) {
     this.question = question;
   }
 

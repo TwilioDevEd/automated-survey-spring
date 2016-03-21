@@ -5,7 +5,7 @@ import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
-import com.twilio.survey.util.QuestionHandler;
+import com.twilio.survey.util.VoiceQuestionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +52,7 @@ public class QuestionController {
       }
     } else {
       try {
-        response.getWriter().print(QuestionHandler.getHangupResponse().toEscapedXML());
+        response.getWriter().print(VoiceQuestionHandler.getHangupResponse().toEscapedXML());
       } catch (IOException e) {
         System.out.println("Couldn't write Twilio's response to XML");
       }
@@ -62,8 +62,8 @@ public class QuestionController {
 
   private TwiMLResponse getQuestionResponse(List<Question> questions, int questionNumber) {
     Question currentQuestion = questions.get(questionNumber - 1);
-    QuestionHandler questionHandler = new QuestionHandler(currentQuestion);
-    TwiMLResponse twiml = questionHandler.getTwilioResponse();
+    VoiceQuestionHandler voiceQuestionHandler = new VoiceQuestionHandler(currentQuestion);
+    TwiMLResponse twiml = voiceQuestionHandler.getTwilioResponse();
 
     return twiml;
   }
