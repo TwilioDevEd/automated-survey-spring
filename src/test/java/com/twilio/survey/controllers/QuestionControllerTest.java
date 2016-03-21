@@ -4,7 +4,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
-import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.SurveyRepository;

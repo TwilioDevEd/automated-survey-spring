@@ -54,14 +54,16 @@ public class VoiceQuestionHandler {
 
   private TwiMLResponse getTextResponse(TwiMLResponse response) {
     String defaultMessage =
-        "Record your answer after the beep and press the pound key when you are done.";
+        "Record your answer after the beep.";
     Say say = new Say(defaultMessage);
     Say questionSay = new Say(question.getBody());
     Pause pause = new Pause();
     Record record = new Record();
     record.setAction("/save_response?qid=" + question.getId());
     record.setMethod("POST");
-    record.setFinishOnKey("#");
+    record.setTranscribe(true);
+    record.setTranscribeCallback("/save_response?qid=" + question.getId());
+    record.setMaxLength(60);
 
     try {
       response.append(say);

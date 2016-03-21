@@ -118,4 +118,8 @@ public class Response {
   public void setIsYesNo(boolean isYesNo) {
     this.isYesNo = isYesNo;
   }
+
+  public boolean isRecording(){
+    return this.getResponse().contains("/Recordings/") && this.getResponse().startsWith("https");
+  }
 }

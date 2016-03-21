@@ -33,16 +33,19 @@ public class ResponseHandler {
   }
 
   private Response getTextResponse() {
-    String recordedUrl = request.getParameter("RecordingUrl");
-    String sessionSid = request.getParameter("SessionSid");
-    Response response = new Response(recordedUrl, sessionSid, question, new Date());
+    String text = request.getParameter("TranscriptionText");
+    if(text == null){
+      text = request.getParameter("RecordingUrl");
+    }
+    String sessionSid = request.getParameter("CallSid");
+    Response response = new Response(text, sessionSid, question, new Date());
 
     return response;
   }
 
   private Response getNumericResponse() {
     String pressedNumber = request.getParameter("Digits");
-    String sessionSid = request.getParameter("SessionSid");
+    String sessionSid = request.getParameter("CallSid");
     Response response = new Response(pressedNumber, sessionSid, question, new Date());
 
     return response;
@@ -50,7 +53,7 @@ public class ResponseHandler {
 
   private Response getYesNoResponse() {
     String pressedNumber = request.getParameter("Digits");
-    String sessionSid = request.getParameter("SessionSid");
+    String sessionSid = request.getParameter("CallSid");
     Response response = new Response(pressedNumber, sessionSid, question, new Date());
 
     return response;

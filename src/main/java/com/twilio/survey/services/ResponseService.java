@@ -1,5 +1,6 @@
 package com.twilio.survey.services;
 
+import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Response;
 import com.twilio.survey.repositories.ResponseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +40,7 @@ public class ResponseService {
   public Response find(Long id) {
     return responseRepository.findOne(id);
   }
+
+  public Response getBySessionSidAndQuestion(String sessionSid, Question question){
+    return responseRepository.getBySessionSidAndQuestion(sessionSid, question);}
 }

@@ -52,6 +52,11 @@ public class ResponseController {
     ResponseHandler responseHandler = new ResponseHandler(currentQuestion, request);
 
     Response questionResponse = responseHandler.getResponse();
+    Response previousResponse = responseService.getBySessionSidAndQuestion(questionResponse.getSessionSid(), currentQuestion);
+    if(previousResponse!=null){
+      // it's already answered. That's an update from Twilio API (Transcriptions, for instance)
+      questionResponse.setId(previousResponse.getId());
+    }
 
     /** creates the question response on the db */
     responseService.create(questionResponse);

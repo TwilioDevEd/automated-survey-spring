@@ -66,7 +66,7 @@ public class ResponseControllerTest {
   }
 
   @Test
-  public void saveResponseTest() {
+  public void saveTextWhenTranscriptionSucceedTest() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
     Question question = new Question("Question Body", "text", survey, new Date());
@@ -76,9 +76,43 @@ public class ResponseControllerTest {
     String requestPath = "http://localhost:" + port + "/save_response?qid=" + question.getId();
     Map<String, Object> params = new HashMap<>();
     params.put("RecordingUrl", "http://recording_url.com");
-    params.put("SessionSid", "QD&1f1f1h1h1h1j1j1j");
+
+
+    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
 
     try {
+      stringResponse = Unirest.post(requestPath).fields(params).asString();
+      // Transcription callback is called with TranscriptionText
+      params.put("TranscriptionText", "My name is Answer");
+      stringResponse = Unirest.post(requestPath).fields(params).asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
+    }
+    assertThat(responseService.count(), is(1L));
+    assertThat(responseService.findAll().get(0).getResponse(), is("My name is Answer"));
+    assertTrue(stringResponse.getBody().contains("Tank you for taking the"));
+    assertTrue(stringResponse.getBody().contains("Hangup"));
+  }
+
+  @Test
+  public void saveRecordWhenTranscriptionFailsTest() {
+    Survey survey = new Survey("New Title Survey", new Date());
+    surveyService.create(survey);
+    Question question = new Question("Question Body", "text", survey, new Date());
+    questionService.create(question);
+
+    HttpResponse<String> stringResponse = null;
+    String requestPath = "http://localhost:" + port + "/save_response?qid=" + question.getId();
+    Map<String, Object> params = new HashMap<>();
+    params.put("RecordingUrl", "http://recording_url.com");
+
+
+    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
+
+    try {
+      stringResponse = Unirest.post(requestPath).fields(params).asString();
+      // Transcription callback is called with TranscriptionText
+      params.put("TranscriptionStatus", "failed");
       stringResponse = Unirest.post(requestPath).fields(params).asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");

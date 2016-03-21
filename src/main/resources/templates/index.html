@@ -60,11 +60,16 @@
                             <li class="list-group-item">
                                 {{#isText}}
                                 <div class="text-response">
+                                    {{#isRecording}}
                                     <span class="text-response-audio">Response:</span>
                                     <audio controls>
                                         <source src="{{response}}" type="audio/mpeg">
                                         Your browser does not support the audio tag.
                                     </audio>
+                                    {{/isRecording}}
+                                    {{^isRecording}}
+                                    <p>Response: {{response}}</p>
+                                    {{/isRecording}}
                                 </div>
                                 {{/isText}}
                                 {{#isNumeric}}
