@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
@@ -56,6 +58,24 @@ public class SurveyControllerTest {
       System.out.println("Unable to create request");
     }
     assertTrue(stringResponse.getBody().contains("New Title Survey"));
+    assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
+  }
+
+  @Test
+  public void getFirstSurveyAsSMS() {
+    Survey survey = new Survey("New Title Survey", new Date());
+    surveyService.create(survey);
+
+    HttpResponse<String> stringResponse = null;
+    Map<String, Object> params = new HashMap<>();
+    params.put("MessageSid", "SMS225345");
+    try {
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey").queryString(params).asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
+    }
+    System.err.println(stringResponse.getBody());
+    assertTrue(stringResponse.getBody().contains("<Message>Welcome to the New Title Survey survey</Message>"));
     assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
   }
 
