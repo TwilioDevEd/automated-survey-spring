@@ -27,39 +27,24 @@ public class SurveyController {
    * and redirects to the first question of that survey
    */
   @RequestMapping(value = "/survey", method = RequestMethod.GET)
-  public void welcome(HttpServletRequest request, HttpServletResponse response) {
+  public void welcome(HttpServletRequest request, HttpServletResponse response) throws Exception {
     this.surveyService = new SurveyService(surveyRepository);
-    boolean sms = request.getParameter("MessageSid")!=null;
+    boolean isSms = request.getParameter("MessageSid")!=null;
 
-    Survey lastSurvey;
-    try {
-      lastSurvey = surveyService.findLast();
-    } catch (IndexOutOfBoundsException e) {
-      lastSurvey = null;
-    }
+    Survey lastSurvey = surveyService.findLast();
 
     if (lastSurvey != null) {
-      try {
-        HttpSession session = request.getSession(true);
-        if (session.getAttribute("questionId") == null) {
-          response.getWriter().print(getFirstQuestionRedirect(lastSurvey, sms).toEscapedXML());
-        }else{
-          Long questionId = (Long) session.getAttribute("questionId");
-          TwiMLResponse twiml = new TwiMLResponse();
-          twiml.append(new Redirect("/save_response?qid=" + questionId));
-          response.getWriter().print(twiml.toEscapedXML());
-        }
-      } catch (IOException e) {
-        System.out.println("Couldn't write Twilio's response to XML");
-      } catch (TwiMLException e) {
-        System.out.println("Couldn't write Twilio's response to XML");
+      HttpSession session = request.getSession(true);
+      if (session.getAttribute("questionId") == null) {
+        response.getWriter().print(getFirstQuestionRedirect(lastSurvey, isSms).toEscapedXML());
+      }else{
+        Long questionId = (Long) session.getAttribute("questionId");
+        TwiMLResponse twiml = new TwiMLResponse();
+        twiml.append(new Redirect("/save_response?qid=" + questionId));
+        response.getWriter().print(twiml.toEscapedXML());
       }
     } else {
-      try {
-        response.getWriter().print(getHangupResponse(sms).toEscapedXML());
-      } catch (IOException e) {
-        System.out.println("Couldn't write Twilio's response to XML");
-      }
+      response.getWriter().print(getHangupResponse(isSms).toEscapedXML());
     }
     response.setContentType("application/xml");
   }
@@ -68,26 +53,23 @@ public class SurveyController {
    * Creates the TwiMLResponse for the first question of the survey
    *
    * @param survey Survey entity
-   * @param sms
+   * @param isSms
    * @return TwiMLResponse
    */
-  private TwiMLResponse getFirstQuestionRedirect(Survey survey, boolean sms) {
+  private TwiMLResponse getFirstQuestionRedirect(Survey survey, boolean isSms) throws Exception{
     TwiMLResponse twiml = new TwiMLResponse();
     String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
     Verb welcomeVerb;
-    if(!sms) {
+    if(!isSms) {
       welcomeVerb = new Say(welcomeMessage);
     }else{
       welcomeVerb = new Message(welcomeMessage);
     }
     Redirect redirect = new Redirect("/question?survey=" + survey.getId() + "&question=1");
     redirect.setMethod("GET");
-    try {
-      twiml.append(welcomeVerb);
-      twiml.append(redirect);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or redirect to Twilio's response");
-    }
+
+    twiml.append(welcomeVerb);
+    twiml.append(redirect);
 
     return twiml;
   }
@@ -97,22 +79,16 @@ public class SurveyController {
    *
    * @return TwiMLResponse
    */
-  private TwiMLResponse getHangupResponse(boolean sms) {
+  private TwiMLResponse getHangupResponse(boolean isSms) throws Exception{
     String errorMessage = "We are sorry, there are no surveys available. Good bye.";
 
     TwiMLResponse twiml = new TwiMLResponse();
-     try {
-      if (!sms){
+      if (!isSms){
         twiml.append(new Say(errorMessage));
         twiml.append(new Hangup());
       }else{
         twiml.append(new Message(errorMessage));
       }
-
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or redirect to Twilio's response");
-    }
-
     return twiml;
   }
 }

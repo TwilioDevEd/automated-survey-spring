@@ -42,8 +42,9 @@ public class SurveyService {
     return surveyRepository.findOne(id);
   }
 
-  public Survey findLast() throws IndexOutOfBoundsException {
-    return surveyRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0);
+  public Survey findLast() {
+    List<Survey> surveys =  surveyRepository.findAll(new Sort(Sort.Direction.DESC, "id"));
+    return surveys.isEmpty()? null: surveys.get(0);
   }
 
   public List<Question> findSurveyQuestions(Survey survey) {

@@ -13,13 +13,18 @@ import java.util.Date;
 public class ResponseHandler {
   Question question;
   HttpServletRequest request;
+  boolean sms;
 
   public ResponseHandler(Question question, HttpServletRequest request) {
     this.question = question;
     this.request = request;
+    this.sms = request.getParameter("MessageSid")!=null;
   }
 
   public Response getResponse() {
+    if(this.sms){
+      return getSMSResponse();
+    }
     switch (question.getType()) {
       case "text":
         return getTextResponse();
@@ -30,6 +35,13 @@ public class ResponseHandler {
       default:
         return new Response();
     }
+  }
+
+  private Response getSMSResponse() {
+    String text = request.getParameter("Body");
+    String sessionSid = request.getParameter("MessageSid");
+    Response response = new Response(text, sessionSid, question, new Date());
+    return response;
   }
 
   private Response getTextResponse() {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -77,21 +78,33 @@ public class ResponseController {
         System.out.println("Couldn't append redirect to Twilio's response");
       }
     } else {
-      Say say = new Say("Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
-      Hangup hangup = new Hangup();
-      try {
-        twiml.append(say);
-        twiml.append(hangup);
-      } catch (TwiMLException e) {
-        System.out.println("Couldn't append redirect to Twilio's response");
-      }
+      this.appendLastMessage(request, twiml, "Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
     }
     try {
-      System.out.println();
       response.getWriter().print(twiml.toEscapedXML());
     } catch (IOException e) {
       System.out.println("Couldn't write Twilio's response to XML");
     }
     response.setContentType("application/xml");
+  }
+  
+  private void appendLastMessage(HttpServletRequest request, TwiMLResponse response, String lastMessage){
+    boolean sms = request.getParameter("MessageSid")!=null;
+    List<Verb> verbs = new LinkedList<Verb>();
+    if(sms){
+      verbs.add(new Message(lastMessage));
+    }else{
+      verbs.add(new Say(lastMessage));
+      verbs.add(new Hangup());
+    }
+    
+    try {
+      for (Verb verb: verbs) {
+        response.append(verb);
+      }
+    } catch (TwiMLException e) {
+      System.out.println("Couldn't append redirect to Twilio's response");
+    }
+    
   }
 }

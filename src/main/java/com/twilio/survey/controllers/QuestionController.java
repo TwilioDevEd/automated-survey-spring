@@ -5,6 +5,7 @@ import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
+import com.twilio.survey.util.QuestionHandler;
 import com.twilio.survey.util.SMSQuestionHandler;
 import com.twilio.survey.util.VoiceQuestionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class QuestionController {
 
     Long surveyId = null;
     int questionNumber = 0;
-    boolean sms = request.getParameter("MessageSid")!=null;
+
 
     try {
       surveyId = Long.parseLong(request.getParameter("survey"));
@@ -53,7 +54,8 @@ public class QuestionController {
         Question currentQuestion = questions.get(questionNumber - 1);
         HttpSession session = request.getSession(true);
         session.setAttribute("questionId", currentQuestion.getId());
-        response.getWriter().print(getQuestionResponse(currentQuestion, sms).toEscapedXML());
+        QuestionHandler handler = this.getQuestionHandler(currentQuestion, request);
+        response.getWriter().print(handler.getTwilioResponse().toEscapedXML());
       } catch (IOException e) {
         System.out.println("Couldn't write Twilio's response to XML");
       }
@@ -67,16 +69,16 @@ public class QuestionController {
     response.setContentType("application/xml");
   }
 
-  private TwiMLResponse getQuestionResponse(Question currentQuestion, boolean sms) {
+  private QuestionHandler getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
     TwiMLResponse twiml = null;
-    if (!sms) {
-      VoiceQuestionHandler voiceQuestionHandler = new VoiceQuestionHandler(currentQuestion);
-      twiml = voiceQuestionHandler.getTwilioResponse();
+    QuestionHandler questionHandler;
+
+    if (request.getParameter("MessageSid")==null) {
+      questionHandler = new VoiceQuestionHandler(currentQuestion);
     }else{
-      SMSQuestionHandler smsQuestionHandler = new SMSQuestionHandler(currentQuestion);
-      twiml = smsQuestionHandler.getTwilioResponse();
+      questionHandler = new SMSQuestionHandler(currentQuestion);
     }
 
-    return twiml;
+    return questionHandler;
   }
 }
