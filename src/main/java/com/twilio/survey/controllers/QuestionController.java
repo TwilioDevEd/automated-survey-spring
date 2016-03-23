@@ -70,7 +70,6 @@ public class QuestionController {
   }
 
   private QuestionHandler getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
-    TwiMLResponse twiml = null;
     QuestionHandler questionHandler;
 
     if (request.getParameter("MessageSid")==null) {

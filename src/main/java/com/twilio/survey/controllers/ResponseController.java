@@ -36,7 +36,7 @@ public class ResponseController {
    * if one is available.
    */
   @RequestMapping(value = "/save_response", method = RequestMethod.POST)
-  public void readQuestion(HttpServletRequest request, HttpServletResponse response) {
+  public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception{
     this.questionService = new QuestionService(questionRepository);
     this.responseService = new ResponseService(responseRepository);
 
@@ -52,7 +52,31 @@ public class ResponseController {
 
     ResponseHandler responseHandler = new ResponseHandler(currentQuestion, request);
 
-    Response questionResponse = responseHandler.getResponse();
+    persistResponse(responseHandler.getResponse());
+    Survey survey = currentQuestion.getSurvey();
+    List<Question> questions = survey.getQuestions();
+
+    TwiMLResponse twiml = new TwiMLResponse();
+
+    if (currentQuestion.hasNext()) {
+      redirectToNextQuestion(currentQuestion, survey, questions, twiml);
+    } else {
+      this.appendLastMessage(request, twiml, "Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
+    }
+    response.getWriter().print(twiml.toEscapedXML());
+    response.setContentType("application/xml");
+  }
+
+  private void redirectToNextQuestion(Question currentQuestion, Survey survey, List<Question> questions, TwiMLResponse twiml) throws TwiMLException {
+    int nextQuestionNumber = questions.indexOf(currentQuestion) + 2;
+    Redirect redirect =
+            new Redirect("/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber);
+    redirect.setMethod("GET");
+    twiml.append(redirect);
+  }
+
+  private void persistResponse(Response questionResponse) {
+    Question currentQuestion = questionResponse.getQuestion();
     Response previousResponse = responseService.getBySessionSidAndQuestion(questionResponse.getSessionSid(), currentQuestion);
     if(previousResponse!=null){
       // it's already answered. That's an update from Twilio API (Transcriptions, for instance)
@@ -61,33 +85,13 @@ public class ResponseController {
 
     /** creates the question response on the db */
     responseService.create(questionResponse);
-    Survey survey = currentQuestion.getSurvey();
-    List<Question> questions = survey.getQuestions();
-    int questionIndex = questions.indexOf(currentQuestion);
-    TwiMLResponse twiml = new TwiMLResponse();
-
-    /** if there is another question for this survey, redirect to that question */
-    if (questionIndex < questions.size() - 1) {
-      int nextQuestionNumber = questionIndex + 2;
-      Redirect redirect =
-          new Redirect("/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber);
-      redirect.setMethod("GET");
-      try {
-        twiml.append(redirect);
-      } catch (TwiMLException e) {
-        System.out.println("Couldn't append redirect to Twilio's response");
-      }
-    } else {
-      this.appendLastMessage(request, twiml, "Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
-    }
-    try {
-      response.getWriter().print(twiml.toEscapedXML());
-    } catch (IOException e) {
-      System.out.println("Couldn't write Twilio's response to XML");
-    }
-    response.setContentType("application/xml");
   }
-  
+
+  private boolean hasNextQuestion(List<Question> questions, Question currentQuestion) {
+    int questionIndex = questions.indexOf(currentQuestion);
+    return questionIndex < questions.size() - 1;
+  }
+
   private void appendLastMessage(HttpServletRequest request, TwiMLResponse response, String lastMessage){
     boolean sms = request.getParameter("MessageSid")!=null;
     List<Verb> verbs = new LinkedList<Verb>();
