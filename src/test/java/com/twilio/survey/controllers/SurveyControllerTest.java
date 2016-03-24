@@ -47,13 +47,13 @@ public class SurveyControllerTest {
   }
 
   @Test
-  public void getFirstSurvey() {
+  public void getFirstSurveyOnCall() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
 
     HttpResponse<String> stringResponse = null;
     try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey/call").asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
@@ -62,7 +62,7 @@ public class SurveyControllerTest {
   }
 
   @Test
-  public void getFirstSurveyAsSMS() {
+  public void getFirstSurveyOnSMS() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
 
@@ -70,7 +70,7 @@ public class SurveyControllerTest {
     Map<String, Object> params = new HashMap<>();
     params.put("MessageSid", "SMS225345");
     try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey").queryString(params).asString();
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey/sms").queryString(params).asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
@@ -80,10 +80,10 @@ public class SurveyControllerTest {
   }
 
   @Test
-  public void getHangupOnNoSurvey() {
+  public void getHangupOnNoSurveyCall() {
     HttpResponse<String> stringResponse = null;
     try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey").asString();
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey/call").asString();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }

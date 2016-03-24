@@ -23,11 +23,38 @@ public class SurveyController {
   public SurveyController() {}
 
   /**
+   * End point for voice calls that always returns the last survey inserted in the db
+   * and redirects to the first question of that survey
+   */
+  @RequestMapping(value = "/survey/call", method = RequestMethod.GET)
+  public void welcomeCall(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    this.surveyService = new SurveyService(surveyRepository);
+    boolean isSms = request.getParameter("MessageSid")!=null;
+
+    Survey lastSurvey = surveyService.findLast();
+
+    if (lastSurvey != null) {
+      HttpSession session = request.getSession(true);
+      if (session.getAttribute("questionId") == null) {
+        response.getWriter().print(getFirstQuestionRedirect(lastSurvey, isSms).toEscapedXML());
+      }else{
+        Long questionId = (Long) session.getAttribute("questionId");
+        TwiMLResponse twiml = new TwiMLResponse();
+        twiml.append(new Redirect("/save_response?qid=" + questionId));
+        response.getWriter().print(twiml.toEscapedXML());
+      }
+    } else {
+      response.getWriter().print(getHangupResponse(isSms).toEscapedXML());
+    }
+    response.setContentType("application/xml");
+  }
+
+  /**
    * End point that always returns the last survey inserted in the db
    * and redirects to the first question of that survey
    */
-  @RequestMapping(value = "/survey", method = RequestMethod.GET)
-  public void welcome(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  @RequestMapping(value = "/survey/sms", method = RequestMethod.GET)
+  public void welcomeSMS(HttpServletRequest request, HttpServletResponse response) throws Exception {
     this.surveyService = new SurveyService(surveyRepository);
     boolean isSms = request.getParameter("MessageSid")!=null;
 
@@ -75,7 +102,9 @@ public class SurveyController {
   }
 
   /**
-   * Creates a TwiMLResponse for Hangup if no surveys are found on the database
+   * Creates a TwiMLResponse if no surveys are found on the database
+   * For SMS, it's just a message
+   * For Voice it should also send a Hangup to the ongoing call
    *
    * @return TwiMLResponse
    */

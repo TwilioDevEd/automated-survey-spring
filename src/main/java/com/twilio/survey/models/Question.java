@@ -86,7 +86,6 @@ public class Question {
   }
 
   public Question next() {
-    Survey survey = getSurvey();
     List<Question> questions = survey.getQuestions();
     int currentIndex = questions.indexOf(this);
     return (currentIndex<(questions.size()-1))? questions.get(questions.indexOf(this) + 1) : null;

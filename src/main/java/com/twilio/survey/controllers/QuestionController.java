@@ -31,40 +31,26 @@ public class QuestionController {
    * End point that returns the appropriate question response based on the parameters it receives
    */
   @RequestMapping(value = "/question", method = RequestMethod.GET)
-  public void readQuestion(HttpServletRequest request, HttpServletResponse response) {
+  public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
     this.surveyService = new SurveyService(surveyRepository);
-
     Long surveyId = null;
     int questionNumber = 0;
 
-
-    try {
-      surveyId = Long.parseLong(request.getParameter("survey"));
-      questionNumber = Integer.parseInt(request.getParameter("question"));
-    } catch (NumberFormatException e) {
-      System.out.println("Numbers wrongly formatted, unable to parse");
-    }
+    surveyId = Long.parseLong(request.getParameter("survey"));
+    questionNumber = Integer.parseInt(request.getParameter("question"));
 
     Survey survey = surveyService.find(surveyId);
     List<Question> questions = survey.getQuestions();
 
 
     if (questionNumber <= questions.size()) {
-      try {
-        Question currentQuestion = questions.get(questionNumber - 1);
-        HttpSession session = request.getSession(true);
-        session.setAttribute("questionId", currentQuestion.getId());
-        QuestionHandler handler = this.getQuestionHandler(currentQuestion, request);
-        response.getWriter().print(handler.getTwilioResponse().toEscapedXML());
-      } catch (IOException e) {
-        System.out.println("Couldn't write Twilio's response to XML");
-      }
+      Question currentQuestion = questions.get(questionNumber - 1);
+      HttpSession session = request.getSession(true);
+      session.setAttribute("questionId", currentQuestion.getId());
+      QuestionHandler handler = this.getQuestionHandler(currentQuestion, request);
+      response.getWriter().print(handler.getTwilioResponse().toEscapedXML());
     } else {
-      try {
-        response.getWriter().print(VoiceQuestionHandler.getHangupResponse().toEscapedXML());
-      } catch (IOException e) {
-        System.out.println("Couldn't write Twilio's response to XML");
-      }
+      response.getWriter().print(VoiceQuestionHandler.getHangupResponse().toEscapedXML());
     }
     response.setContentType("application/xml");
   }

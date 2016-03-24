@@ -67,10 +67,9 @@ public class ResponseController {
     response.setContentType("application/xml");
   }
 
-  private void redirectToNextQuestion(Question currentQuestion, Survey survey, List<Question> questions, TwiMLResponse twiml) throws TwiMLException {
-    int nextQuestionNumber = questions.indexOf(currentQuestion) + 2;
+  private void redirectToNextQuestion(Question nextQuestion, Survey survey, List<Question> questions, TwiMLResponse twiml) throws TwiMLException {
     Redirect redirect =
-            new Redirect("/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber);
+            new Redirect("/question?survey=" + survey.getId() + "&qid=" + nextQuestion.getId());
     redirect.setMethod("GET");
     twiml.append(redirect);
   }
