@@ -33,37 +33,30 @@ public class QuestionController {
   @RequestMapping(value = "/question", method = RequestMethod.GET)
   public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
     this.surveyService = new SurveyService(surveyRepository);
-    Long surveyId = null;
-    int questionNumber = 0;
+    Survey survey = surveyService.find(Long.parseLong(request.getParameter("survey")));
 
-    surveyId = Long.parseLong(request.getParameter("survey"));
-    questionNumber = Integer.parseInt(request.getParameter("question"));
+    int questionNumber = Integer.parseInt(request.getParameter("question"));
 
-    Survey survey = surveyService.find(surveyId);
-    List<Question> questions = survey.getQuestions();
-
-
-    if (questionNumber <= questions.size()) {
-      Question currentQuestion = questions.get(questionNumber - 1);
-      HttpSession session = request.getSession(true);
-      session.setAttribute("questionId", currentQuestion.getId());
-      QuestionHandler handler = this.getQuestionHandler(currentQuestion, request);
-      response.getWriter().print(handler.getTwilioResponse().toEscapedXML());
+    if (survey.isValidQuestionNumber(questionNumber)) {
+      Question currentQuestion = survey.getQuestionByNumber(questionNumber);
+      response.getWriter().print(getQuestionHandler(currentQuestion, request).getTwilioResponse());
     } else {
-      response.getWriter().print(VoiceQuestionHandler.getHangupResponse().toEscapedXML());
+      response.getWriter().print(VoiceQuestionHandler.getHangupResponse());
     }
     response.setContentType("application/xml");
   }
 
+  private void createSessionForQuestion(HttpServletRequest request, Question currentQuestion) {
+    HttpSession session = request.getSession(true);
+    session.setAttribute("questionId", currentQuestion.getId());
+  }
+
   private QuestionHandler getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
-    QuestionHandler questionHandler;
-
     if (request.getParameter("MessageSid")==null) {
-      questionHandler = new VoiceQuestionHandler(currentQuestion);
+      createSessionForQuestion(request, currentQuestion);
+      return new VoiceQuestionHandler(currentQuestion);
     }else{
-      questionHandler = new SMSQuestionHandler(currentQuestion);
+      return new SMSQuestionHandler(currentQuestion);
     }
-
-    return questionHandler;
   }
 }

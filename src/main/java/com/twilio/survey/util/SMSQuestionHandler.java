@@ -36,7 +36,7 @@ public class SMSQuestionHandler implements QuestionHandler{
    * Bases on the question's type, a specific method is called. This method will construct
    * the specific TwiMLResponse
    */
-  public TwiMLResponse getTwilioResponse() {
+  public String getTwilioResponse() throws TwiMLException{
     TwiMLResponse response = new TwiMLResponse();
     switch (question.getType()) {
       case "text":
@@ -46,47 +46,23 @@ public class SMSQuestionHandler implements QuestionHandler{
       case "yes-no":
         return getYesNoResponse(response);
       default:
-        return response;
+        return response.toEscapedXML();
     }
   }
 
-  private TwiMLResponse getTextResponse(TwiMLResponse response) {
-    Message questionMessage = new Message(question.getBody());
-
-    try {
-      response.append(questionMessage);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or record to Twilio's response");
-    }
-    System.out.println(response.toEscapedXML());
-    return response;
+  private String getTextResponse(TwiMLResponse response) throws TwiMLException{
+    return response.append(new Message(question.getBody())).toEscapedXML();
   }
 
-  private TwiMLResponse getNumericResponse(TwiMLResponse response) {
+  private String getNumericResponse(TwiMLResponse response) throws TwiMLException{
     String questionInstructions =
         "For the next question, please answer with a number. " + question.getBody();
-    Message message = new Message(questionInstructions);
-
-    try {
-      response.append(message);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or gather to Twilio's response");
-    }
-    System.out.println(response.toEscapedXML());
-    return response;
+    return response.append(new Message(questionInstructions)).toEscapedXML();
   }
 
-  private TwiMLResponse getYesNoResponse(TwiMLResponse response) {
+  private String getYesNoResponse(TwiMLResponse response) throws TwiMLException{
     String questionInstructions =
         "For the next question, type 1 for yes, and 0 for no. " + question.getBody();
-    Message message = new Message(questionInstructions);
-
-    try {
-      response.append(message);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or gather to Twilio's response");
-    }
-    System.out.println(response.toEscapedXML());
-    return response;
+    return response.append(new Message(questionInstructions)).toEscapedXML();
   }
 }

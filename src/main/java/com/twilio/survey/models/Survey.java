@@ -54,6 +54,10 @@ public class Survey {
     return questions;
   }
 
+  public Question getQuestionByNumber(int number) { return questions.get(number); }
+
+  public boolean isValidQuestionNumber(int number) { return number>0 && number<questions.size();}
+
   public void setQuestions(List<Question> questions) {
     this.questions = questions;
   }

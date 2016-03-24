@@ -17,7 +17,7 @@ public class VoiceQuestionHandler implements QuestionHandler{
   /**
    * Static method that returns a generic TwiMLResponse when an non existent question is requested
    */
-  public static TwiMLResponse getHangupResponse() {
+  public static String getHangupResponse() {
     String errorMessage =
         "We are sorry, there are no more questions available for this survey. Good bye.";
 
@@ -31,14 +31,14 @@ public class VoiceQuestionHandler implements QuestionHandler{
       System.out.println("Couldn't append say or redirect to Twilio's response");
     }
 
-    return twiml;
+    return twiml.toEscapedXML();
   }
 
   /**
    * Bases on the question's type, a specific method is called. This method will construct
    * the specific TwiMLResponse
    */
-  public TwiMLResponse getTwilioResponse() {
+  public String getTwilioResponse() throws TwiMLException{
     TwiMLResponse response = new TwiMLResponse();
     switch (question.getType()) {
       case "text":
@@ -48,11 +48,11 @@ public class VoiceQuestionHandler implements QuestionHandler{
       case "yes-no":
         return getYesNoResponse(response);
       default:
-        return response;
+        return response.toEscapedXML();
     }
   }
 
-  private TwiMLResponse getTextResponse(TwiMLResponse response) {
+  private String getTextResponse(TwiMLResponse response) {
     String defaultMessage =
         "Record your answer after the beep.";
     Say say = new Say(defaultMessage);
@@ -74,10 +74,10 @@ public class VoiceQuestionHandler implements QuestionHandler{
       System.out.println("Couldn't append say or record to Twilio's response");
     }
     System.out.println(response.toEscapedXML());
-    return response;
+    return response.toEscapedXML();
   }
 
-  private TwiMLResponse getNumericResponse(TwiMLResponse response) {
+  private String getNumericResponse(TwiMLResponse response) {
     String defaultMessage =
         "For the next question select a number with the dial pad and then press the pound key";
     Say say = new Say(defaultMessage);
@@ -97,10 +97,10 @@ public class VoiceQuestionHandler implements QuestionHandler{
       System.out.println("Couldn't append say or gather to Twilio's response");
     }
     System.out.println(response.toEscapedXML());
-    return response;
+    return response.toEscapedXML();
   }
 
-  private TwiMLResponse getYesNoResponse(TwiMLResponse response) {
+  private String getYesNoResponse(TwiMLResponse response) {
     String defaultMessage =
         "For the next question, press 1 for yes, and 0 for no. Then press the pound key.";
     Say say = new Say(defaultMessage);
@@ -120,6 +120,6 @@ public class VoiceQuestionHandler implements QuestionHandler{
       System.out.println("Couldn't append say or gather to Twilio's response");
     }
     System.out.println(response.toEscapedXML());
-    return response;
+    return response.toEscapedXML();
   }
 }
