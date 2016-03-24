@@ -54,9 +54,9 @@ public class Survey {
     return questions;
   }
 
-  public Question getQuestionByNumber(int number) { return questions.get(number); }
+  public Question getQuestionByNumber(int number) { return isValidQuestionNumber(number)? questions.get(number-1):null; }
 
-  public boolean isValidQuestionNumber(int number) { return number>0 && number<questions.size();}
+  public boolean isValidQuestionNumber(int number) { return number>0 && number<=questions.size();}
 
   public void setQuestions(List<Question> questions) {
     this.questions = questions;

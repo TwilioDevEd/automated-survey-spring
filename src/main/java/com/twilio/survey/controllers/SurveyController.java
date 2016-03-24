@@ -116,6 +116,10 @@ public class SurveyController {
         twiml.append(new Hangup());
       }else{
         twiml.append(new Message(errorMessage));
+        HttpSession session = request.getSession(false);
+        if(session!=null){
+          session.invalidate();
+        }
       }
     return twiml.toEscapedXML();
   }

@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
+import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.SurveyRepository;
@@ -21,6 +22,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -55,7 +58,7 @@ public class QuestionControllerTest {
   }
 
   @Test
-  public void getNoQuestionTest() {
+  public void getNoQuestionCallTest() {
     Survey survey1 = new Survey("New Title Question", new Date());
     surveyService.create(survey1);
 
@@ -67,7 +70,51 @@ public class QuestionControllerTest {
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
+
     assertTrue(stringResponse.getBody().contains(
-        "We are sorry, there are no more questions available for this survey. Good bye."));
+        "<Say>We are sorry, there are no more questions available for this survey. Good bye.</Say>"));
+  }
+
+  @Test
+  public void getNoQuestionSMSTest() {
+    Survey survey1 = new Survey("New Title Question", new Date());
+    surveyService.create(survey1);
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("MessageSid", "SMS225345");
+
+    HttpResponse<String> stringResponse = null;
+    String requestPath =
+            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+    try {
+      stringResponse = Unirest.get(requestPath).queryString(params).asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
+    }
+
+    assertTrue(stringResponse.getBody().contains(
+            "<Message>We are sorry, there are no more questions available for this survey. Good bye.</Message>"));
+  }
+
+  @Test
+  public void getSMSQuestionTest() {
+    Survey survey1 = new Survey("New Title Question", new Date());
+    surveyService.create(survey1);
+    Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
+    questionService.create(question);
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("MessageSid", "SMS225345");
+
+    HttpResponse<String> stringResponse = null;
+    String requestPath =
+            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+    try {
+      stringResponse = Unirest.get(requestPath).queryString(params).asString();
+    } catch (UnirestException e) {
+      System.out.println("Unable to create request");
+    }
+    assertTrue(stringResponse.getBody().contains(
+            "<Message>Question Body</Message>"));
   }
 }

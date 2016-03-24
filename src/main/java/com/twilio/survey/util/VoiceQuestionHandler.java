@@ -15,26 +15,6 @@ public class VoiceQuestionHandler implements QuestionHandler{
   }
 
   /**
-   * Static method that returns a generic TwiMLResponse when an non existent question is requested
-   */
-  public static String getHangupResponse() {
-    String errorMessage =
-        "We are sorry, there are no more questions available for this survey. Good bye.";
-
-    TwiMLResponse twiml = new TwiMLResponse();
-    Say say = new Say(errorMessage);
-    Hangup hangup = new Hangup();
-    try {
-      twiml.append(say);
-      twiml.append(hangup);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or redirect to Twilio's response");
-    }
-
-    return twiml.toEscapedXML();
-  }
-
-  /**
    * Bases on the question's type, a specific method is called. This method will construct
    * the specific TwiMLResponse
    */
@@ -50,6 +30,19 @@ public class VoiceQuestionHandler implements QuestionHandler{
       default:
         return response.toEscapedXML();
     }
+  }
+
+
+  /**
+   * method that returns a generic TwiMLResponse when an non existent question is requested
+   */
+  public String getHangupResponse() throws TwiMLException{
+    String errorMessage =
+            "We are sorry, there are no more questions available for this survey. Good bye.";
+    TwiMLResponse response =  new TwiMLResponse();
+    response.append(new Say(errorMessage));
+    response.append(new Hangup());
+    return response.toEscapedXML();
   }
 
   private String getTextResponse(TwiMLResponse response) {

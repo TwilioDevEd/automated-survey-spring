@@ -35,27 +35,28 @@ public class QuestionController {
     this.surveyService = new SurveyService(surveyRepository);
     Survey survey = surveyService.find(Long.parseLong(request.getParameter("survey")));
 
-    int questionNumber = Integer.parseInt(request.getParameter("question"));
+    Question currentQuestion = survey.getQuestionByNumber(Integer.parseInt(request.getParameter("question")));
+    QuestionHandler handler = getQuestionHandler(currentQuestion, request);
 
-    if (survey.isValidQuestionNumber(questionNumber)) {
-      Question currentQuestion = survey.getQuestionByNumber(questionNumber);
-      response.getWriter().print(getQuestionHandler(currentQuestion, request).getTwilioResponse());
+    if (currentQuestion!=null) {
+      response.getWriter().print(handler.getTwilioResponse());
     } else {
-      response.getWriter().print(VoiceQuestionHandler.getHangupResponse());
+      response.getWriter().print(handler.getHangupResponse());
     }
     response.setContentType("application/xml");
   }
 
   private void createSessionForQuestion(HttpServletRequest request, Question currentQuestion) {
+    if (currentQuestion==null) { return; }
     HttpSession session = request.getSession(true);
     session.setAttribute("questionId", currentQuestion.getId());
   }
 
   private QuestionHandler getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
     if (request.getParameter("MessageSid")==null) {
-      createSessionForQuestion(request, currentQuestion);
       return new VoiceQuestionHandler(currentQuestion);
     }else{
+      createSessionForQuestion(request, currentQuestion);
       return new SMSQuestionHandler(currentQuestion);
     }
   }

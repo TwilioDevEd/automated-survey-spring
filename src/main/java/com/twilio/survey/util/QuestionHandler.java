@@ -8,4 +8,5 @@ import com.twilio.sdk.verbs.TwiMLResponse;
  */
 public interface QuestionHandler{
     public String getTwilioResponse() throws TwiMLException;
+    public String getHangupResponse() throws TwiMLException;
 }

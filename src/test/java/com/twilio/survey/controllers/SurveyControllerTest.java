@@ -74,7 +74,6 @@ public class SurveyControllerTest {
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
-    System.err.println(stringResponse.getBody());
     assertTrue(stringResponse.getBody().contains("<Message>Welcome to the New Title Survey survey</Message>"));
     assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
   }
