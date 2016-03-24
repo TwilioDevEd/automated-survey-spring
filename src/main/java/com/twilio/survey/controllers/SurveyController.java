@@ -23,82 +23,81 @@ public class SurveyController {
   public SurveyController() {}
 
   /**
-   * End point for voice calls that always returns the last survey inserted in the db
-   * and redirects to the first question of that survey
+   * Calls endpoint; Welcomes a user and redirects to the question controller if there is a survey to be answered.
+   * Otherwise it plays a message and hang up the call if there is no survey available.
    */
   @RequestMapping(value = "/survey/call", method = RequestMethod.GET)
   public void welcomeCall(HttpServletRequest request, HttpServletResponse response) throws Exception {
     this.surveyService = new SurveyService(surveyRepository);
-    boolean isSms = request.getParameter("MessageSid")!=null;
 
     Survey lastSurvey = surveyService.findLast();
 
     if (lastSurvey != null) {
-      HttpSession session = request.getSession(true);
-      if (session.getAttribute("questionId") == null) {
-        response.getWriter().print(getFirstQuestionRedirect(lastSurvey, isSms).toEscapedXML());
-      }else{
-        Long questionId = (Long) session.getAttribute("questionId");
-        TwiMLResponse twiml = new TwiMLResponse();
-        twiml.append(new Redirect("/save_response?qid=" + questionId));
-        response.getWriter().print(twiml.toEscapedXML());
-      }
+      response.getWriter().print(getFirstQuestionRedirect(lastSurvey, request));
     } else {
-      response.getWriter().print(getHangupResponse(isSms).toEscapedXML());
+      response.getWriter().print(getHangupResponse(request));
     }
     response.setContentType("application/xml");
   }
 
   /**
-   * End point that always returns the last survey inserted in the db
-   * and redirects to the first question of that survey
+   * SMS endpoint; Welcomes a user and redirects to the question controller if there is a survey to be answered.
+   * As SMS is just a message instead of a long running call, we store state by mapping a Twilio's Cookie to a Session
    */
   @RequestMapping(value = "/survey/sms", method = RequestMethod.GET)
   public void welcomeSMS(HttpServletRequest request, HttpServletResponse response) throws Exception {
     this.surveyService = new SurveyService(surveyRepository);
-    boolean isSms = request.getParameter("MessageSid")!=null;
 
     Survey lastSurvey = surveyService.findLast();
+    HttpSession session = request.getSession(false);
 
     if (lastSurvey != null) {
-      HttpSession session = request.getSession(true);
-      if (session.getAttribute("questionId") == null) {
-        response.getWriter().print(getFirstQuestionRedirect(lastSurvey, isSms).toEscapedXML());
+      if (session == null) {
+        // New session,
+        response.getWriter().print(getFirstQuestionRedirect(lastSurvey, request));
       }else{
-        Long questionId = (Long) session.getAttribute("questionId");
-        TwiMLResponse twiml = new TwiMLResponse();
-        twiml.append(new Redirect("/save_response?qid=" + questionId));
-        response.getWriter().print(twiml.toEscapedXML());
+        // Ongoing session, redirect to ResponseController to save it's answer.
+        response.getWriter().print(getSaveResponseRedirect(session));
       }
     } else {
-      response.getWriter().print(getHangupResponse(isSms).toEscapedXML());
+      // No survey
+      response.getWriter().print(getHangupResponse(request));
     }
     response.setContentType("application/xml");
+  }
+
+  private String getSaveResponseRedirect(HttpSession session) throws TwiMLException {
+    return new TwiMLResponse().append(new Redirect("/save_response?qid=" + getQuestionIdFromSession(session))).toEscapedXML();
+  }
+
+  private Long getQuestionIdFromSession(HttpSession session) {
+    return (Long) session.getAttribute("questionId");
   }
 
   /**
    * Creates the TwiMLResponse for the first question of the survey
    *
    * @param survey Survey entity
-   * @param isSms
+   * @param request HttpServletRequest request
    * @return TwiMLResponse
    */
-  private TwiMLResponse getFirstQuestionRedirect(Survey survey, boolean isSms) throws Exception{
+  private String getFirstQuestionRedirect(Survey survey, HttpServletRequest request) throws Exception{
     TwiMLResponse twiml = new TwiMLResponse();
     String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
+
     Verb welcomeVerb;
-    if(!isSms) {
+    if(request.getParameter("MessageSid") == null) {
       welcomeVerb = new Say(welcomeMessage);
     }else{
       welcomeVerb = new Message(welcomeMessage);
     }
+
     Redirect redirect = new Redirect("/question?survey=" + survey.getId() + "&question=1");
     redirect.setMethod("GET");
 
     twiml.append(welcomeVerb);
     twiml.append(redirect);
-
-    return twiml;
+    return twiml.toEscapedXML();
   }
 
   /**
@@ -108,16 +107,16 @@ public class SurveyController {
    *
    * @return TwiMLResponse
    */
-  private TwiMLResponse getHangupResponse(boolean isSms) throws Exception{
+  private String getHangupResponse(HttpServletRequest request) throws Exception{
     String errorMessage = "We are sorry, there are no surveys available. Good bye.";
 
     TwiMLResponse twiml = new TwiMLResponse();
-      if (!isSms){
+      if (request.getParameter("MessageSid") == null){
         twiml.append(new Say(errorMessage));
         twiml.append(new Hangup());
       }else{
         twiml.append(new Message(errorMessage));
       }
-    return twiml;
+    return twiml.toEscapedXML();
   }
 }
