@@ -10,6 +10,7 @@ import com.twilio.survey.repositories.QuestionRepository;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.SurveyService;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class QuestionControllerTest extends BaseControllerTest{
 
     String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
-    assertTrue(response.contains(
+    assertThat(response, CoreMatchers.containsString(
             "<Say>We are sorry, there are no more questions available for this survey. Good bye.</Say>"));
   }
 
@@ -65,7 +66,7 @@ public class QuestionControllerTest extends BaseControllerTest{
 
     String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-    assertTrue(response.contains(
+    assertThat(response, CoreMatchers.containsString(
             "<Message>We are sorry, there are no more questions available for this survey. Good bye.</Message>"));
   }
 
@@ -76,7 +77,7 @@ public class QuestionControllerTest extends BaseControllerTest{
 
     String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-    assertTrue(response.contains(
+    assertThat(response, CoreMatchers.containsString(
             "<Message>Question Body</Message>"));
   }
 
@@ -87,7 +88,7 @@ public class QuestionControllerTest extends BaseControllerTest{
 
     String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-    assertTrue(response.contains(
+    assertThat(response, CoreMatchers.containsString(
             "<Message>For the next question, type 1 for yes, and 0 for no. " + question.getBody()+ "</Message>"));
   }
 
@@ -98,9 +99,9 @@ public class QuestionControllerTest extends BaseControllerTest{
 
     String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
-    assertTrue(response.contains(
+    assertThat(response, CoreMatchers.containsString(
             "<Say>For the next question, press 1 for yes, and 0 for no. Then press the pound key.</Say>"));
-    assertTrue(response.contains(
+    assertThat(response, CoreMatchers.containsString(
             "<Say>"+question.getBody()+"</Say>"));
   }
 }

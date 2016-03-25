@@ -12,6 +12,7 @@ import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class ResponseControllerTest {
+public class ResponseControllerTest extends BaseControllerTest {
   @Value("${local.server.port}")
   int port;
   @Autowired
@@ -48,13 +49,6 @@ public class ResponseControllerTest {
   private SurveyService surveyService;
   private ResponseService responseService;
 
-  @After
-  public void after() {
-    responseService.deleteAll();
-    questionService.deleteAll();
-    surveyService.deleteAll();
-  }
-
   @Before
   public void before() {
     questionService = new QuestionService(questionRepository);
@@ -66,60 +60,46 @@ public class ResponseControllerTest {
   }
 
   @Test
-  public void saveTextWhenTranscriptionSucceedTest() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Question Body", "text", survey, new Date());
-    questionService.create(question);
+  public void saveTextWhenTranscriptionSucceedTest() throws Exception {
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    Question question = questionService.create(new Question("Question Body", "text", survey, new Date()));
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath = "http://localhost:" + port + "/save_response?qid=" + question.getId();
+    String requestPath = "/save_response?qid=" + question.getId();
+
     Map<String, Object> params = new HashMap<>();
     params.put("RecordingUrl", "http://recording_url.com");
-
-
     params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
-
-    try {
-      stringResponse = Unirest.post(requestPath).fields(params).asString();
-      // Transcription callback is called with TranscriptionText
-      params.put("TranscriptionText", "My name is Answer");
-      stringResponse = Unirest.post(requestPath).fields(params).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
+    postWithParameters(requestPath, params);
+    
+    // Transcription callback is called with TranscriptionText
+    params.put("TranscriptionText", "The Answer is 42");
+    String response = postWithParameters(requestPath, params);
+    
     assertThat(responseService.count(), is(1L));
-    assertThat(responseService.findAll().get(0).getResponse(), is("My name is Answer"));
-    assertTrue(stringResponse.getBody().contains("Tank you for taking the"));
-    assertTrue(stringResponse.getBody().contains("Hangup"));
+    assertThat(responseService.findAll().get(0).getResponse(), is("The Answer is 42"));
+    assertThat(response, CoreMatchers.containsString("Tank you for taking the"));
+    assertThat(response, CoreMatchers.containsString("Hangup"));
   }
 
   @Test
-  public void saveRecordWhenTranscriptionFailsTest() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Question Body", "text", survey, new Date());
-    questionService.create(question);
+  public void saveRecordWhenTranscriptionFailsTest() throws Exception{
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    Question question = questionService.create(new Question("Question Body", "text", survey, new Date()));
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath = "http://localhost:" + port + "/save_response?qid=" + question.getId();
+    String requestPath = "/save_response?qid=" + question.getId();
+
     Map<String, Object> params = new HashMap<>();
     params.put("RecordingUrl", "http://recording_url.com");
-
-
     params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
+    postWithParameters(requestPath, params);
+    
+    // Transcription callback is called with a failure
+    params.put("TranscriptionStatus", "failed");
+    String response = postWithParameters(requestPath, params);
 
-    try {
-      stringResponse = Unirest.post(requestPath).fields(params).asString();
-      // Transcription callback is called with TranscriptionText
-      params.put("TranscriptionStatus", "failed");
-      stringResponse = Unirest.post(requestPath).fields(params).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
     assertThat(responseService.count(), is(1L));
     assertThat(responseService.findAll().get(0).getResponse(), is("http://recording_url.com"));
-    assertTrue(stringResponse.getBody().contains("Tank you for taking the"));
-    assertTrue(stringResponse.getBody().contains("Hangup"));
+    assertThat(response, CoreMatchers.containsString("Tank you for taking the"));
+    assertThat(response, CoreMatchers.containsString("Hangup"));
   }
 }

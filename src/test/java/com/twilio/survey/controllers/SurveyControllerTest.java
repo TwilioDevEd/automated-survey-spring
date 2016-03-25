@@ -63,8 +63,6 @@ public class SurveyControllerTest extends BaseControllerTest{
   }
 
   private Survey createSurvey() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    return survey;
+    return surveyService.create(new Survey("New Title Survey", new Date()));
   }
 }

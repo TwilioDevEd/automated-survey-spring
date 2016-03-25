@@ -39,12 +39,18 @@ public class BaseControllerTest {
     }
 
     protected String getWithParameters(String url, String key, String value) throws Exception {
-        url = "http://localhost:" + port + url;
-                Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         if(key != null && value != null) { params.put(key, value); }
+        return getWithParameters(url, params);
+    }
 
-        String stringResponse = Unirest.get(url).queryString(params).asString().getBody();
+    protected String getWithParameters(String url, Map<String, Object> params) throws Exception {
+        url = "http://localhost:" + port + url;
+        return Unirest.get(url).queryString(params).asString().getBody();
+    }
 
-        return stringResponse;
+    protected String postWithParameters(String url, Map<String, Object> params) throws Exception {
+        url = "http://localhost:" + port + url;
+        return Unirest.post(url).queryString(params).asString().getBody();
     }
 }

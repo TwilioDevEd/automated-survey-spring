@@ -13,6 +13,7 @@ import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,8 +64,8 @@ public class DisplayControllerTest extends BaseControllerTest {
 
     String httpResponse = get("/");
 
-    assertTrue(httpResponse.contains("New Title Survey"));
-    assertTrue(httpResponse.contains("Question Body"));
+    assertThat(httpResponse, CoreMatchers.containsString("New Title Survey"));
+    assertThat(httpResponse, CoreMatchers.containsString("Question Body"));
   }
 
   @Test
@@ -75,7 +76,7 @@ public class DisplayControllerTest extends BaseControllerTest {
 
     String httpResponse = get("/");
 
-    assertTrue(httpResponse.contains("Response: test number"));
+    assertThat(httpResponse, CoreMatchers.containsString("Response: test number"));
   }
 
   @Test
@@ -86,7 +87,7 @@ public class DisplayControllerTest extends BaseControllerTest {
 
     String httpResponse = get("/");
 
-    assertTrue(httpResponse.contains("http://recording_url"));
+    assertThat(httpResponse, CoreMatchers.containsString("http://recording_url"));
   }
 
   @Test
@@ -97,6 +98,6 @@ public class DisplayControllerTest extends BaseControllerTest {
 
     String httpResponse = get("/");
 
-    assertTrue(httpResponse.contains("(1: YES, 0: NO) Response: 0"));
+    assertThat(httpResponse, CoreMatchers.containsString("(1: YES, 0: NO) Response: 0"));
   }
 }
