@@ -49,7 +49,14 @@ public class BaseControllerTest {
         return Unirest.get(url).queryString(params).asString().getBody();
     }
 
-    protected String postWithParameters(String url, Map<String, Object> params) throws Exception {
+    protected String postCallWithParameters(String url, Map<String, Object> params) throws Exception {
+        params.put("CallSid", "Call25345234234");
+        url = "http://localhost:" + port + url;
+        return Unirest.post(url).queryString(params).asString().getBody();
+    }
+
+    protected String postSMSWithParameters(String url, Map<String, Object> params) throws Exception {
+        params.put("MessageSid", "SMS225345234234");
         url = "http://localhost:" + port + url;
         return Unirest.post(url).queryString(params).asString().getBody();
     }

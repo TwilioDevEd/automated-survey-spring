@@ -37,8 +37,6 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
 public class ResponseControllerTest extends BaseControllerTest {
-  @Value("${local.server.port}")
-  int port;
   @Autowired
   private QuestionRepository questionRepository;
   @Autowired
@@ -60,46 +58,70 @@ public class ResponseControllerTest extends BaseControllerTest {
   }
 
   @Test
-  public void saveTextWhenTranscriptionSucceedTest() throws Exception {
-    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.create(new Question("Question Body", "text", survey, new Date()));
+  public void thankYouAndHangupCallOnLastAnswerTest() throws Exception {
+    Question question = createQuestion();
 
     String requestPath = "/save_response?qid=" + question.getId();
 
     Map<String, Object> params = new HashMap<>();
     params.put("RecordingUrl", "http://recording_url.com");
-    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
-    postWithParameters(requestPath, params);
-    
-    // Transcription callback is called with TranscriptionText
-    params.put("TranscriptionText", "The Answer is 42");
-    String response = postWithParameters(requestPath, params);
-    
-    assertThat(responseService.count(), is(1L));
-    assertThat(responseService.findAll().get(0).getResponse(), is("The Answer is 42"));
-    assertThat(response, CoreMatchers.containsString("Tank you for taking the"));
+    String response = postCallWithParameters(requestPath, params);
+
+    assertThat(response, CoreMatchers.containsString("<Say>Tank you for taking the"));
     assertThat(response, CoreMatchers.containsString("Hangup"));
   }
 
   @Test
-  public void saveRecordWhenTranscriptionFailsTest() throws Exception{
-    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.create(new Question("Question Body", "text", survey, new Date()));
+  public void thankYouSMSOnLastAnswerTest() throws Exception {
+    Question question = createQuestion();
+
+    String requestPath = "/save_response?qid=" + question.getId();
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("Body", "Last answer");
+    String response = postSMSWithParameters(requestPath, params);
+
+    assertThat(response, CoreMatchers.containsString("<Message>Tank you for taking the"));
+  }
+
+  @Test
+  public void saveTextWhenTranscriptionSucceedTest() throws Exception {
+    Question question = createQuestion();
 
     String requestPath = "/save_response?qid=" + question.getId();
 
     Map<String, Object> params = new HashMap<>();
     params.put("RecordingUrl", "http://recording_url.com");
-    params.put("CallSid", "QD&1f1f1h1h1h1j1j1j");
-    postWithParameters(requestPath, params);
+    postCallWithParameters(requestPath, params);
+    
+    // Transcription callback is called with TranscriptionText
+    params.put("TranscriptionText", "The Answer is 42");
+    String response = postCallWithParameters(requestPath, params);
+    
+    assertThat(responseService.count(), is(1L));
+    assertThat(responseService.findAll().get(0).getResponse(), is("The Answer is 42"));
+  }
+
+  @Test
+  public void saveRecordWhenTranscriptionFailsTest() throws Exception{
+    Question question = createQuestion();
+
+    String requestPath = "/save_response?qid=" + question.getId();
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("RecordingUrl", "http://recording_url.com");
+    postCallWithParameters(requestPath, params);
     
     // Transcription callback is called with a failure
     params.put("TranscriptionStatus", "failed");
-    String response = postWithParameters(requestPath, params);
+    String response = postCallWithParameters(requestPath, params);
 
     assertThat(responseService.count(), is(1L));
     assertThat(responseService.findAll().get(0).getResponse(), is("http://recording_url.com"));
-    assertThat(response, CoreMatchers.containsString("Tank you for taking the"));
-    assertThat(response, CoreMatchers.containsString("Hangup"));
+  }
+
+  private Question createQuestion() {
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    return questionService.create(new Question("Question Body", "text", survey, new Date()));
   }
 }
