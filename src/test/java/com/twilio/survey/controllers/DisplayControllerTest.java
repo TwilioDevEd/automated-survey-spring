@@ -36,8 +36,6 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
 public class DisplayControllerTest extends BaseControllerTest {
-  @Value("${local.server.port}")
-  int port;
   @Autowired
   private QuestionRepository questionRepository;
   @Autowired

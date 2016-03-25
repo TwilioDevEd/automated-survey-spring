@@ -33,21 +33,13 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class QuestionControllerTest {
-  @Value("${local.server.port}")
-  int port;
+public class QuestionControllerTest extends BaseControllerTest{
   @Autowired
   private QuestionRepository questionRepository;
   @Autowired
   private SurveyRepository surveyRepository;
   private QuestionService questionService;
   private SurveyService surveyService;
-
-  @After
-  public void after() {
-    questionService.deleteAll();
-    surveyService.deleteAll();
-  }
 
   @Before
   public void before() {
@@ -58,105 +50,57 @@ public class QuestionControllerTest {
   }
 
   @Test
-  public void getNoQuestionCallTest() {
-    Survey survey1 = new Survey("New Title", new Date());
-    surveyService.create(survey1);
+  public void getNoQuestionCallTest() throws Exception {
+    Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath =
-            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
-    try {
-      stringResponse = Unirest.get(requestPath).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
+    String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
-    assertTrue(stringResponse.getBody().contains(
+    assertTrue(response.contains(
             "<Say>We are sorry, there are no more questions available for this survey. Good bye.</Say>"));
   }
 
   @Test
-  public void getNoQuestionSMSTest() {
-    Survey survey1 = new Survey("New Title", new Date());
-    surveyService.create(survey1);
+  public void getNoQuestionSMSTest() throws Exception {
+    Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("MessageSid", "SMS225345");
+    String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath =
-            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
-    try {
-      stringResponse = Unirest.get(requestPath).queryString(params).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-
-    assertTrue(stringResponse.getBody().contains(
+    assertTrue(response.contains(
             "<Message>We are sorry, there are no more questions available for this survey. Good bye.</Message>"));
   }
 
   @Test
-  public void getSMSQuestionTest() {
-    Survey survey1 = new Survey("New Title", new Date());
-    surveyService.create(survey1);
-    Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.create(question);
+  public void getSMSQuestionTest() throws Exception {
+    Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
+    questionService.create(new Question("Question Body", "Q_TYPE", survey1, new Date()));
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("MessageSid", "SMS225345");
+    String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath =
-            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
-    try {
-      stringResponse = Unirest.get(requestPath).queryString(params).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertTrue(stringResponse.getBody().contains(
+    assertTrue(response.contains(
             "<Message>Question Body</Message>"));
   }
 
-
   @Test
-  public void getYesNoQuestionSMSTest() throws UnirestException {
-    Survey survey1 = new Survey("New Title", new Date());
-    surveyService.create(survey1);
-    Question question = new Question("Question Body", "yes-no", survey1, new Date());
-    questionService.create(question);
+  public void getYesNoQuestionSMSTest() throws Exception {
+    Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
+    Question question = questionService.create(new Question("Question Body", "yes-no", survey1, new Date()));
 
-    Map<String, Object> params = new HashMap<>();
-    params.put("MessageSid", "SMS225345");
+    String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath =
-            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
-
-    stringResponse = Unirest.get(requestPath).queryString(params).asString();
-
-
-    assertTrue(stringResponse.getBody().contains(
+    assertTrue(response.contains(
             "<Message>For the next question, type 1 for yes, and 0 for no. " + question.getBody()+ "</Message>"));
   }
 
   @Test
-  public void getYesNoQuestionCallTest() throws UnirestException {
-    Survey survey1 = new Survey("New Title", new Date());
-    surveyService.create(survey1);
-    Question question = new Question("Question Body", "yes-no", survey1, new Date());
-    questionService.create(question);
+  public void getYesNoQuestionCallTest() throws Exception {
+    Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
+    Question question = questionService.create(new Question("Question Body", "yes-no", survey1, new Date()));
 
-    HttpResponse<String> stringResponse = null;
-    String requestPath =
-            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+    String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
-    stringResponse = Unirest.get(requestPath).asString();
-
-
-    assertTrue(stringResponse.getBody().contains(
+    assertTrue(response.contains(
             "<Say>For the next question, press 1 for yes, and 0 for no. Then press the pound key.</Say>"));
-    assertTrue(stringResponse.getBody().contains(
+    assertTrue(response.contains(
             "<Say>"+question.getBody()+"</Say>"));
   }
 }
