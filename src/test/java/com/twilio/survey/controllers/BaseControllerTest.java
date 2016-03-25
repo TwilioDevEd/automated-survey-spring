@@ -34,10 +34,15 @@ public class BaseControllerTest {
         return getWithParameters(url, "CallSid", "Call25345234234");
     }
 
+    protected String get(String url) throws Exception {
+        return getWithParameters(url, null, null);
+    }
+
     protected String getWithParameters(String url, String key, String value) throws Exception {
         url = "http://localhost:" + port + url;
                 Map<String, Object> params = new HashMap<>();
-        params.put(key, value);
+        if(key != null && value != null) { params.put(key, value); }
+
         String stringResponse = Unirest.get(url).queryString(params).asString().getBody();
 
         return stringResponse;

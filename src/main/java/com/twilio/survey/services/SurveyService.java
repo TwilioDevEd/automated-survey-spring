@@ -18,8 +18,9 @@ public class SurveyService {
     this.surveyRepository = surveyRepository;
   }
 
-  public void create(Survey survey) {
+  public Survey create(Survey survey) {
     surveyRepository.save(survey);
+    return survey;
   }
 
   public void delete(Long id) {

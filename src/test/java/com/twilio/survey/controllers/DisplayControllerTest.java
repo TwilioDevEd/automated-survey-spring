@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class DisplayControllerTest {
+public class DisplayControllerTest extends BaseControllerTest {
   @Value("${local.server.port}")
   int port;
   @Autowired
@@ -48,13 +48,6 @@ public class DisplayControllerTest {
   private SurveyService surveyService;
   private ResponseService responseService;
 
-  @After
-  public void after() {
-    responseService.deleteAll();
-    questionService.deleteAll();
-    surveyService.deleteAll();
-  }
-
   @Before
   public void before() {
     questionService = new QuestionService(questionRepository);
@@ -66,80 +59,46 @@ public class DisplayControllerTest {
   }
 
   @Test
-  public void showQuestions() {
-    assertThat(questionService.count(), is(0L));
+  public void showQuestions() throws Exception{
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    questionService.create(new Question("Question Body", "Q_TYPE", survey, new Date()));
 
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
-    questionService.create(question);
+    String httpResponse = get("/");
 
-    HttpResponse<String> stringResponse = null;
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertTrue(stringResponse.getBody().contains("New Title Survey"));
-    assertTrue(stringResponse.getBody().contains("Question Body"));
+    assertTrue(httpResponse.contains("New Title Survey"));
+    assertTrue(httpResponse.contains("Question Body"));
   }
 
   @Test
-  public void showResponses() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Numeric Question", "numeric", survey, new Date());
-    questionService.create(question);
-    Response response = new Response("test number", "SESSION_SID", question, new Date());
-    responseService.create(response);
+  public void showResponses() throws Exception{
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    Question question = questionService.create(new Question("Numeric Question", "numeric", survey, new Date()));
+    responseService.create(new Response("test number", "SESSION_SID", question, new Date()));
 
-    HttpResponse<String> stringResponse = null;
+    String httpResponse = get("/");
 
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-
-    assertTrue(stringResponse.getBody().contains("Response: test number"));
+    assertTrue(httpResponse.contains("Response: test number"));
   }
 
   @Test
-  public void showTextResponses() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Text Question", "text", survey, new Date());
-    questionService.create(question);
-    Response response = new Response("http://recording_url", "SESSION_SID", question, new Date());
-    responseService.create(response);
+  public void showTextResponses() throws Exception{
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    Question question = questionService.create(new Question("Text Question", "text", survey, new Date()));
+    responseService.create(new Response("http://recording_url", "SESSION_SID", question, new Date()));
 
-    HttpResponse<String> stringResponse = null;
+    String httpResponse = get("/");
 
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port).asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-
-    assertTrue(stringResponse.getBody().contains("http://recording_url"));
+    assertTrue(httpResponse.contains("http://recording_url"));
   }
 
   @Test
-  public void showYesNoResponses() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-    Question question = new Question("YesNo Question", "yes-no", survey, new Date());
-    questionService.create(question);
-    Response response = new Response("0", "SESSION_SID", question, new Date());
-    responseService.create(response);
+  public void showYesNoResponses() throws Exception{
+    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+    Question question = questionService.create(new Question("YesNo Question", "yes-no", survey, new Date()));
+    responseService.create(new Response("0", "SESSION_SID", question, new Date()));
 
-    HttpResponse<String> stringResponse = null;
+    String httpResponse = get("/");
 
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/").asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertTrue(stringResponse.getBody().contains("(1: YES, 0: NO) Response: 0"));
+    assertTrue(httpResponse.contains("(1: YES, 0: NO) Response: 0"));
   }
 }
