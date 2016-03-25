@@ -9,6 +9,12 @@ import com.twilio.survey.models.Question;
  */
 public class SMSQuestionHandler implements QuestionHandler{
   Question question;
+  private String booleanInstructions =
+          "For the next question, type 1 for yes, and 0 for no. " ;
+  private String numericInstrunctions =
+          "For the next question, please answer with a number. ";
+  private String errorMessage =
+          "We are sorry, there are no more questions available for this survey. Good bye.";
 
   public SMSQuestionHandler(Question question) {
     this.question = question;
@@ -21,35 +27,17 @@ public class SMSQuestionHandler implements QuestionHandler{
   public String getTwilioResponse() throws TwiMLException{
     switch (question.getType()) {
       case "numeric":
-        return getNumericResponse();
+        return renderTwiMLMessage(numericInstrunctions + question.getBody());
       case "yes-no":
-        return getYesNoResponse();
+        return renderTwiMLMessage(booleanInstructions + question.getBody());
       default:
         return renderTwiMLMessage(question.getBody());
     }
   }
 
-  public String getHangupResponse() throws TwiMLException {
-    String errorMessage =
-            "We are sorry, there are no more questions available for this survey. Good bye.";
-    return renderTwiMLMessage(errorMessage);
-  }
+  public String getHangupResponse() throws TwiMLException { return renderTwiMLMessage(errorMessage); }
 
-  private String renderTwiMLMessage(String questionInstructions) throws TwiMLException {
-    TwiMLResponse response = new TwiMLResponse();
-    response.append(new Message(questionInstructions));
-    return response.toEscapedXML();
-  }
-
-  private String getNumericResponse() throws TwiMLException{
-    String questionInstructions =
-        "For the next question, please answer with a number. " + question.getBody();
-    return renderTwiMLMessage(questionInstructions);
-  }
-
-  private String getYesNoResponse() throws TwiMLException{
-    String questionInstructions =
-        "For the next question, type 1 for yes, and 0 for no. " + question.getBody();
-    return renderTwiMLMessage(questionInstructions);
+  private String renderTwiMLMessage(String content) throws TwiMLException {
+    return new TwiMLResponseBuilder().message(content).asString();
   }
 }

@@ -1,9 +1,9 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.*;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
+import com.twilio.survey.util.TwiMLResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,12 +66,9 @@ public class SurveyController {
     response.setContentType("application/xml");
   }
 
-  private String getSaveResponseRedirect(HttpSession session) throws TwiMLException {
-    return new TwiMLResponse().append(new Redirect("/save_response?qid=" + getQuestionIdFromSession(session))).toEscapedXML();
-  }
-
-  private Long getQuestionIdFromSession(HttpSession session) {
-    return (Long) session.getAttribute("questionId");
+  private String getSaveResponseRedirect(HttpSession session) throws Exception {
+    String saveURL = "/save_response?qid=" + getQuestionIdFromSession(session);
+    return new TwiMLResponseBuilder().redirect(saveURL).asString();
   }
 
   /**
@@ -82,22 +79,9 @@ public class SurveyController {
    * @return TwiMLResponse
    */
   private String getFirstQuestionRedirect(Survey survey, HttpServletRequest request) throws Exception{
-    TwiMLResponse twiml = new TwiMLResponse();
     String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
-
-    Verb welcomeVerb;
-    if(request.getParameter("MessageSid") == null) {
-      welcomeVerb = new Say(welcomeMessage);
-    }else{
-      welcomeVerb = new Message(welcomeMessage);
-    }
-
-    Redirect redirect = new Redirect("/question?survey=" + survey.getId() + "&question=1");
-    redirect.setMethod("GET");
-
-    twiml.append(welcomeVerb);
-    twiml.append(redirect);
-    return twiml.toEscapedXML();
+    String questionURL = "/question?survey=" + survey.getId() + "&question=1";
+    return new TwiMLResponseBuilder().writeContent(request, welcomeMessage).redirect(questionURL).asString();
   }
 
   /**
@@ -109,18 +93,17 @@ public class SurveyController {
    */
   private String getHangupResponse(HttpServletRequest request) throws Exception{
     String errorMessage = "We are sorry, there are no surveys available. Good bye.";
+    cleanSession(request);
+    return new TwiMLResponseBuilder().writeContent(request, errorMessage, true).asString();
+  }
 
-    TwiMLResponse twiml = new TwiMLResponse();
-      if (request.getParameter("MessageSid") == null){
-        twiml.append(new Say(errorMessage));
-        twiml.append(new Hangup());
-      }else{
-        twiml.append(new Message(errorMessage));
-        HttpSession session = request.getSession(false);
-        if(session!=null){
-          session.invalidate();
-        }
-      }
-    return twiml.toEscapedXML();
+  private void cleanSession(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if(session!=null){
+      session.invalidate();
+    }
+  }
+  private Long getQuestionIdFromSession(HttpSession session) {
+    return (Long) session.getAttribute("questionId");
   }
 }
