@@ -8,7 +8,7 @@ import com.twilio.survey.models.Question;
  * it receives
  */
 public class VoiceQuestionHandler implements QuestionHandler{
-  Question question;
+  private Question question;
 
   public VoiceQuestionHandler(Question question) {
     this.question = question;
@@ -45,7 +45,7 @@ public class VoiceQuestionHandler implements QuestionHandler{
     return response.toEscapedXML();
   }
 
-  private String getTextResponse(TwiMLResponse response) {
+  private String getTextResponse(TwiMLResponse response) throws TwiMLException {
     String defaultMessage =
         "Record your answer after the beep.";
     Say say = new Say(defaultMessage);
@@ -58,19 +58,15 @@ public class VoiceQuestionHandler implements QuestionHandler{
     record.setTranscribeCallback("/save_response?qid=" + question.getId());
     record.setMaxLength(60);
 
-    try {
-      response.append(say);
-      response.append(pause);
-      response.append(questionSay);
-      response.append(record);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or record to Twilio's response");
-    }
-    System.out.println(response.toEscapedXML());
+    response.append(say);
+    response.append(pause);
+    response.append(questionSay);
+    response.append(record);
+
     return response.toEscapedXML();
   }
 
-  private String getNumericResponse(TwiMLResponse response) {
+  private String getNumericResponse(TwiMLResponse response) throws TwiMLException {
     String defaultMessage =
         "For the next question select a number with the dial pad and then press the pound key";
     Say say = new Say(defaultMessage);
@@ -81,38 +77,29 @@ public class VoiceQuestionHandler implements QuestionHandler{
     gather.setMethod("POST");
     gather.setFinishOnKey("#");
 
-    try {
-      response.append(say);
-      response.append(pause);
-      response.append(questionSay);
-      response.append(gather);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or gather to Twilio's response");
-    }
-    System.out.println(response.toEscapedXML());
+
+    response.append(say);
+    response.append(pause);
+    response.append(questionSay);
+    response.append(gather);
+
     return response.toEscapedXML();
   }
 
-  private String getYesNoResponse(TwiMLResponse response) {
+  private String getYesNoResponse(TwiMLResponse response) throws TwiMLException {
     String defaultMessage =
-        "For the next question, press 1 for yes, and 0 for no. Then press the pound key.";
-    Say say = new Say(defaultMessage);
-    Say questionSay = new Say(question.getBody());
-    Pause pause = new Pause();
+            "For the next question, press 1 for yes, and 0 for no. Then press the pound key.";
+
+    response.append(new Say(defaultMessage));
+    response.append(new Pause());
+    response.append(new Say(question.getBody()));
+
     Gather gather = new Gather();
     gather.setAction("/save_response?qid=" + question.getId());
     gather.setMethod("POST");
     gather.setFinishOnKey("#");
+    response.append(gather);
 
-    try {
-      response.append(say);
-      response.append(pause);
-      response.append(questionSay);
-      response.append(gather);
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append say or gather to Twilio's response");
-    }
-    System.out.println(response.toEscapedXML());
     return response.toEscapedXML();
   }
 }

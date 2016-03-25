@@ -59,12 +59,12 @@ public class QuestionControllerTest {
 
   @Test
   public void getNoQuestionCallTest() {
-    Survey survey1 = new Survey("New Title Question", new Date());
+    Survey survey1 = new Survey("New Title", new Date());
     surveyService.create(survey1);
 
     HttpResponse<String> stringResponse = null;
     String requestPath =
-        "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
     try {
       stringResponse = Unirest.get(requestPath).asString();
     } catch (UnirestException e) {
@@ -72,12 +72,12 @@ public class QuestionControllerTest {
     }
 
     assertTrue(stringResponse.getBody().contains(
-        "<Say>We are sorry, there are no more questions available for this survey. Good bye.</Say>"));
+            "<Say>We are sorry, there are no more questions available for this survey. Good bye.</Say>"));
   }
 
   @Test
   public void getNoQuestionSMSTest() {
-    Survey survey1 = new Survey("New Title Question", new Date());
+    Survey survey1 = new Survey("New Title", new Date());
     surveyService.create(survey1);
 
     Map<String, Object> params = new HashMap<>();
@@ -98,7 +98,7 @@ public class QuestionControllerTest {
 
   @Test
   public void getSMSQuestionTest() {
-    Survey survey1 = new Survey("New Title Question", new Date());
+    Survey survey1 = new Survey("New Title", new Date());
     surveyService.create(survey1);
     Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
     questionService.create(question);
@@ -116,5 +116,47 @@ public class QuestionControllerTest {
     }
     assertTrue(stringResponse.getBody().contains(
             "<Message>Question Body</Message>"));
+  }
+
+
+  @Test
+  public void getYesNoQuestionSMSTest() throws UnirestException {
+    Survey survey1 = new Survey("New Title", new Date());
+    surveyService.create(survey1);
+    Question question = new Question("Question Body", "yes-no", survey1, new Date());
+    questionService.create(question);
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("MessageSid", "SMS225345");
+
+    HttpResponse<String> stringResponse = null;
+    String requestPath =
+            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+
+    stringResponse = Unirest.get(requestPath).queryString(params).asString();
+
+
+    assertTrue(stringResponse.getBody().contains(
+            "<Message>For the next question, type 1 for yes, and 0 for no. " + question.getBody()+ "</Message>"));
+  }
+
+  @Test
+  public void getYesNoQuestionCallTest() throws UnirestException {
+    Survey survey1 = new Survey("New Title", new Date());
+    surveyService.create(survey1);
+    Question question = new Question("Question Body", "yes-no", survey1, new Date());
+    questionService.create(question);
+
+    HttpResponse<String> stringResponse = null;
+    String requestPath =
+            "http://localhost:" + port + "/question?survey=" + survey1.getId() + "&question=1";
+
+    stringResponse = Unirest.get(requestPath).asString();
+
+
+    assertTrue(stringResponse.getBody().contains(
+            "<Say>For the next question, press 1 for yes, and 0 for no. Then press the pound key.</Say>"));
+    assertTrue(stringResponse.getBody().contains(
+            "<Say>"+question.getBody()+"</Say>"));
   }
 }
