@@ -1,16 +1,10 @@
 package com.twilio.survey.controllers;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.HttpClients;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -32,69 +24,47 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class SurveyControllerTest {
-  @Value("${local.server.port}")
-  int port;
+public class SurveyControllerTest extends BaseControllerTest{
   @Autowired
   private SurveyRepository surveyRepository;
   private SurveyService surveyService;
-
-  @After
-  public void after() {
-    surveyService.deleteAll();
-  }
 
   @Before
   public void before() {
     surveyService = new SurveyService(surveyRepository);
     surveyService.deleteAll();
-    BasicCookieStore cookieStore = new BasicCookieStore();
-    Unirest.setHttpClient(HttpClients.custom()
-            .setDefaultCookieStore(cookieStore)
-            .build());
   }
 
   @Test
-  public void getFirstSurveyOnCall() {
+  public void getFirstSurveyOnCall() throws Exception {
+    Survey survey = createSurvey();
+
+    String response = getAsCall("/survey/call");
+
+    assertThat(response, CoreMatchers.containsString("New Title Survey"));
+    assertThat(response, CoreMatchers.containsString("/question?survey=" + survey.getId()));
+  }
+
+  @Test
+  public void getFirstSurveyOnSMS() throws Exception {
+    Survey survey = createSurvey();
+
+    String response = getAsSMS("/survey/sms");
+
+    assertThat(response, CoreMatchers.containsString("<Message>Welcome to the New Title Survey survey</Message>"));
+    assertThat(response, CoreMatchers.containsString("/question?survey=" + survey.getId()));
+  }
+
+  @Test
+  public void getHangupOnNoSurveyCall() throws Exception{
+    String response = getAsCall("/survey/call");
+
+    assertThat(response, CoreMatchers.containsString("We are sorry, there are no surveys available. Good bye."));
+  }
+
+  private Survey createSurvey() {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
-
-    HttpResponse<String> stringResponse = null;
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey/call").asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertTrue(stringResponse.getBody().contains("New Title Survey"));
-    assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
-  }
-
-  @Test
-  public void getFirstSurveyOnSMS() {
-    Survey survey = new Survey("New Title Survey", new Date());
-    surveyService.create(survey);
-
-    String stringResponse = null;
-    Map<String, Object> params = new HashMap<>();
-    params.put("MessageSid", "SMS225345234234");
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey/sms").queryString(params).asString().getBody();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertThat(stringResponse, CoreMatchers.containsString("<Message>Welcome to the New Title Survey survey</Message>"));
-    assertThat(stringResponse, CoreMatchers.containsString("/question?survey=" + survey.getId()));
-  }
-
-  @Test
-  public void getHangupOnNoSurveyCall() {
-    HttpResponse<String> stringResponse = null;
-    try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey/call").asString();
-    } catch (UnirestException e) {
-      System.out.println("Unable to create request");
-    }
-    assertTrue(stringResponse.getBody()
-        .contains("We are sorry, there are no surveys available. Good bye."));
+    return survey;
   }
 }
