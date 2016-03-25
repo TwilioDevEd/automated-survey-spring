@@ -80,14 +80,4 @@ public class Question {
   public void setDate(Date date) {
     this.date = date;
   }
-
-  public boolean hasNext() {
-    return next()!=null;
-  }
-
-  public Question next() {
-    List<Question> questions = survey.getQuestions();
-    int currentIndex = questions.indexOf(this);
-    return (currentIndex<(questions.size()-1))? questions.get(questions.indexOf(this) + 1) : null;
-  }
 }

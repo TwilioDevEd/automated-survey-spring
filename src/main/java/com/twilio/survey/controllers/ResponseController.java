@@ -9,6 +9,8 @@ import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.util.ResponseHandler;
+import com.twilio.survey.util.TwiMLResponseBuilder;
+import org.apache.http.impl.io.HttpResponseWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,41 +40,30 @@ public class ResponseController {
    */
   @RequestMapping(value = "/save_response", method = RequestMethod.POST)
   public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    PrintWriter responseWriter = response.getWriter();
     this.questionService = new QuestionService(questionRepository);
     this.responseService = new ResponseService(responseRepository);
 
-    Long questionId = null;
-
-    try {
-      questionId = Long.parseLong(request.getParameter("qid"));
-    } catch (NumberFormatException e) {
-      System.out.println("Numbers wrongly formatted, unable to parse");
-    }
-
-    Question currentQuestion = questionService.find(questionId);
-
-    ResponseHandler responseHandler = new ResponseHandler(currentQuestion, request);
-
-    persistResponse(responseHandler.getResponse());
+    Question currentQuestion = getQuestionFromRequest(request);
     Survey survey = currentQuestion.getSurvey();
-    List<Question> questions = survey.getQuestions();
+    persistResponse(new ResponseHandler(currentQuestion, request).getResponse());
 
-    TwiMLResponse twiml = new TwiMLResponse();
-
-    if (currentQuestion.hasNext()) {
-      redirectToNextQuestion(currentQuestion, survey, questions, twiml);
+    if (survey.isLastQuestion(currentQuestion)) {
+      responseWriter.print(redirectToNextQuestion(currentQuestion, survey));
     } else {
-      this.appendLastMessage(request, twiml, "Tank you for taking the " + survey.getTitle() + " survey. Good Bye");
+      String message = "Tank you for taking the " + survey.getTitle() + " survey. Good Bye";
+      responseWriter.print(new TwiMLResponseBuilder().writeContent(request, message, true).asString());
     }
-    response.getWriter().print(twiml.toEscapedXML());
     response.setContentType("application/xml");
   }
 
-  private void redirectToNextQuestion(Question nextQuestion, Survey survey, List<Question> questions, TwiMLResponse twiml) throws TwiMLException {
-    Redirect redirect =
-            new Redirect("/question?survey=" + survey.getId() + "&qid=" + nextQuestion.getId());
-    redirect.setMethod("GET");
-    twiml.append(redirect);
+  private Question getQuestionFromRequest(HttpServletRequest request) {
+    return questionService.find(Long.parseLong(request.getParameter("qid")));
+  }
+
+  private String redirectToNextQuestion(Question nextQuestion, Survey survey) throws TwiMLException {
+    String nextQuestionURL = "/question?survey=" + survey.getId() + "&qid=" + nextQuestion.getId();
+    return new TwiMLResponseBuilder().redirect(nextQuestionURL).asString();
   }
 
   private void persistResponse(Response questionResponse) {
@@ -92,6 +84,7 @@ public class ResponseController {
   }
 
   private void appendLastMessage(HttpServletRequest request, TwiMLResponse response, String lastMessage){
+
     boolean sms = request.getParameter("MessageSid")!=null;
     List<Verb> verbs = new LinkedList<Verb>();
     if(sms){

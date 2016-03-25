@@ -61,4 +61,9 @@ public class Survey {
   public void setQuestions(List<Question> questions) {
     this.questions = questions;
   }
+
+  public boolean isLastQuestion(Question currentQuestion) {
+    int nextIndex = questions.indexOf(currentQuestion) + 2;
+    return isValidQuestionNumber(nextIndex);
+  }
 }
