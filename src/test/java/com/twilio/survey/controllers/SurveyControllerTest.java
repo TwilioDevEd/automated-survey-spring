@@ -7,6 +7,8 @@ import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClients;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
@@ -46,6 +48,10 @@ public class SurveyControllerTest {
   public void before() {
     surveyService = new SurveyService(surveyRepository);
     surveyService.deleteAll();
+    BasicCookieStore cookieStore = new BasicCookieStore();
+    Unirest.setHttpClient(HttpClients.custom()
+            .setDefaultCookieStore(cookieStore)
+            .build());
   }
 
   @Test
@@ -70,7 +76,7 @@ public class SurveyControllerTest {
 
     String stringResponse = null;
     Map<String, Object> params = new HashMap<>();
-    params.put("MessageSid", "SMS225345");
+    params.put("MessageSid", "SMS225345234234");
     try {
       stringResponse = Unirest.get("http://localhost:" + port + "/survey/sms").queryString(params).asString().getBody();
     } catch (UnirestException e) {

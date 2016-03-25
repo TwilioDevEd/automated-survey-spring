@@ -52,7 +52,7 @@ public class SurveyController {
     HttpSession session = request.getSession(false);
 
     if (lastSurvey != null) {
-      if (session == null) {
+      if (session == null || session.isNew()) {
         // New session,
         response.getWriter().print(getFirstQuestionRedirect(lastSurvey, request));
       }else{
