@@ -70,3 +70,12 @@ task wrapper(type: Wrapper) {
 jar {
     archiveName = "app.jar"
 }
+test {
+    reports {
+        junitXml.enabled = false
+        html.enabled = false
+    }
+    testLogging {
+        exceptionFormat = "full"
+    }
+}

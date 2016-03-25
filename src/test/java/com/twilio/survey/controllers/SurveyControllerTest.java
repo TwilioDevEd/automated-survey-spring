@@ -7,6 +7,7 @@ import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -66,16 +68,16 @@ public class SurveyControllerTest {
     Survey survey = new Survey("New Title Survey", new Date());
     surveyService.create(survey);
 
-    HttpResponse<String> stringResponse = null;
+    String stringResponse = null;
     Map<String, Object> params = new HashMap<>();
     params.put("MessageSid", "SMS225345");
     try {
-      stringResponse = Unirest.get("http://localhost:" + port + "/survey/sms").queryString(params).asString();
+      stringResponse = Unirest.get("http://localhost:" + port + "/survey/sms").queryString(params).asString().getBody();
     } catch (UnirestException e) {
       System.out.println("Unable to create request");
     }
-    assertTrue(stringResponse.getBody().contains("<Message>Welcome to the New Title Survey survey</Message>"));
-    assertTrue(stringResponse.getBody().contains("/question?survey=" + survey.getId()));
+    assertThat(stringResponse, CoreMatchers.containsString("<Message>Welcome to the New Title Survey survey</Message>"));
+    assertThat(stringResponse, CoreMatchers.containsString("/question?survey=" + survey.getId()));
   }
 
   @Test
