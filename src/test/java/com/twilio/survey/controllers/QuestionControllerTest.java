@@ -82,6 +82,17 @@ public class QuestionControllerTest extends BaseControllerTest{
   }
 
   @Test
+  public void getTextQuestionOnACallWillRecordTest() throws Exception {
+    Survey survey1 = surveyService.create(new Survey("Curious Survey", new Date()));
+    Question question = questionService.create(new Question("Who are you?", "text", survey1, new Date()));
+
+    String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
+
+    assertThat(response, CoreMatchers.containsString(
+            "<Record action=\"/save_response?qid=" + question.getId() + "\" method=\"POST\""));
+  }
+
+  @Test
   public void getYesNoQuestionSMSTest() throws Exception {
     Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
     Question question = questionService.create(new Question("Question Body", "yes-no", survey1, new Date()));
@@ -103,5 +114,7 @@ public class QuestionControllerTest extends BaseControllerTest{
             "<Say>For the next question, press 1 for yes, and 0 for no. Then press the pound key.</Say>"));
     assertThat(response, CoreMatchers.containsString(
             "<Say>"+question.getBody()+"</Say>"));
+    assertThat(response, CoreMatchers.containsString(
+            "<Gather action=\"/save_response?qid="+question.getId()));
   }
 }

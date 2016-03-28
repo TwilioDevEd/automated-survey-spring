@@ -4,31 +4,34 @@ import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Response;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Digits;
 import java.util.Date;
 
 /**
  * Class returns the appropriate Response model
- * when you call the getResponse() method
+ * when you call the parse() method
  */
-public class ResponseHandler {
+public class ResponseParser {
   private Question question;
   private HttpServletRequest request;
 
-  public ResponseHandler(Question question, HttpServletRequest request) {
+  public ResponseParser(Question question, HttpServletRequest request) {
     this.question = question;
     this.request = request;
   }
 
-  public Response getResponse() {
+  public Response parse() {
     String contentKey;
-    if (question.getType().equals("text")) {
-      contentKey = (request.getParameter("TranscriptionText") == null) ? "RecordingUrl" : "TranscriptionText";
+    if (hasTextContent()) {
+      contentKey = isValidTranscription() ? "RecordingUrl" : "TranscriptionText";
     }else{
       contentKey = "Digits";
     }
     return buildResponse(contentKey);
   }
+
+  private boolean isValidTranscription() { return request.getParameter("TranscriptionText") == null; }
+  private boolean hasTextContent() { return question.getType().equals("text"); }
+  private boolean isSMS() { return request.getParameter("MessageSid")!=null; }
 
   private Response buildResponse(String contentKey) {
     String sessionKey = isSMS() ? "MessageSid" : "CallSid";
@@ -36,13 +39,10 @@ public class ResponseHandler {
       contentKey = "Body";
     }
     String content = request.getParameter(contentKey);
-
     String sessionSid = request.getParameter(sessionKey);
     return new Response(content, sessionSid, question, new Date());
   }
 
-  private boolean isSMS() {
-    return request.getParameter("MessageSid")!=null;
-  }
+
 
 }
