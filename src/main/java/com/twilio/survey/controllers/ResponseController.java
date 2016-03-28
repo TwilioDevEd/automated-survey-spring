@@ -47,16 +47,12 @@ public class ResponseController {
     persistResponse(new ResponseParser(currentQuestion, request).parse());
 
     if (survey.isLastQuestion(currentQuestion)) {
-      responseWriter.print(redirectToNextQuestion(currentQuestion, survey));
-    } else {
       String message = "Tank you for taking the " + survey.getTitle() + " survey. Good Bye";
       responseWriter.print(new TwiMLResponseBuilder().writeContent(request, message, true).asString());
+    } else {
+      responseWriter.print(redirectToNextQuestion(currentQuestion, survey));
     }
     response.setContentType("application/xml");
-  }
-
-  private Question getQuestionFromRequest(HttpServletRequest request) {
-    return questionService.find(Long.parseLong(request.getParameter("qid")));
   }
 
   private String redirectToNextQuestion(Question nextQuestion, Survey survey) throws TwiMLException {
@@ -76,29 +72,7 @@ public class ResponseController {
     responseService.create(questionResponse);
   }
 
-  private boolean hasNextQuestion(List<Question> questions, Question currentQuestion) {
-    int questionIndex = questions.indexOf(currentQuestion);
-    return questionIndex < questions.size() - 1;
-  }
-
-  private void appendLastMessage(HttpServletRequest request, TwiMLResponse response, String lastMessage){
-
-    boolean sms = request.getParameter("MessageSid")!=null;
-    List<Verb> verbs = new LinkedList<Verb>();
-    if(sms){
-      verbs.add(new Message(lastMessage));
-    }else{
-      verbs.add(new Say(lastMessage));
-      verbs.add(new Hangup());
-    }
-    
-    try {
-      for (Verb verb: verbs) {
-        response.append(verb);
-      }
-    } catch (TwiMLException e) {
-      System.out.println("Couldn't append redirect to Twilio's response");
-    }
-    
+  private Question getQuestionFromRequest(HttpServletRequest request) {
+    return questionService.find(Long.parseLong(request.getParameter("qid")));
   }
 }

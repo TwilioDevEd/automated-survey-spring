@@ -28,12 +28,12 @@ public class TwiMLResponseBuilder {
         return writeContent(request, content, false);
     }
 
-    public TwiMLResponseBuilder writeContent(HttpServletRequest request, String content, boolean last) throws TwiMLException {
+    public TwiMLResponseBuilder writeContent(HttpServletRequest request, String content, boolean hangup) throws TwiMLException {
         if(request.getParameter("MessageSid") != null) {
             message(content);
         }else{
             say(content);
-            if(last){ hangup(); }
+            if(hangup){ hangup(); }
         }
         return this;
     }

@@ -1,13 +1,12 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.TwiMLResponse;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
-import com.twilio.survey.util.QuestionHandler;
-import com.twilio.survey.util.SMSQuestionHandler;
-import com.twilio.survey.util.VoiceQuestionHandler;
+import com.twilio.survey.util.QuestionBuilder;
+import com.twilio.survey.util.SMSQuestionBuilder;
+import com.twilio.survey.util.VoiceQuestionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class QuestionController {
@@ -36,12 +33,12 @@ public class QuestionController {
     Survey survey = surveyService.find(Long.parseLong(request.getParameter("survey")));
 
     Question currentQuestion = survey.getQuestionByNumber(Integer.parseInt(request.getParameter("question")));
-    QuestionHandler handler = getQuestionHandler(currentQuestion, request);
+    QuestionBuilder builder = getQuestionHandler(currentQuestion, request);
 
     if (currentQuestion!=null) {
-      response.getWriter().print(handler.getTwilioResponse());
+      response.getWriter().print(builder.build());
     } else {
-      response.getWriter().print(handler.getHangupResponse());
+      response.getWriter().print(builder.buildNoMoreQuestions());
     }
     response.setContentType("application/xml");
   }
@@ -52,12 +49,16 @@ public class QuestionController {
     session.setAttribute("questionId", currentQuestion.getId());
   }
 
-  private QuestionHandler getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
-    if (request.getParameter("MessageSid")==null) {
-      return new VoiceQuestionHandler(currentQuestion);
+  private QuestionBuilder getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
+    if (isVoiceRequest(request)) {
+      return new VoiceQuestionBuilder(currentQuestion);
     }else{
       createSessionForQuestion(request, currentQuestion);
-      return new SMSQuestionHandler(currentQuestion);
+      return new SMSQuestionBuilder(currentQuestion);
     }
+  }
+
+  private boolean isVoiceRequest(HttpServletRequest request) {
+    return request.getParameter("MessageSid")==null;
   }
 }

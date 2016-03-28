@@ -7,7 +7,7 @@ import com.twilio.survey.models.Question;
  * Class responsible of returning the appropriate TwiMLResponse based on the question
  * it receives
  */
-public class VoiceQuestionHandler implements QuestionHandler{
+public class VoiceQuestionBuilder implements QuestionBuilder {
   private Question question;
   private String recordingInstructions =
           "Record your answer after the beep.";
@@ -19,7 +19,7 @@ public class VoiceQuestionHandler implements QuestionHandler{
           "We are sorry, there are no more questions available for this survey. Good bye.";
 
 
-  public VoiceQuestionHandler(Question question) {
+  public VoiceQuestionBuilder(Question question) {
     this.question = question;
   }
 
@@ -27,7 +27,7 @@ public class VoiceQuestionHandler implements QuestionHandler{
    * Bases on the question's type, a specific method is called. This method will construct
    * the specific TwiMLResponse
    */
-  public String getTwilioResponse() throws TwiMLException{
+  public String build() throws TwiMLException{
     switch (question.getType()) {
       case "text":
         return getRecordTwiML();
@@ -36,51 +36,23 @@ public class VoiceQuestionHandler implements QuestionHandler{
       case "yes-no":
         return getGatherResponse(booleanInstructions);
       default:
-        return getHangupResponse();
+        return buildNoMoreQuestions();
     }
   }
 
   /**
    * method that returns a generic TwiMLResponse when an non existent question is requested
    */
-  public String getHangupResponse() throws TwiMLException{
-    TwiMLResponse response =  new TwiMLResponse();
-    response.append(new Say(errorMessage));
-    response.append(new Hangup());
-    return response.toEscapedXML();
+  public String buildNoMoreQuestions() throws TwiMLException{
+    return new TwiMLResponseBuilder().say(errorMessage).hangup().asString();
   }
 
   private String getRecordTwiML() throws TwiMLException {
-    TwiMLResponse response = new TwiMLResponse();
-
-    response.append(new Say(recordingInstructions));
-    response.append(new Pause());
-    response.append(new Say(question.getBody()));
-
-    Record record = new Record();
-    record.setAction("/save_response?qid=" + question.getId());
-    record.setMethod("POST");
-    record.setTranscribe(true);
-    record.setTranscribeCallback("/save_response?qid=" + question.getId());
-    record.setMaxLength(60);
-    response.append(record);
-
-    return response.toEscapedXML();
+    return new TwiMLResponseBuilder().say(recordingInstructions).pause().say(question.getBody()).record(question)
+            .asString();
   }
 
   private String getGatherResponse(String defaultMessage) throws TwiMLException {
-    TwiMLResponse response = new TwiMLResponse();
-
-    response.append(new Say(defaultMessage));
-    response.append(new Pause());
-    response.append(new Say(question.getBody()));
-
-    Gather gather = new Gather();
-    gather.setAction("/save_response?qid=" + question.getId());
-    gather.setMethod("POST");
-    gather.setFinishOnKey("#");
-    response.append(gather);
-
-    return response.toEscapedXML();
+    return new TwiMLResponseBuilder().say(defaultMessage).pause().say(question.getBody()).gather(question).asString();
   }
 }
