@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 public class ResponseController {
@@ -69,7 +67,7 @@ public class ResponseController {
     }
 
     /** creates the question response on the db */
-    responseService.create(questionResponse);
+    responseService.save(questionResponse);
   }
 
   private Question getQuestionFromRequest(HttpServletRequest request) {

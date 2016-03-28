@@ -1,8 +1,5 @@
 package com.twilio.survey.controllers;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
@@ -11,20 +8,16 @@ import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.SurveyService;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -73,7 +66,7 @@ public class QuestionControllerTest extends BaseControllerTest{
   @Test
   public void getSMSQuestionTest() throws Exception {
     Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
-    questionService.create(new Question("Question Body", "Q_TYPE", survey1, new Date()));
+    questionService.save(new Question("Question Body", "Q_TYPE", survey1, new Date()));
 
     String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
@@ -84,7 +77,7 @@ public class QuestionControllerTest extends BaseControllerTest{
   @Test
   public void getTextQuestionOnACallWillRecordTest() throws Exception {
     Survey survey1 = surveyService.create(new Survey("Curious Survey", new Date()));
-    Question question = questionService.create(new Question("Who are you?", "text", survey1, new Date()));
+    Question question = questionService.save(new Question("Who are you?", "text", survey1, new Date()));
 
     String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
@@ -95,7 +88,7 @@ public class QuestionControllerTest extends BaseControllerTest{
   @Test
   public void getYesNoQuestionSMSTest() throws Exception {
     Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
-    Question question = questionService.create(new Question("Question Body", "yes-no", survey1, new Date()));
+    Question question = questionService.save(new Question("Question Body", "yes-no", survey1, new Date()));
 
     String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
@@ -106,7 +99,7 @@ public class QuestionControllerTest extends BaseControllerTest{
   @Test
   public void getYesNoQuestionCallTest() throws Exception {
     Survey survey1 = surveyService.create(new Survey("New Title", new Date()));
-    Question question = questionService.create(new Question("Question Body", "yes-no", survey1, new Date()));
+    Question question = questionService.save(new Question("Question Body", "yes-no", survey1, new Date()));
 
     String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 

@@ -1,8 +1,5 @@
 package com.twilio.survey.controllers;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Response;
@@ -14,12 +11,10 @@ import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -60,7 +55,7 @@ public class DisplayControllerTest extends BaseControllerTest {
   @Test
   public void showQuestions() throws Exception{
     Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    questionService.create(new Question("Question Body", "Q_TYPE", survey, new Date()));
+    questionService.save(new Question("Question Body", "Q_TYPE", survey, new Date()));
 
     String httpResponse = get("/");
 
@@ -71,8 +66,8 @@ public class DisplayControllerTest extends BaseControllerTest {
   @Test
   public void showResponses() throws Exception{
     Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.create(new Question("Numeric Question", "numeric", survey, new Date()));
-    responseService.create(new Response("test number", "SESSION_SID", question, new Date()));
+    Question question = questionService.save(new Question("Numeric Question", "numeric", survey, new Date()));
+    responseService.save(new Response("test number", "SESSION_SID", question, new Date()));
 
     String httpResponse = get("/");
 
@@ -82,8 +77,8 @@ public class DisplayControllerTest extends BaseControllerTest {
   @Test
   public void showTextResponses() throws Exception{
     Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.create(new Question("Text Question", "text", survey, new Date()));
-    responseService.create(new Response("http://recording_url", "SESSION_SID", question, new Date()));
+    Question question = questionService.save(new Question("Text Question", "text", survey, new Date()));
+    responseService.save(new Response("http://recording_url", "SESSION_SID", question, new Date()));
 
     String httpResponse = get("/");
 
@@ -93,8 +88,8 @@ public class DisplayControllerTest extends BaseControllerTest {
   @Test
   public void showYesNoResponses() throws Exception{
     Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.create(new Question("YesNo Question", "yes-no", survey, new Date()));
-    responseService.create(new Response("0", "SESSION_SID", question, new Date()));
+    Question question = questionService.save(new Question("YesNo Question", "yes-no", survey, new Date()));
+    responseService.save(new Response("0", "SESSION_SID", question, new Date()));
 
     String httpResponse = get("/");
 

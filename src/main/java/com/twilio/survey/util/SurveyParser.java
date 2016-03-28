@@ -69,7 +69,7 @@ public class SurveyParser {
       String body = (String) obj.get("body");
       String type = (String) obj.get("type");
       newQuestion = new Question(body, type, survey, new Date());
-      questionService.create(newQuestion);
+      questionService.save(newQuestion);
     }
   }
 }

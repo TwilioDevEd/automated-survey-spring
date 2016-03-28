@@ -1,8 +1,5 @@
 package com.twilio.survey.controllers;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twilio.survey.SurveyJavaApplication;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Survey;
@@ -13,12 +10,10 @@ import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.services.SurveyService;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -122,6 +117,6 @@ public class ResponseControllerTest extends BaseControllerTest {
 
   private Question createQuestion() {
     Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    return questionService.create(new Question("Question Body", "text", survey, new Date()));
+    return questionService.save(new Question("Question Body", "text", survey, new Date()));
   }
 }

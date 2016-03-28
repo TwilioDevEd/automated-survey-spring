@@ -51,7 +51,7 @@ public class QuestionServiceTest {
     Survey survey = new Survey("New Title Question", new Date());
     surveyService.create(survey);
     Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
-    questionService.create(question);
+    questionService.save(question);
 
     assertThat(questionService.count(), is(1L));
   }
@@ -64,7 +64,7 @@ public class QuestionServiceTest {
     surveyService.create(survey1);
 
     Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.create(question);
+    questionService.save(question);
 
     assertThat(questionService.count(), is(1L));
 
@@ -80,11 +80,11 @@ public class QuestionServiceTest {
     Survey survey1 = new Survey("New Title Question", new Date());
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.create(question1);
+    questionService.save(question1);
     Survey survey2 = new Survey("New Title Question2", new Date());
     surveyService.create(survey2);
     Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
-    questionService.create(question2);
+    questionService.save(question2);
 
     assertThat(questionService.findAll().size(), is(2));
   }
@@ -96,11 +96,11 @@ public class QuestionServiceTest {
     Survey survey1 = new Survey("New Title Question", new Date());
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.create(question1);
+    questionService.save(question1);
     Survey survey2 = new Survey("New Title Question2", new Date());
     surveyService.create(survey2);
     Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
-    questionService.create(question2);
+    questionService.save(question2);
 
     assertThat(questionService.count(), is(2L));
   }
@@ -110,7 +110,7 @@ public class QuestionServiceTest {
     Survey survey1 = new Survey("New Title Question", new Date());
     surveyService.create(survey1);
     Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.create(question1);
+    questionService.save(question1);
 
     assertThat(questionService.find(question1.getId()).getBody(), is("Question Body"));
   }

@@ -17,7 +17,7 @@ public class ResponseService {
     this.responseRepository = responseRepository;
   }
 
-  public void create(Response response) {
+  public void save(Response response) {
     responseRepository.save(response);
   }
 
