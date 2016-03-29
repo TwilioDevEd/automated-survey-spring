@@ -29,7 +29,7 @@ public class QuestionController {
      * End point that returns the appropriate question response based on the parameters it receives
      */
     @RequestMapping(value = "/question", method = RequestMethod.GET)
-    public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void show(HttpServletRequest request, HttpServletResponse response) throws Exception {
         this.surveyService = new SurveyService(surveyRepository);
         Survey survey = surveyService.find(Long.parseLong(request.getParameter("survey")));
 

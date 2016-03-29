@@ -36,7 +36,7 @@ public class ResponseController {
      * if one is available.
      */
     @RequestMapping(value = "/save_response", method = RequestMethod.POST)
-    public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void save(HttpServletRequest request, HttpServletResponse response) throws Exception {
         PrintWriter responseWriter = response.getWriter();
         this.questionService = new QuestionService(questionRepository);
         this.responseService = new ResponseService(responseRepository);

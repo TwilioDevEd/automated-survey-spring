@@ -27,7 +27,7 @@ public class SurveyController {
      * Otherwise it plays a message and hang up the call if there is no survey available.
      */
     @RequestMapping(value = "/survey/call", method = RequestMethod.GET)
-    public void welcomeCall(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void call(HttpServletRequest request, HttpServletResponse response) throws Exception {
         this.surveyService = new SurveyService(surveyRepository);
 
         Survey lastSurvey = surveyService.findLast();
@@ -45,7 +45,7 @@ public class SurveyController {
      * As SMS is just a message instead of a long running call, we store state by mapping a Twilio's Cookie to a Session
      */
     @RequestMapping(value = "/survey/sms", method = RequestMethod.GET)
-    public void welcomeSMS(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void sms(HttpServletRequest request, HttpServletResponse response) throws Exception {
         this.surveyService = new SurveyService(surveyRepository);
 
         Survey lastSurvey = surveyService.findLast();
