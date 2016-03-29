@@ -68,7 +68,7 @@ public class SurveyController {
 
   private String getSaveResponseRedirect(HttpSession session) throws Exception {
     String saveURL = "/save_response?qid=" + getQuestionIdFromSession(session);
-    return new TwiMLResponseBuilder().redirect(saveURL).asString();
+    return new TwiMLResponseBuilder().redirectPOST(saveURL).asString();
   }
 
   /**

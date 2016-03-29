@@ -63,7 +63,11 @@ public class Survey {
   }
 
   public boolean isLastQuestion(Question currentQuestion) {
-    int nextIndex = questions.indexOf(currentQuestion) + 2;
-    return !isValidQuestionNumber(nextIndex);
+    int nextNumber = getNextQuestionNumber(currentQuestion);
+    return !isValidQuestionNumber(nextNumber);
+  }
+
+  public int getNextQuestionNumber(Question currentQuestion) {
+    return questions.indexOf(currentQuestion) + 2;
   }
 }

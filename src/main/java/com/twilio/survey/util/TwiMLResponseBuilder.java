@@ -69,7 +69,16 @@ public class TwiMLResponseBuilder {
     }
 
     public TwiMLResponseBuilder redirect(String url) throws TwiMLException {
-        response.append(new Redirect(url));
+        Redirect redirect = new Redirect(url);
+        redirect.setMethod("GET");
+        response.append(redirect);
+        return this;
+    }
+
+    public TwiMLResponseBuilder redirectPOST(String url) throws TwiMLException {
+        Redirect redirect = new Redirect(url);
+        redirect.setMethod("POST");
+        response.append(redirect);
         return this;
     }
 

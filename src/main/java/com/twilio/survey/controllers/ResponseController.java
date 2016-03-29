@@ -48,13 +48,13 @@ public class ResponseController {
       String message = "Tank you for taking the " + survey.getTitle() + " survey. Good Bye";
       responseWriter.print(new TwiMLResponseBuilder().writeContent(request, message, true).asString());
     } else {
-      responseWriter.print(redirectToNextQuestion(currentQuestion, survey));
+      responseWriter.print(redirectToNextQuestion(survey.getNextQuestionNumber(currentQuestion), survey));
     }
     response.setContentType("application/xml");
   }
 
-  private String redirectToNextQuestion(Question nextQuestion, Survey survey) throws TwiMLException {
-    String nextQuestionURL = "/question?survey=" + survey.getId() + "&qid=" + nextQuestion.getId();
+  private String redirectToNextQuestion(int nextQuestionNumber, Survey survey) throws TwiMLException {
+    String nextQuestionURL = "/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber;
     return new TwiMLResponseBuilder().redirect(nextQuestionURL).asString();
   }
 
