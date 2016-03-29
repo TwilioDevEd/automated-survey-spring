@@ -12,25 +12,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SurveyJavaApplication implements CommandLineRunner {
-  @Autowired
-  private QuestionRepository questionRepository;
-  @Autowired
-  private SurveyRepository surveyRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private SurveyRepository surveyRepository;
 
-  public static void main(String[] args) {
-    SpringApplication.run(SurveyJavaApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(SurveyJavaApplication.class, args);
+    }
 
-  /**
-   * Method that runs on app initialization. It will parse and insert the questions in the DB
-   * on every app initialization
-   */
-  @Override
-  public void run(String... strings) throws Exception {
-    SurveyService surveyService = new SurveyService(surveyRepository);
-    QuestionService questionService = new QuestionService(questionRepository);
+    /**
+     * Method that runs on app initialization. It will parse and insert the questions in the DB
+     * on every app initialization
+     */
+    @Override
+    public void run(String... strings) throws Exception {
+        SurveyService surveyService = new SurveyService(surveyRepository);
+        QuestionService questionService = new QuestionService(questionRepository);
 
-    SurveyParser surveyParser = new SurveyParser(surveyService, questionService);
-    surveyParser.parse("survey.json");
-  }
+        SurveyParser surveyParser = new SurveyParser(surveyService, questionService);
+        surveyParser.parse("survey.json");
+    }
 }

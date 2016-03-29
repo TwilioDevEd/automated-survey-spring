@@ -23,95 +23,95 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 public class QuestionServiceTest {
-  @Autowired
-  private QuestionRepository questionRepository;
-  @Autowired
-  private SurveyRepository surveyRepository;
-  private QuestionService questionService;
-  private SurveyService surveyService;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private SurveyRepository surveyRepository;
+    private QuestionService questionService;
+    private SurveyService surveyService;
 
-  @After
-  public void after() {
-    questionService.deleteAll();
-    surveyService.deleteAll();
-  }
+    @After
+    public void after() {
+        questionService.deleteAll();
+        surveyService.deleteAll();
+    }
 
-  @Before
-  public void before() {
-    questionService = new QuestionService(questionRepository);
-    surveyService = new SurveyService(surveyRepository);
-    questionService.deleteAll();
-    surveyService.deleteAll();
-  }
+    @Before
+    public void before() {
+        questionService = new QuestionService(questionRepository);
+        surveyService = new SurveyService(surveyRepository);
+        questionService.deleteAll();
+        surveyService.deleteAll();
+    }
 
-  @Test
-  public void testCreate() {
-    assertThat(questionService.count(), is(0L));
+    @Test
+    public void testCreate() {
+        assertThat(questionService.count(), is(0L));
 
-    Survey survey = new Survey("New Title Question", new Date());
-    surveyService.create(survey);
-    Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
-    questionService.save(question);
+        Survey survey = new Survey("New Title Question", new Date());
+        surveyService.create(survey);
+        Question question = new Question("Question Body", "Q_TYPE", survey, new Date());
+        questionService.save(question);
 
-    assertThat(questionService.count(), is(1L));
-  }
+        assertThat(questionService.count(), is(1L));
+    }
 
-  @Test
-  public void testDelete() {
-    assertThat(questionService.count(), is(0L));
+    @Test
+    public void testDelete() {
+        assertThat(questionService.count(), is(0L));
 
-    Survey survey1 = new Survey("New Title Question", new Date());
-    surveyService.create(survey1);
+        Survey survey1 = new Survey("New Title Question", new Date());
+        surveyService.create(survey1);
 
-    Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.save(question);
+        Question question = new Question("Question Body", "Q_TYPE", survey1, new Date());
+        questionService.save(question);
 
-    assertThat(questionService.count(), is(1L));
+        assertThat(questionService.count(), is(1L));
 
-    questionService.delete(question.getId());
+        questionService.delete(question.getId());
 
-    assertThat(questionService.count(), is(0L));
-  }
+        assertThat(questionService.count(), is(0L));
+    }
 
-  @Test
-  public void testFindAll() {
-    assertThat(questionService.count(), is(0L));
+    @Test
+    public void testFindAll() {
+        assertThat(questionService.count(), is(0L));
 
-    Survey survey1 = new Survey("New Title Question", new Date());
-    surveyService.create(survey1);
-    Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.save(question1);
-    Survey survey2 = new Survey("New Title Question2", new Date());
-    surveyService.create(survey2);
-    Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
-    questionService.save(question2);
+        Survey survey1 = new Survey("New Title Question", new Date());
+        surveyService.create(survey1);
+        Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
+        questionService.save(question1);
+        Survey survey2 = new Survey("New Title Question2", new Date());
+        surveyService.create(survey2);
+        Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
+        questionService.save(question2);
 
-    assertThat(questionService.findAll().size(), is(2));
-  }
+        assertThat(questionService.findAll().size(), is(2));
+    }
 
-  @Test
-  public void testCount() {
-    assertThat(questionService.count(), is(0L));
+    @Test
+    public void testCount() {
+        assertThat(questionService.count(), is(0L));
 
-    Survey survey1 = new Survey("New Title Question", new Date());
-    surveyService.create(survey1);
-    Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.save(question1);
-    Survey survey2 = new Survey("New Title Question2", new Date());
-    surveyService.create(survey2);
-    Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
-    questionService.save(question2);
+        Survey survey1 = new Survey("New Title Question", new Date());
+        surveyService.create(survey1);
+        Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
+        questionService.save(question1);
+        Survey survey2 = new Survey("New Title Question2", new Date());
+        surveyService.create(survey2);
+        Question question2 = new Question("Question Body2", "Q_TYPE", survey1, new Date());
+        questionService.save(question2);
 
-    assertThat(questionService.count(), is(2L));
-  }
+        assertThat(questionService.count(), is(2L));
+    }
 
-  @Test
-  public void testFind() {
-    Survey survey1 = new Survey("New Title Question", new Date());
-    surveyService.create(survey1);
-    Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
-    questionService.save(question1);
+    @Test
+    public void testFind() {
+        Survey survey1 = new Survey("New Title Question", new Date());
+        surveyService.create(survey1);
+        Question question1 = new Question("Question Body", "Q_TYPE", survey1, new Date());
+        questionService.save(question1);
 
-    assertThat(questionService.find(question1.getId()).getBody(), is("Question Body"));
-  }
+        assertThat(questionService.find(question1.getId()).getBody(), is("Question Body"));
+    }
 }

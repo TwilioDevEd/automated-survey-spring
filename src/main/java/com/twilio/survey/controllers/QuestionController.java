@@ -18,47 +18,50 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class QuestionController {
-  @Autowired
-  private SurveyRepository surveyRepository;
-  private SurveyService surveyService;
+    @Autowired
+    private SurveyRepository surveyRepository;
+    private SurveyService surveyService;
 
-  public QuestionController() {}
-
-  /**
-   * End point that returns the appropriate question response based on the parameters it receives
-   */
-  @RequestMapping(value = "/question", method = RequestMethod.GET)
-  public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    this.surveyService = new SurveyService(surveyRepository);
-    Survey survey = surveyService.find(Long.parseLong(request.getParameter("survey")));
-
-    Question currentQuestion = survey.getQuestionByNumber(Integer.parseInt(request.getParameter("question")));
-    QuestionBuilder builder = getQuestionHandler(currentQuestion, request);
-
-    if (currentQuestion!=null) {
-      response.getWriter().print(builder.build());
-    } else {
-      response.getWriter().print(builder.buildNoMoreQuestions());
+    public QuestionController() {
     }
-    response.setContentType("application/xml");
-  }
 
-  private void createSessionForQuestion(HttpServletRequest request, Question currentQuestion) {
-    if (currentQuestion==null) { return; }
-    HttpSession session = request.getSession(true);
-    session.setAttribute("questionId", currentQuestion.getId());
-  }
+    /**
+     * End point that returns the appropriate question response based on the parameters it receives
+     */
+    @RequestMapping(value = "/question", method = RequestMethod.GET)
+    public void readQuestion(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        this.surveyService = new SurveyService(surveyRepository);
+        Survey survey = surveyService.find(Long.parseLong(request.getParameter("survey")));
 
-  private QuestionBuilder getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
-    if (isVoiceRequest(request)) {
-      return new VoiceQuestionBuilder(currentQuestion);
-    }else{
-      createSessionForQuestion(request, currentQuestion);
-      return new SMSQuestionBuilder(currentQuestion);
+        Question currentQuestion = survey.getQuestionByNumber(Integer.parseInt(request.getParameter("question")));
+        QuestionBuilder builder = getQuestionHandler(currentQuestion, request);
+
+        if (currentQuestion != null) {
+            response.getWriter().print(builder.build());
+        } else {
+            response.getWriter().print(builder.buildNoMoreQuestions());
+        }
+        response.setContentType("application/xml");
     }
-  }
 
-  private boolean isVoiceRequest(HttpServletRequest request) {
-    return request.getParameter("MessageSid")==null;
-  }
+    private void createSessionForQuestion(HttpServletRequest request, Question currentQuestion) {
+        if (currentQuestion == null) {
+            return;
+        }
+        HttpSession session = request.getSession(true);
+        session.setAttribute("questionId", currentQuestion.getId());
+    }
+
+    private QuestionBuilder getQuestionHandler(Question currentQuestion, HttpServletRequest request) {
+        if (isVoiceRequest(request)) {
+            return new VoiceQuestionBuilder(currentQuestion);
+        } else {
+            createSessionForQuestion(request, currentQuestion);
+            return new SMSQuestionBuilder(currentQuestion);
+        }
+    }
+
+    private boolean isVoiceRequest(HttpServletRequest request) {
+        return request.getParameter("MessageSid") == null;
+    }
 }

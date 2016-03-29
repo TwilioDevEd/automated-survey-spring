@@ -22,77 +22,74 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
 public class DisplayControllerTest extends BaseControllerTest {
-  @Autowired
-  private QuestionRepository questionRepository;
-  @Autowired
-  private SurveyRepository surveyRepository;
-  @Autowired
-  private ResponseRepository responseRepository;
-  private QuestionService questionService;
-  private SurveyService surveyService;
-  private ResponseService responseService;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private SurveyRepository surveyRepository;
+    @Autowired
+    private ResponseRepository responseRepository;
+    private QuestionService questionService;
+    private SurveyService surveyService;
+    private ResponseService responseService;
 
-  @Before
-  public void before() {
-    questionService = new QuestionService(questionRepository);
-    surveyService = new SurveyService(surveyRepository);
-    responseService = new ResponseService(responseRepository);
-    questionService.deleteAll();
-    surveyService.deleteAll();
-    responseService.deleteAll();
-  }
+    @Before
+    public void before() {
+        questionService = new QuestionService(questionRepository);
+        surveyService = new SurveyService(surveyRepository);
+        responseService = new ResponseService(responseRepository);
+        questionService.deleteAll();
+        surveyService.deleteAll();
+        responseService.deleteAll();
+    }
 
-  @Test
-  public void showQuestions() throws Exception{
-    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    questionService.save(new Question("Question Body", "Q_TYPE", survey, new Date()));
+    @Test
+    public void showQuestions() throws Exception {
+        Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+        questionService.save(new Question("Question Body", "Q_TYPE", survey, new Date()));
 
-    String httpResponse = get("/");
+        String httpResponse = get("/");
 
-    assertThat(httpResponse, CoreMatchers.containsString("New Title Survey"));
-    assertThat(httpResponse, CoreMatchers.containsString("Question Body"));
-  }
+        assertThat(httpResponse, CoreMatchers.containsString("New Title Survey"));
+        assertThat(httpResponse, CoreMatchers.containsString("Question Body"));
+    }
 
-  @Test
-  public void showResponses() throws Exception{
-    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.save(new Question("Numeric Question", "numeric", survey, new Date()));
-    responseService.save(new Response("test number", "SESSION_SID", question, new Date()));
+    @Test
+    public void showResponses() throws Exception {
+        Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+        Question question = questionService.save(new Question("Numeric Question", "numeric", survey, new Date()));
+        responseService.save(new Response("test number", "SESSION_SID", question, new Date()));
 
-    String httpResponse = get("/");
+        String httpResponse = get("/");
 
-    assertThat(httpResponse, CoreMatchers.containsString("Response: test number"));
-  }
+        assertThat(httpResponse, CoreMatchers.containsString("Response: test number"));
+    }
 
-  @Test
-  public void showTextResponses() throws Exception{
-    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.save(new Question("Text Question", "text", survey, new Date()));
-    responseService.save(new Response("http://recording_url", "SESSION_SID", question, new Date()));
+    @Test
+    public void showTextResponses() throws Exception {
+        Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+        Question question = questionService.save(new Question("Text Question", "text", survey, new Date()));
+        responseService.save(new Response("http://recording_url", "SESSION_SID", question, new Date()));
 
-    String httpResponse = get("/");
+        String httpResponse = get("/");
 
-    assertThat(httpResponse, CoreMatchers.containsString("http://recording_url"));
-  }
+        assertThat(httpResponse, CoreMatchers.containsString("http://recording_url"));
+    }
 
-  @Test
-  public void showYesNoResponses() throws Exception{
-    Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
-    Question question = questionService.save(new Question("YesNo Question", "yes-no", survey, new Date()));
-    responseService.save(new Response("0", "SESSION_SID", question, new Date()));
+    @Test
+    public void showYesNoResponses() throws Exception {
+        Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));
+        Question question = questionService.save(new Question("YesNo Question", "yes-no", survey, new Date()));
+        responseService.save(new Response("0", "SESSION_SID", question, new Date()));
 
-    String httpResponse = get("/");
+        String httpResponse = get("/");
 
-    assertThat(httpResponse, CoreMatchers.containsString("(1: YES, 0: NO) Response: 0"));
-  }
+        assertThat(httpResponse, CoreMatchers.containsString("(1: YES, 0: NO) Response: 0"));
+    }
 }

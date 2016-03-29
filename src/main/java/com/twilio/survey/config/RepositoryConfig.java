@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "com.twilio.survey.repositories")
 @EnableAutoConfiguration
 @EntityScan(basePackages = {"com.twilio.survey.models"})
-public class RepositoryConfig {}
+public class RepositoryConfig {
+}

@@ -10,37 +10,38 @@ import java.util.List;
 
 @Service
 public class ResponseService {
-  private ResponseRepository responseRepository;
+    private ResponseRepository responseRepository;
 
-  @Autowired
-  public ResponseService(ResponseRepository responseRepository) {
-    this.responseRepository = responseRepository;
-  }
+    @Autowired
+    public ResponseService(ResponseRepository responseRepository) {
+        this.responseRepository = responseRepository;
+    }
 
-  public void save(Response response) {
-    responseRepository.save(response);
-  }
+    public void save(Response response) {
+        responseRepository.save(response);
+    }
 
-  public void delete(Long id) {
-    responseRepository.delete(id);
-  }
+    public void delete(Long id) {
+        responseRepository.delete(id);
+    }
 
-  public void deleteAll() {
-    responseRepository.deleteAll();
-  }
+    public void deleteAll() {
+        responseRepository.deleteAll();
+    }
 
-  public Long count() {
-    return responseRepository.count();
-  }
+    public Long count() {
+        return responseRepository.count();
+    }
 
-  public List<Response> findAll() {
-    return responseRepository.findAll();
-  }
+    public List<Response> findAll() {
+        return responseRepository.findAll();
+    }
 
-  public Response find(Long id) {
-    return responseRepository.findOne(id);
-  }
+    public Response find(Long id) {
+        return responseRepository.findOne(id);
+    }
 
-  public Response getBySessionSidAndQuestion(String sessionSid, Question question){
-    return responseRepository.getBySessionSidAndQuestion(sessionSid, question);}
+    public Response getBySessionSidAndQuestion(String sessionSid, Question question) {
+        return responseRepository.getBySessionSidAndQuestion(sessionSid, question);
+    }
 }

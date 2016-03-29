@@ -21,74 +21,74 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(classes = SurveyJavaApplication.class)
 @WebAppConfiguration
 public class SurveyServiceTest {
-  @Autowired
-  private SurveyRepository surveyRepository;
-  private SurveyService service;
+    @Autowired
+    private SurveyRepository surveyRepository;
+    private SurveyService service;
 
-  @Before
-  public void before() {
-    service = new SurveyService(surveyRepository);
-    service.deleteAll();
-  }
+    @Before
+    public void before() {
+        service = new SurveyService(surveyRepository);
+        service.deleteAll();
+    }
 
-  @After
-  public void after() {
-    service.deleteAll();
-  }
+    @After
+    public void after() {
+        service.deleteAll();
+    }
 
-  @Test
-  public void testCreate() {
-    assertThat(service.count(), is(0L));
+    @Test
+    public void testCreate() {
+        assertThat(service.count(), is(0L));
 
-    Survey survey = new Survey("New Title", new Date());
-    service.create(survey);
+        Survey survey = new Survey("New Title", new Date());
+        service.create(survey);
 
-    assertThat(service.count(), is(1L));
-  }
+        assertThat(service.count(), is(1L));
+    }
 
-  @Test
-  public void testDelete() {
-    assertThat(service.count(), is(0L));
+    @Test
+    public void testDelete() {
+        assertThat(service.count(), is(0L));
 
-    Survey survey = new Survey("New Title", new Date());
-    service.create(survey);
+        Survey survey = new Survey("New Title", new Date());
+        service.create(survey);
 
-    assertThat(service.count(), is(1L));
+        assertThat(service.count(), is(1L));
 
-    service.delete(survey.getId());
+        service.delete(survey.getId());
 
-    assertThat(service.count(), is(0L));
-  }
+        assertThat(service.count(), is(0L));
+    }
 
-  @Test
-  public void testFindAll() {
-    assertThat(service.count(), is(0L));
+    @Test
+    public void testFindAll() {
+        assertThat(service.count(), is(0L));
 
-    Survey survey1 = new Survey("New Title", new Date());
-    service.create(survey1);
-    Survey survey2 = new Survey("New Title 2", new Date());
-    service.create(survey2);
+        Survey survey1 = new Survey("New Title", new Date());
+        service.create(survey1);
+        Survey survey2 = new Survey("New Title 2", new Date());
+        service.create(survey2);
 
-    assertThat(service.findAll().size(), is(2));
-  }
+        assertThat(service.findAll().size(), is(2));
+    }
 
-  @Test
-  public void testCount() {
-    assertThat(service.count(), is(0L));
+    @Test
+    public void testCount() {
+        assertThat(service.count(), is(0L));
 
-    Survey survey1 = new Survey("New Title", new Date());
-    service.create(survey1);
-    Survey survey2 = new Survey("New Title 2", new Date());
-    service.create(survey2);
+        Survey survey1 = new Survey("New Title", new Date());
+        service.create(survey1);
+        Survey survey2 = new Survey("New Title 2", new Date());
+        service.create(survey2);
 
-    assertThat(service.count(), is(2L));
-  }
+        assertThat(service.count(), is(2L));
+    }
 
-  @Test
-  public void testFind() {
-    Survey survey = new Survey("Test Title", new Date());
-    service.create(survey);
+    @Test
+    public void testFind() {
+        Survey survey = new Survey("Test Title", new Date());
+        service.create(survey);
 
-    assertThat(service.find(survey.getId()).getTitle(), is("Test Title"));
-  }
+        assertThat(service.find(survey.getId()).getTitle(), is("Test Title"));
+    }
 }

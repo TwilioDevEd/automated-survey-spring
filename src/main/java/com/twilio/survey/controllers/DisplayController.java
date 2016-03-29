@@ -18,36 +18,37 @@ import java.util.Map;
 
 @Controller
 public class DisplayController {
-  @Autowired
-  private SurveyRepository surveyRepository;
-  private SurveyService surveyService;
-  @Autowired
-  private ResponseRepository responseRepository;
-  private ResponseService responseService;
+    @Autowired
+    private SurveyRepository surveyRepository;
+    private SurveyService surveyService;
+    @Autowired
+    private ResponseRepository responseRepository;
+    private ResponseService responseService;
 
-  public DisplayController() {}
+    public DisplayController() {
+    }
 
-  /**
-   * Renders the survey results
-   *
-   * @param model    Empty model where you fill in the data that the template will use
-   * @param request  Standard HttpServletRequest request
-   * @param response Standard HttpServletResponse response
-   * @return returns the template's name
-   */
-  @RequestMapping(value = "/", method = RequestMethod.GET)
-  public String index(Map<String, Object> model, HttpServletRequest request,
-      HttpServletResponse response) {
-    this.surveyService = new SurveyService(surveyRepository);
-    this.responseService = new ResponseService(responseRepository);
+    /**
+     * Renders the survey results
+     *
+     * @param model    Empty model where you fill in the data that the template will use
+     * @param request  Standard HttpServletRequest request
+     * @param response Standard HttpServletResponse response
+     * @return returns the template's name
+     */
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(Map<String, Object> model, HttpServletRequest request,
+                        HttpServletResponse response) {
+        this.surveyService = new SurveyService(surveyRepository);
+        this.responseService = new ResponseService(responseRepository);
 
-    Survey lastSurvey = surveyService.findLast();
-    model.put("surveyTitle", lastSurvey.getTitle());
+        Survey lastSurvey = surveyService.findLast();
+        model.put("surveyTitle", lastSurvey.getTitle());
 
-    List<Question> questions = lastSurvey.getQuestions();
+        List<Question> questions = lastSurvey.getQuestions();
 
-    model.put("questions", questions);
+        model.put("questions", questions);
 
-    return "index";
-  }
+        return "index";
+    }
 }

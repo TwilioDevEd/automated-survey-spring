@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class TwiMLResponseBuilder {
     private TwiMLResponse response;
-    public TwiMLResponseBuilder(){
+
+    public TwiMLResponseBuilder() {
         response = new TwiMLResponse();
     }
 
-    public TwiMLResponseBuilder message(String content) throws TwiMLException{
+    public TwiMLResponseBuilder message(String content) throws TwiMLException {
         response.append(new Message(content));
         return this;
     }
@@ -29,11 +30,13 @@ public class TwiMLResponseBuilder {
     }
 
     public TwiMLResponseBuilder writeContent(HttpServletRequest request, String content, boolean hangup) throws TwiMLException {
-        if(request.getParameter("MessageSid") != null) {
+        if (request.getParameter("MessageSid") != null) {
             message(content);
-        }else{
+        } else {
             say(content);
-            if(hangup){ hangup(); }
+            if (hangup) {
+                hangup();
+            }
         }
         return this;
     }
@@ -82,7 +85,7 @@ public class TwiMLResponseBuilder {
         return this;
     }
 
-    public String asString(){
+    public String asString() {
         return response.toEscapedXML();
     }
 
