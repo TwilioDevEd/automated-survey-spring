@@ -8,6 +8,7 @@ import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.SurveyService;
 import org.hamcrest.CoreMatchers;
+import org.jdom2.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +50,7 @@ public class QuestionControllerTest extends BaseControllerTest {
 
         String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Say>We are sorry, there are no more questions available for this survey. Good bye.</Say>"));
     }
 
@@ -57,7 +60,7 @@ public class QuestionControllerTest extends BaseControllerTest {
 
         String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Message>We are sorry, there are no more questions available for this survey. Good bye.</Message>"));
     }
 
@@ -68,7 +71,7 @@ public class QuestionControllerTest extends BaseControllerTest {
 
         String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Message>Question Body</Message>"));
     }
 
@@ -78,9 +81,14 @@ public class QuestionControllerTest extends BaseControllerTest {
         Question question = questionService.save(new Question("Who are you?", "text", survey1, new Date()));
 
         String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
+        Element recordVerb = getElement(getDocument(response), "Record");
+        String actionURL = "/save_response?qid=" + question.getId();
 
-        assertThat(response, CoreMatchers.containsString(
-                "<Record action=\"/save_response?qid=" + question.getId() + "\" method=\"POST\""));
+        assertThat(recordVerb, is(CoreMatchers.<Element>notNullValue()));
+        assertThat(recordVerb.getAttribute("action"), is(CoreMatchers.<Element>notNullValue()));
+        assertThat(recordVerb.getAttribute("action").getValue(), containsString(actionURL));
+        assertThat(recordVerb.getAttribute("method"), is(CoreMatchers.<Element>notNullValue()));
+        assertThat(recordVerb.getAttribute("method").getValue(), containsString("POST"));
     }
 
     @Test
@@ -90,7 +98,7 @@ public class QuestionControllerTest extends BaseControllerTest {
 
         String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Message>For the next question, type 1 for yes, and 0 for no. " + question.getBody() + "</Message>"));
     }
 
@@ -101,11 +109,11 @@ public class QuestionControllerTest extends BaseControllerTest {
 
         String response = getAsCall("/question?survey=" + survey1.getId() + "&question=1");
 
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Say>For the next question, press 1 for yes, and 0 for no. Then press the pound key.</Say>"));
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Say>" + question.getBody() + "</Say>"));
-        assertThat(response, CoreMatchers.containsString(
+        assertThat(response, containsString(
                 "<Gather action=\"/save_response?qid=" + question.getId()));
     }
 }
