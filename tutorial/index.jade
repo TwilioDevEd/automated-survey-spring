@@ -12,13 +12,13 @@
 
       ![Automated Survey Diagram](https://s3.amazonaws.com/howtodocs/automated-survey.png)
 
-      1. The end user calls or texts the survey phone number. 
+      1. The end user calls or texts the survey phone number.
 
       1. Twilio gets the call or text and makes an HTTP request to your application for instructions on how to respond.
 
       1. Your web application serves up [TwiML instructions](/docs/api/twiml) to `Gather` or `Record` the user input over the phone, or prompt for text input with `Message`.
 
-      1. After each question, Twilio makes another request to your server with the user's input, which your application stores in its database.
+      1. After each question, Twilio makes another request to your server with the user's input, which your application stores on its database.
 
       1. Your application returns a TwiML response to Twilio with instructions to either ask the next question or end the survey.
 
@@ -32,8 +32,6 @@
     :markdown
       ## Create a survey
 
-      
-
       In order to perform automated surveys we first need to have some
       questions to ask. For your convenience, the application's
       repository already includes one survey that can be loaded into
@@ -43,8 +41,8 @@
       You can modify the questions from the survey by editing the
       [survey.json](https://github.com/TwilioDevEd/automated-survey-spring/blob/master/survey.json)
       file located in the root of the repository and re-running the app.
-      
-      We want users to take our survey, so next we are going implement
+
+      We want users to take our survey, so next we will implement
       the handler for SMS and calls.
 
    .step(data-tile='The Interview Loop')
@@ -52,7 +50,7 @@
       ## The Interview Loop
 
       It is helpful to visualize your interaction with a user during a survey as a loop.
-      The chart below shows how that interaction will be handled. (click it to make it bigger):
+      The chart below shows how that interaction will be handled. (click it for enlargement):
 
       ![Survey Flow Chart](//s3.amazonaws.com/howtodocs/flowchart.png)
 
@@ -61,7 +59,7 @@
       keys the user pressed or a URL to a recording of their voice input.
 
       It's up to the application to process, store and respond to the user's input.
-      
+
       Let's dive into this flow to see how it actually works.
 
   .step(data-file='src/main/java/com/twilio/survey/controllers/SurveyController.java',
@@ -86,15 +84,15 @@
     :markdown
       ## Responding to a Phone Call
 
-      
-      Right after receiveing a call or a SMS, Twilio will send a request to the URL specified on the number configuration
-      (/survey/call for calls and /survey/sms for sms). 
-      
-      Each of these endpoints will receive the request and will use a `TwiMLResponseBuilder` to return 
-      a welcome message to the user. For phone users, the built message will contain a `Say` 
+
+      Right after receiveing a call or a SMS, Twilio will send a request to the URL specified on the number's configuration
+      (/survey/call for calls and /survey/sms for sms).
+
+      Each of these endpoints will receive the request and will use a `TwiMLResponseBuilder` to return
+      a welcome message to the user. For phone users, the built message will contain a `Say`
       verb with the message or a `Message` Verb for SMS.
 
-      It will also include a `Redirect` verb to the question enpoint, in order to continue the survey flow.
+      It will also include a `Redirect` verb to the question's endpoint to continue with the survey flow.
 
       ---
 
@@ -111,13 +109,13 @@
     data-highlight='32-62')
     :markdown
       ## Question Controller
-     
-      This endpoint will just check if it's a SMS or Call, instantiating the proper class to build a TwiML response.
+
+      This endpoint will just check if it's a SMS or Call, instantiating the proper class to build the correct TwiML response.
       Each type of question and interaction (Call/SMS) will produce different instructions on how to proceed.
       For instance, we can record voice or gather a key press during a call, but we can't do the same for text messages.
 
       When the user is interacting over SMS we don't have something like an ongoing call session with a well defined state.
-      It becomes harder to know if a SMS is answering question 2 or 20, since all requests will be fired to `/survey/sms` main endpoint.
+      It becomes harder to know if an SMS is answering question 2 or 20, since all requests will be fired to `/survey/sms` main endpoint.
       To solve that, we can use [Twilio Cookies](https://www.twilio.com/blog/2014/07/the-definitive-guide-to-sms-conversation-tracking.html)
       to keep the question being answered at the moment. That is done by `createSessionForQuestion` method.
 
@@ -128,14 +126,14 @@
     :markdown
       ## Building Our TwiML Verbs
 
-      If the question is of kind "numeric" then we use the
+      If the question is of "numeric" kind then we use the
       [`<Gather>`](https://www.twilio.com/docs/api/twiml/gather)
-      verb. However, if we expect dialpad input we use the 
+      verb. However, if we expect dialpad input we use the
       [`<Record>`](https://www.twilio.com/docs/api/twiml/record)
       verb. Both verbs take an `action` attribute and a `method`
       attribute.
 
-      Twilio will use both attributes to define our response endpoint that will be used as callback. That endpoint
+      Twilio will uses both attributes to define our response's endpoint that will be used as callback. That endpoint
       will be responsible to receive and store the caller's answer.
 
       During the Record verb creation, we also ask for a [Transcription](https://www.twilio.com/docs/api/rest/transcription).
@@ -153,10 +151,11 @@
     :markdown
       ## Handling responses.
 
-      Ok, user finished speaking and pressing keys and Twilio just sent us a request telling what happened, asking for further instructions.
-      
+      After the user has finished speaking and pressing keys, Twilio just sends a request telling what happened and asking for further instructions.
+
       At this point, we need to recover data from Twilio's request parameters (`ResponseParser` does that) and store them on `persistResponse` method.
-      Recovered parameters vary according to what we asked during the question, they can be:
+
+      Recovered parameters vary according to what we asked on the questions, they can be:
       * `Body` contains the text message from answer over SMS.
       * `Digits` contains the keys pressed for a numeric question.
       * `RecodingUrl` contains the URL for listening a recorded message.
@@ -194,7 +193,9 @@
     :markdown
       ## Where to next?
 
-      It's done! If you have configured one of your Twilio
+      That's it!
+
+      If you have configured one of your Twilio
       numbers to the application built in this tutorial you should be
       able to take the survey and see the results under the root route of
       the application. We hope you found this sample application
@@ -208,5 +209,5 @@
       Click-to-call enables your company to convert web traffic into phone calls with the click of a button.
 
       ### Did this help?
-      Thanks for checking out this tutorial! If you have any feedback to share with us,
-      we'd love to hear it. Tweet [@twilio](twitter.com/twilio) to let us know what you think.
+      Thanks for checking this tutorial out! If you have any feedback to share with us,
+      we'd love to hear it.[Contact support](//www.twilio.com/help/contact) to let us know what you think.
