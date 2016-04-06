@@ -9,58 +9,65 @@
 .wrapper {
   height:100%;
   width:100%;
-}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Automated Surveys in Spring"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Automated Surveys in Spring</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement automated surveys in your Spring web app with Twilio.</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="Setting Up The Application" class="chapter"><div data-tile="What Are We Building?" data-file="src/main/java/com/twilio/survey/SurveyJavaApplication.java" data-highlight="13-36" class="step"><h2 id="automated-survey">Automated Survey</h2>
+}</style><link rel="shortcut icon" href="//twilio.com/bundles/marketing/img/favicons/favicon.ico"><link rel="apple-touch-icon" href="//twilio.com/bundles/marketing/img/favicons/favicon_57.png"><link rel="apple-touch-icon" sizes="72x72" href="//twilio.com/bundles/marketing/img/favicons/favicon_72.png"><link rel="apple-touch-icon" sizes="114x114" href="//twilio.com/bundles/marketing/img/favicons/favicon_114.png"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="viewsaurus.css"></head><body><div class="wrapper"><div id="viewsaurus" data-title="Automated Surveys in Spring"><div class="saurus-panes"><div class="saurus-prose"><div class="saurus-prose-header"><div class="title-outer"><span class="step-title">Automated Surveys in Spring</span></div></div><div class="saurus-nav-buttons"><div class="saurus-nav-button nav-overview"><div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-previous"><div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div><div class="nav-divider"></div></div><div class="saurus-nav-button nav-next clickable"><div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div></div><div class="saurus-next-title"><span class="next-title-inner"></span></div></div><div class="saurus-progress-bar"></div><div class="saurus-start"><p>Learn to implement automated surveys in your Spring web app with Twilio.</p><a href="#0">Start Tutorial</a></div><div class="saurus-content"><div data-title="Automated Surveys Spring" class="chapter"><div data-tile="What Are We Building?" data-file="src/main/java/com/twilio/survey/SurveyJavaApplication.java" data-highlight="13-36" class="step"><h2 id="automated-survey">Automated Survey</h2>
 <p>Have you ever wondered how to create an automated survey that can be answered over phone or SMS?</p>
 <p>This tutorial will show how to do it using Twilio API.</p>
 <h4 id="here-s-how-it-works-at-a-high-level">Here&#39;s how it works at a high level</h4>
-<p><img src="https://s3.amazonaws.com/howtodocs/automated-survey.png" alt="Automated Survey Diagram"></p>
+<p><img src="//s3.amazonaws.com/howtodocs/automated-survey.png" alt="Automated Survey Diagram"></p>
 <ol>
-<li><p>The end user calls or texts the survey phone number.</p>
+<li><p>The end user calls or sends an SMS to the survey phone number.</p>
 </li>
-<li><p>Twilio gets the call or text and makes an HTTP request to your application for instructions on how to respond.</p>
+<li><p>Twilio gets the call or text and makes an HTTP request to your application asking for instructions on how to respond.</p>
 </li>
-<li><p>Your web application serves up <a href="/docs/api/twiml">TwiML instructions</a> to <code>Gather</code> or <code>Record</code> the user input over the phone, or prompt for text input with <code>Message</code>.</p>
+<li><p>Your web application instructs Twilio (using <a href="//www.twilio.com/docs/api/twiml">TwiML</a>)
+to <a href="//www.twilio.com/docs/api/twiml/gather"><code>Gather</code></a> or
+<a href="//www.twilio.com/docs/api/twiml/record"><code>Record</code></a> the user input over the phone,
+and prompt for text input with <a href="//www.twilio.com/docs/api/twiml/sms/message"><code>Message</code></a>
+if you are using SMS.</p>
 </li>
 <li><p>After each question, Twilio makes another request to your server with the user&#39;s input, which your application stores on its database.</p>
 </li>
-<li><p>Your application returns a TwiML response to Twilio with instructions to either ask the next question or end the survey.</p>
+<li><p>After storing the answer, our server will instruct Twilio to <a href="//www.twilio.com/docs/api/twiml/redirect"><code>Redirect</code></a>
+the user to the next question or finish the survey.</p>
 </li>
 </ol>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
 <li><a href="//spring.io/guides/gs/spring-boot/">Getting Started with Spring Boot</a></li>
-<li><a href="https://www.twilio.com/docs/java/install">Getting started with Twilio Java</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml">TwiML: the Twilio Markup Language</a>.</li>
+<li><a href="//www.twilio.com/docs/java/install">Getting started with Twilio Java</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml">TwiML: the Twilio Markup Language</a>.</li>
 </ul>
-</div><div data-tile="Create a survey" data-file="src/main/java/com/twilio/survey/util/SurveyParser.java" data-highlight="32-74" class="step"><h2 id="create-a-survey">Create a survey</h2>
+</div><div data-tile="Create a Survey" data-file="src/main/java/com/twilio/survey/util/SurveyParser.java" data-highlight="32-74" class="step"><h2 id="create-a-survey">Create a Survey</h2>
 <p>In order to perform automated surveys we first need to have some
 questions to ask. For your convenience, the application&#39;s
 repository already includes one survey that can be loaded into
 the database. If the database is configured correctly this
 survey will be loaded into the database when the app starts.</p>
 <p>You can modify the questions from the survey by editing the
-<a href="https://github.com/TwilioDevEd/automated-survey-spring/blob/master/survey.json">survey.json</a>
+<a href="//github.com/TwilioDevEd/automated-survey-spring/blob/master/survey.json">survey.json</a>
 file located in the root of the repository and re-running the app.</p>
 <p>We want users to take our survey, so next we will implement
 the handler for SMS and calls.</p>
 </div><div data-tile="The Interview Loop" class="step"><h2 id="the-interview-loop">The Interview Loop</h2>
 <p>It is helpful to visualize your interaction with a user during a survey as a loop.
-The chart below shows how that interaction will be handled. (click it for enlargement):</p>
+The chart below shows how that interaction will be handled. (click to enlarge):</p>
 <p><img src="//s3.amazonaws.com/howtodocs/flowchart.png" alt="Survey Flow Chart"></p>
-<p>The user can enter input for your survey over the phone using either their phone&#39;s keypad or by speaking.
+<p>The user can answer question for your survey over the phone using either their phone&#39;s keypad or by speaking.
 After each interaction, Twilio will make an HTTP request to your web application with either the string of
 keys the user pressed or a URL to a recording of their voice input.</p>
+<p>For SMS surveys the user will answer questions just by replying
+with another SMS to your Twilio number where we got the question from. </p>
 <p>It&#39;s up to the application to process, store and respond to the user&#39;s input.</p>
 <p>Let&#39;s dive into this flow to see how it actually works.</p>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/SurveyController.java" data-title="Configuring a Twilio Number" data-highlight="24-97" class="step"><h2 id="configuring-a-twilio-number">Configuring a Twilio Number</h2>
-<p>To initiate the interview process, we need to configure one of our <a href="/user/account/phone-numbers/incoming">Twilio numbers</a>
+<p>To initiate the interview process, we need to configure one of our <a href="//www.twilio.com/user/account/phone-numbers/incoming">Twilio numbers</a>
 to send our web application an HTTP request when we get an incoming call or text.</p>
-<p><a href="/user/account/phone-numbers/incoming">Click on one of your numbers</a> and configure Voice and Message URLs that point to your server.
+<p><a href="//www.twilio.com/user/account/phone-numbers/incoming">Click on one of your numbers</a> and configure Voice and Message URLs that point to your server.
 In our code, the routes are <code>/survey/call</code> and <code>/survey/sms</code>, respectively.</p>
 <p><img src="//s3.amazonaws.com/howtodocs/number-config.png" alt="Configuring a Twilio Number"></p>
-</div><div data-file="src/main/java/com/twilio/survey/controllers/SurveyController.java" data-title="Responding To A Phone Call" data-highlight="25-41, 81-85" class="step"><h2 id="responding-to-a-phone-call">Responding to a Phone Call</h2>
-<p>Right after receiveing a call or a SMS, Twilio will send a request to the URL specified on the number&#39;s configuration
+</div><div data-file="src/main/java/com/twilio/survey/controllers/SurveyController.java" data-title="Responding To A Twilio Request" data-highlight="25-41, 81-85" class="step"><h2 id="responding-to-a-twilio-request">Responding to a Twilio Request</h2>
+<p>Right after receiving a call or an SMS, Twilio will send a request to the URL specified on the number&#39;s configuration
 (/survey/call for calls and /survey/sms for sms).</p>
 <p>Each of these endpoints will receive the request and will use a <code>TwiMLResponseBuilder</code> to return
 a welcome message to the user. For phone users, the built message will contain a <code>Say</code>
@@ -69,13 +76,13 @@ verb with the message or a <code>Message</code> Verb for SMS.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
-<li><a href="https://www.twilio.com/platform/webhooks">Twilio webhooks</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/your_response">TwiML Voice: Your Response</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/sms/your_response">TwiML SMS: Your Response</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/say">TwiML Voice: &lt;Say&gt;</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/sms/message">TwiML SMS: &lt;Message&gt;</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/redirect">TwiML Voice: &lt;Redirect&gt;</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/sms/redirect">TwiML SMS: &lt;Redirect&gt;</a></li>
+<li><a href="//www.twilio.com/platform/webhooks">Twilio webhooks</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/your_response">TwiML Voice: Your Response</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/sms/your_response">TwiML SMS: Your Response</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/say">TwiML Voice: &lt;Say&gt;</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/sms/message">TwiML SMS: &lt;Message&gt;</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/redirect">TwiML Voice: &lt;Redirect&gt;</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/sms/redirect">TwiML SMS: &lt;Redirect&gt;</a></li>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/QuestionController.java" data-highlight="32-62" class="step"><h2 id="question-controller">Question Controller</h2>
 <p>This endpoint will just check if it&#39;s a SMS or Call, instantiating the proper class to build the correct TwiML response.
@@ -83,25 +90,25 @@ Each type of question and interaction (Call/SMS) will produce different instruct
 For instance, we can record voice or gather a key press during a call, but we can&#39;t do the same for text messages.</p>
 <p>When the user is interacting over SMS we don&#39;t have something like an ongoing call session with a well defined state.
 It becomes harder to know if an SMS is answering question 2 or 20, since all requests will be fired to <code>/survey/sms</code> main endpoint.
-To solve that, we can use <a href="https://www.twilio.com/blog/2014/07/the-definitive-guide-to-sms-conversation-tracking.html">Twilio Cookies</a>
-to keep the question being answered at the moment. That is done by <code>createSessionForQuestion</code> method.</p>
+To solve that, we can use <a href="//www.twilio.com/blog/2014/07/the-definitive-guide-to-sms-conversation-tracking.html">Twilio Cookies</a>
+to keep track of what question is being answered at the moment. That is done by <code>createSessionForQuestion</code> method.</p>
 <p>Let&#39;s see how the response is built.</p>
 </div><div data-file="src/main/java/com/twilio/survey/util/TwiMLResponseBuilder.java" data-highlight="54-72" class="step"><h2 id="building-our-twiml-verbs">Building Our TwiML Verbs</h2>
-<p>If the question is of &quot;numeric&quot; kind then we use the
-<a href="https://www.twilio.com/docs/api/twiml/gather"><code>&lt;Gather&gt;</code></a>
-verb. However, if we expect dialpad input we use the
-<a href="https://www.twilio.com/docs/api/twiml/record"><code>&lt;Record&gt;</code></a>
+<p>If the question is of &quot;numeric&quot; or &quot;yes-no&quot; kind then we use the
+<a href="//www.twilio.com/docs/api/twiml/gather"><code>&lt;Gather&gt;</code></a>
+verb. However, if we expect the user to record an answer we use the
+<a href="//www.twilio.com/docs/api/twiml/record"><code>&lt;Record&gt;</code></a>
 verb. Both verbs take an <code>action</code> attribute and a <code>method</code>
 attribute.</p>
-<p>Twilio will uses both attributes to define our response&#39;s endpoint that will be used as callback. That endpoint
+<p>Twilio will use both attributes to define our response&#39;s endpoint that will be used as callback. That endpoint
 will be responsible to receive and store the caller&#39;s answer.</p>
-<p>During the Record verb creation, we also ask for a <a href="https://www.twilio.com/docs/api/rest/transcription">Transcription</a>.
+<p>During the Record verb creation, we also ask for a <a href="//www.twilio.com/docs/api/rest/transcription">Transcription</a>.
 Twilio will process the record and extract useful text, making a request to our response endpoint when transcription is done.</p>
 <h2 id="now-let-s-see-what-to-do-with-the-response-">Now let&#39;s see what to do with the response.</h2>
 <p><strong>See Also:</strong></p>
 <ul>
-<li><a href="https://www.twilio.com/docs/api/twiml/gather">TwiML Voice: &lt;Gather&gt;</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/record">TwiML Voice: &lt;Record&gt;</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/gather">TwiML Voice: &lt;Gather&gt;</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/record">TwiML Voice: &lt;Record&gt;</a></li>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/ResponseController.java" data-highlight="38-76" class="step"><h2 id="handling-responses-">Handling responses.</h2>
 <p>After the user has finished speaking and pressing keys, Twilio just sends a request telling what happened and asking for further instructions.</p>
@@ -119,8 +126,8 @@ This is done on <code>redirectToNextQuestion</code> method.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
-<li><a href="https://www.twilio.com/docs/api/twiml/your_response">TwiML Voice: Your Response</a></li>
-<li><a href="https://www.twilio.com/docs/api/twiml/sms/your_response">TwiML SMS: Your Response</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/your_response">TwiML Voice: Your Response</a></li>
+<li><a href="//www.twilio.com/docs/api/twiml/sms/your_response">TwiML SMS: Your Response</a></li>
 </ul>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/DisplayController.java" data-highlight="31-53" class="step"><h2 id="display-the-survey-results">Display the survey results</h2>
 <p>For this route we simply query the database using a JPA query
@@ -131,7 +138,7 @@ inside every panel we list the responses from different calls.</p>
 <hr>
 <p><strong>See Also:</strong></p>
 <ul>
-<li><a href="https://mustache.github.io/">Mustache templates</a></li>
+<li><a href="//mustache.github.io/">Mustache templates</a></li>
 </ul>
 </div><div class="step"><h2 id="where-to-next-">Where to next?</h2>
 <p>That&#39;s it!</p>
@@ -141,9 +148,9 @@ able to take the survey and see the results under the root route of
 the application. We hope you found this sample application
 useful.  If you&#39;re a Java developer working with Twilio, you
 might enjoy these other tutorials:</p>
-<h3 id="-appointment-reminders-https-www-twilio-com-docs-howto-walkthrough-appointment-reminders-java-spark-"><a href="https://www.twilio.com/docs/howto/walkthrough/appointment-reminders/java/spark">Appointment Reminders</a></h3>
+<h3 id="-appointment-reminders-www-twilio-com-docs-howto-walkthrough-appointment-reminders-java-spark-"><a href="//www.twilio.com/docs/howto/walkthrough/appointment-reminders/java/spark">Appointment Reminders</a></h3>
 <p>Automate the process of reaching out to your customers in advance of an upcoming appointment.</p>
-<h3 id="-click-to-call-https-www-twilio-com-docs-tutorials-walkthrough-click-to-call-java-spring-"><a href="https://www.twilio.com/docs/tutorials/walkthrough/click-to-call/java/spring">Click to Call</a></h3>
+<h3 id="-click-to-call-www-twilio-com-docs-tutorials-walkthrough-click-to-call-java-spring-"><a href="//www.twilio.com/docs/tutorials/walkthrough/click-to-call/java/spring">Click to Call</a></h3>
 <p>Click-to-call enables your company to convert web traffic into phone calls with the click of a button.</p>
 <h3 id="did-this-help-">Did this help?</h3>
 <p>Thanks for checking this tutorial out! If you have any feedback to share with us,
