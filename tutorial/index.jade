@@ -35,7 +35,7 @@
 
   .step(data-tile='Create a Survey', data-file='src/main/java/com/twilio/survey/util/SurveyParser.java', data-highlight='32-74')
     :markdown
-      ## Create a Survey
+      ## Creating a Survey
 
       In order to perform automated surveys we first need to have some
       questions to ask. For your convenience, the application's
@@ -59,12 +59,12 @@
 
       ![Survey Flow Chart](//s3.amazonaws.com/howtodocs/flowchart.png)
 
-      The user can answer question for your survey over the phone using either their phone's keypad or by speaking.
+      The user can answer a question for your survey over the phone using either their phone's keypad or by speaking.
       After each interaction, Twilio will make an HTTP request to your web application with either the string of
       keys the user pressed or a URL to a recording of their voice input.
       
       For SMS surveys the user will answer questions just by replying
-      with another SMS to your Twilio number where we got the question from. 
+      with another SMS to the Twilio number that sent the question.
 
       It's up to the application to process, store and respond to the user's input.
 
@@ -182,7 +182,7 @@
   .step(data-file='src/main/java/com/twilio/survey/controllers/DisplayController.java',
     data-highlight='31-53')
     :markdown
-      ## Display the survey results
+      ## Displaying the Survey Results
 
       For this route we simply query the database using a JPA query
       and then display the information within a Mustache template. We

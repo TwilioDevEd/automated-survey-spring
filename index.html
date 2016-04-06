@@ -38,7 +38,7 @@ the user to the next question or finish the survey.</p>
 <li><a href="//www.twilio.com/docs/java/install">Getting started with Twilio Java</a></li>
 <li><a href="//www.twilio.com/docs/api/twiml">TwiML: the Twilio Markup Language</a>.</li>
 </ul>
-</div><div data-tile="Create a Survey" data-file="src/main/java/com/twilio/survey/util/SurveyParser.java" data-highlight="32-74" class="step"><h2 id="create-a-survey">Create a Survey</h2>
+</div><div data-tile="Create a Survey" data-file="src/main/java/com/twilio/survey/util/SurveyParser.java" data-highlight="32-74" class="step"><h2 id="creating-a-survey">Creating a Survey</h2>
 <p>In order to perform automated surveys we first need to have some
 questions to ask. For your convenience, the application&#39;s
 repository already includes one survey that can be loaded into
@@ -53,11 +53,11 @@ the handler for SMS and calls.</p>
 <p>It is helpful to visualize your interaction with a user during a survey as a loop.
 The chart below shows how that interaction will be handled. (click to enlarge):</p>
 <p><img src="//s3.amazonaws.com/howtodocs/flowchart.png" alt="Survey Flow Chart"></p>
-<p>The user can answer question for your survey over the phone using either their phone&#39;s keypad or by speaking.
+<p>The user can answer a question for your survey over the phone using either their phone&#39;s keypad or by speaking.
 After each interaction, Twilio will make an HTTP request to your web application with either the string of
 keys the user pressed or a URL to a recording of their voice input.</p>
 <p>For SMS surveys the user will answer questions just by replying
-with another SMS to your Twilio number where we got the question from. </p>
+with another SMS to the Twilio number that sent the question.</p>
 <p>It&#39;s up to the application to process, store and respond to the user&#39;s input.</p>
 <p>Let&#39;s dive into this flow to see how it actually works.</p>
 </div><div data-file="src/main/java/com/twilio/survey/controllers/SurveyController.java" data-title="Configuring a Twilio Number" data-highlight="24-97" class="step"><h2 id="configuring-a-twilio-number">Configuring a Twilio Number</h2>
@@ -129,7 +129,7 @@ This is done on <code>redirectToNextQuestion</code> method.</p>
 <li><a href="//www.twilio.com/docs/api/twiml/your_response">TwiML Voice: Your Response</a></li>
 <li><a href="//www.twilio.com/docs/api/twiml/sms/your_response">TwiML SMS: Your Response</a></li>
 </ul>
-</div><div data-file="src/main/java/com/twilio/survey/controllers/DisplayController.java" data-highlight="31-53" class="step"><h2 id="display-the-survey-results">Display the survey results</h2>
+</div><div data-file="src/main/java/com/twilio/survey/controllers/DisplayController.java" data-highlight="31-53" class="step"><h2 id="displaying-the-survey-results">Displaying the Survey Results</h2>
 <p>For this route we simply query the database using a JPA query
 and then display the information within a Mustache template. We
 display a panel for every question on the last survey, and
