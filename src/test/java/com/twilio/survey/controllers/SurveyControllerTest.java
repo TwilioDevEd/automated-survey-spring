@@ -49,7 +49,8 @@ public class SurveyControllerTest extends BaseControllerTest {
 
         String response = getAsSMS("/survey/sms");
 
-        assertThat(response, CoreMatchers.containsString("<Message>Welcome to the New Title Survey survey</Message>"));
+        assertThat(response, CoreMatchers.containsString("<Message><Body>Welcome to the New Title Survey " +
+                "survey</Body></Message>"));
         assertThat(response, CoreMatchers.containsString("/question?survey=" + survey.getId()));
     }
 

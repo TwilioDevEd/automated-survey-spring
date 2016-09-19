@@ -75,7 +75,7 @@ public class ResponseControllerTest extends BaseControllerTest {
         params.put("Body", "Last answer");
         String response = postSMSWithParameters(requestPath, params);
 
-        assertThat(response, CoreMatchers.containsString("<Message>Tank you for taking the"));
+        assertThat(response, CoreMatchers.containsString("<Message><Body>Tank you for taking the"));
     }
 
     @Test
