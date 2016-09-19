@@ -17,13 +17,13 @@ import com.twilio.twiml.VoiceResponse;
 
 public class TwiMLUtil {
 
-    public static TwiML redirect(int nextQuestionNumber, Survey survey) {
+    public static String redirect(int nextQuestionNumber, Survey survey) throws TwiMLException {
         String nextQuestionURL = "/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber;
-        return redirect(nextQuestionURL, Method.GET);
+        return redirect(nextQuestionURL, Method.GET).toXml();
     }
 
-    public static TwiML redirectPost(String url) {
-        return redirect(url, Method.POST);
+    public static String redirectPost(String url) throws TwiMLException {
+        return redirect(url, Method.POST).toXml();
     }
 
     private static TwiML redirect(String url, Method method) {
