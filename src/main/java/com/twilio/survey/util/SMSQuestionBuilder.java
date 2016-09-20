@@ -1,7 +1,10 @@
 package com.twilio.survey.util;
 
-import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.survey.models.Question;
+import com.twilio.twiml.Body;
+import com.twilio.twiml.Message;
+import com.twilio.twiml.MessagingResponse;
+import com.twilio.twiml.TwiMLException;
 
 /**
  * Class responsible of returning the appropriate TwiMLResponse based on the question
@@ -24,6 +27,7 @@ public class SMSQuestionBuilder implements QuestionBuilder {
      * Bases on the question's type, a specific method is called. This method will construct
      * the specific TwiMLResponse
      */
+    @Override
     public String build() throws TwiMLException {
         switch (question.getType()) {
             case "numeric":
@@ -35,11 +39,15 @@ public class SMSQuestionBuilder implements QuestionBuilder {
         }
     }
 
+    @Override
     public String buildNoMoreQuestions() throws TwiMLException {
         return renderTwiMLMessage(errorMessage);
     }
 
     private String renderTwiMLMessage(String content) throws TwiMLException {
-        return new TwiMLResponseBuilder().message(content).asString();
+        return new MessagingResponse.Builder()
+                .message(new Message.Builder().body(new Body(content)).build())
+                .build()
+                .toXml();
     }
 }

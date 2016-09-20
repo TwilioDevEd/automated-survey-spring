@@ -3,7 +3,7 @@ package com.twilio.survey.controllers;
 import com.twilio.survey.models.Survey;
 import com.twilio.survey.repositories.SurveyRepository;
 import com.twilio.survey.services.SurveyService;
-import com.twilio.survey.util.TwiMLResponseBuilder;
+import com.twilio.survey.util.TwiMLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,7 +68,7 @@ public class SurveyController {
 
     private String getSaveResponseRedirect(HttpSession session) throws Exception {
         String saveURL = "/save_response?qid=" + getQuestionIdFromSession(session);
-        return new TwiMLResponseBuilder().redirectPOST(saveURL).asString();
+        return TwiMLUtil.redirectPost(saveURL);
     }
 
     /**
@@ -81,7 +81,11 @@ public class SurveyController {
     private String getFirstQuestionRedirect(Survey survey, HttpServletRequest request) throws Exception {
         String welcomeMessage = "Welcome to the " + survey.getTitle() + " survey";
         String questionURL = "/question?survey=" + survey.getId() + "&question=1";
-        return new TwiMLResponseBuilder().writeContent(request, welcomeMessage).redirect(questionURL).asString();
+        if (request.getParameter("MessageSid") != null) {
+            return TwiMLUtil.messagingResponseWithRedirect(welcomeMessage, questionURL);
+        } else {
+            return TwiMLUtil.voiceResponseWithRedirect(welcomeMessage, questionURL);
+        }
     }
 
     /**
@@ -94,7 +98,11 @@ public class SurveyController {
     private String getHangupResponse(HttpServletRequest request) throws Exception {
         String errorMessage = "We are sorry, there are no surveys available. Good bye.";
         cleanSession(request);
-        return new TwiMLResponseBuilder().writeContent(request, errorMessage, true).asString();
+        if (request.getParameter("MessageSid") != null) {
+            return TwiMLUtil.messagingResponse(errorMessage);
+        } else {
+            return TwiMLUtil.voiceResponse(errorMessage);
+        }
     }
 
     private void cleanSession(HttpServletRequest request) {

@@ -61,7 +61,8 @@ public class QuestionControllerTest extends BaseControllerTest {
         String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
         assertThat(response, containsString(
-                "<Message>We are sorry, there are no more questions available for this survey. Good bye.</Message>"));
+                "<Message><Body>We are sorry, there are no more questions available for this survey. Good bye" +
+                        ".</Body></Message>"));
     }
 
     @Test
@@ -72,7 +73,7 @@ public class QuestionControllerTest extends BaseControllerTest {
         String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
         assertThat(response, containsString(
-                "<Message>Question Body</Message>"));
+                "<Message><Body>Question Body</Body></Message>"));
     }
 
     @Test
@@ -99,7 +100,8 @@ public class QuestionControllerTest extends BaseControllerTest {
         String response = getAsSMS("/question?survey=" + survey1.getId() + "&question=1");
 
         assertThat(response, containsString(
-                "<Message>For the next question, type 1 for yes, and 0 for no. " + question.getBody() + "</Message>"));
+                "<Message><Body>For the next question, type 1 for yes, and 0 for no. " + question.getBody() +
+                        "</Body></Message>"));
     }
 
     @Test

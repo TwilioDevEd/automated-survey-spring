@@ -1,7 +1,11 @@
 package com.twilio.survey.util;
 
-import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.survey.models.Question;
+import com.twilio.twiml.Hangup;
+import com.twilio.twiml.Pause;
+import com.twilio.twiml.Say;
+import com.twilio.twiml.TwiMLException;
+import com.twilio.twiml.VoiceResponse;
 
 /**
  * Class responsible of returning the appropriate TwiMLResponse based on the question
@@ -27,6 +31,7 @@ public class VoiceQuestionBuilder implements QuestionBuilder {
      * Bases on the question's type, a specific method is called. This method will construct
      * the specific TwiMLResponse
      */
+    @Override
     public String build() throws TwiMLException {
         switch (question.getType()) {
             case "text":
@@ -43,16 +48,32 @@ public class VoiceQuestionBuilder implements QuestionBuilder {
     /**
      * method that returns a generic TwiMLResponse when an non existent question is requested
      */
+    @Override
     public String buildNoMoreQuestions() throws TwiMLException {
-        return new TwiMLResponseBuilder().say(errorMessage).hangup().asString();
+        return new VoiceResponse.Builder()
+                .say(new Say.Builder(errorMessage).build())
+                .hangup(new Hangup())
+                .build()
+                .toXml();
     }
 
     private String getRecordTwiML() throws TwiMLException {
-        return new TwiMLResponseBuilder().say(recordingInstructions).pause().say(question.getBody()).record(question)
-                .asString();
+        return new VoiceResponse.Builder()
+                .say(new Say.Builder(recordingInstructions).build())
+                .pause(new Pause.Builder().build())
+                .say(new Say.Builder(question.getBody()).build())
+                .record(TwiMLUtil.record(question))
+                .build()
+                .toXml();
     }
 
     private String getGatherResponse(String defaultMessage) throws TwiMLException {
-        return new TwiMLResponseBuilder().say(defaultMessage).pause().say(question.getBody()).gather(question).asString();
+        return new VoiceResponse.Builder()
+                .say(new Say.Builder(defaultMessage).build())
+                .pause(new Pause.Builder().build())
+                .say(new Say.Builder(question.getBody()).build())
+                .gather(TwiMLUtil.gather(question))
+                .build()
+                .toXml();
     }
 }

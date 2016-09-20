@@ -1,6 +1,7 @@
 package com.twilio.survey.util;
 
-import com.twilio.sdk.verbs.TwiMLException;
+
+import com.twilio.twiml.TwiMLException;
 
 /**
  * Created by vshyba on 23/03/16.

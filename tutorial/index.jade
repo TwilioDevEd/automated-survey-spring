@@ -72,7 +72,7 @@
 
   .step(data-file='src/main/java/com/twilio/survey/controllers/SurveyController.java',
     data-title='Configuring a Twilio Number'
-    data-highlight='24-97')
+    data-highlight='25-106')
     :markdown
       ## Configuring a Twilio Number
 
@@ -88,14 +88,14 @@
 
   .step(data-file='src/main/java/com/twilio/survey/controllers/SurveyController.java',
     data-title="Responding To A Twilio Request"
-    data-highlight='25-41, 81-85')
+    data-highlight='25-41, 81-89')
     :markdown
       ## Responding to a Twilio Request
 
       Right after receiving a call or an SMS, Twilio will send a request to the URL specified on the number's configuration
       (/survey/call for calls and /survey/sms for sms).
 
-      Each of these endpoints will receive the request and will use a `TwiMLResponseBuilder` to return
+      Each of these endpoints will receive the request and will use a `TwiMLUtil` to return
       a welcome message to the user. For phone users, the built message will contain a `Say`
       verb with the message or a `Message` Verb for SMS.
 
@@ -128,8 +128,8 @@
 
       Let's see how the response is built.
 
-  .step(data-file='src/main/java/com/twilio/survey/util/TwiMLResponseBuilder.java',
-    data-highlight='54-72')
+  .step(data-file='src/main/java/com/twilio/survey/util/TwiMLUtil.java',
+    data-highlight='35-50')
     :markdown
       ## Building Our TwiML Verbs
 
@@ -154,7 +154,7 @@
       * [TwiML Voice: <Record>](//www.twilio.com/docs/api/twiml/record)
 
   .step(data-file='src/main/java/com/twilio/survey/controllers/ResponseController.java',
-    data-highlight='38-76')
+    data-highlight='37-74')
     :markdown
       ## Handling responses.
 
