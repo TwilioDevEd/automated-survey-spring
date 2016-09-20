@@ -4,3 +4,5 @@
 build/
 survey-java.iml
 automated-survey-spring.iml
+classes/
+.env

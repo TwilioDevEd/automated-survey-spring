@@ -1,6 +1,5 @@
 package com.twilio.survey.controllers;
 
-import com.twilio.sdk.verbs.TwiMLException;
 import com.twilio.survey.models.Question;
 import com.twilio.survey.models.Response;
 import com.twilio.survey.models.Survey;
@@ -9,7 +8,7 @@ import com.twilio.survey.repositories.ResponseRepository;
 import com.twilio.survey.services.QuestionService;
 import com.twilio.survey.services.ResponseService;
 import com.twilio.survey.util.ResponseParser;
-import com.twilio.survey.util.TwiMLResponseBuilder;
+import com.twilio.survey.util.TwiMLUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,16 +46,15 @@ public class ResponseController {
 
         if (survey.isLastQuestion(currentQuestion)) {
             String message = "Tank you for taking the " + survey.getTitle() + " survey. Good Bye";
-            responseWriter.print(new TwiMLResponseBuilder().writeContent(request, message, true).asString());
+            if (request.getParameter("MessageSid") != null) {
+                responseWriter.print(TwiMLUtil.messagingResponse(message));
+            } else {
+                responseWriter.print(TwiMLUtil.voiceResponse(message));
+            }
         } else {
-            responseWriter.print(redirectToNextQuestion(survey.getNextQuestionNumber(currentQuestion), survey));
+            responseWriter.print(TwiMLUtil.redirect(survey.getNextQuestionNumber(currentQuestion), survey));
         }
         response.setContentType("application/xml");
-    }
-
-    private String redirectToNextQuestion(int nextQuestionNumber, Survey survey) throws TwiMLException {
-        String nextQuestionURL = "/question?survey=" + survey.getId() + "&question=" + nextQuestionNumber;
-        return new TwiMLResponseBuilder().redirect(nextQuestionURL).asString();
     }
 
     private void persistResponse(Response questionResponse) {
