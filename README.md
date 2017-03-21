@@ -1,3 +1,7 @@
+<a href="https://www.twilio.com">
+  <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
+</a>
+
 # Automated-survey-spring
 
 [![Build Status](https://travis-ci.org/TwilioDevEd/automated-survey-spring.svg?branch=master)](https://travis-ci.org/TwilioDevEd/automated-survey-spring)
@@ -20,6 +24,11 @@ configure:
 * Set environment variable `DATABASE_URL` as it's shown in the .env.example file
 * If your Postgres installation doesn't have SSL support enabled, you must set `TWILIO_DISABLE_DB_SSL=true`
 
+```bash
+$ cp .env.example .env
+$ source .env
+```
+
 Running the application will also run the database migrations.
 
 ## Running the application
@@ -35,6 +44,12 @@ the following command in the root directory of the project:
 
 ```
 ./gradlew bootRun
+```
+
+If you would like to see request and response content in the console use `--debug` as follows:
+
+```bash
+./gradlew bootRun --debug
 ```
 
 If you open you browser on `http://localhost:8080` you should see the list of questions that were specified in the
@@ -158,10 +173,10 @@ and open a number's configuration by clicking on it.
 ![Open a number configuration](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/number-conf.png)
 
 Next, edit the "Request URL" field under the "Voice" section and point
-it towards your ngrok-exposed application `/survey` route. Set
+it towards your ngrok-exposed application `/survey/call` route. Set
 the HTTP method to GET. If you are trying out the Heroku
 application you need to point Twilio to
-`http://<your-app-name>.herokuapp.com/survey`. See the image
+`http://<your-app-name>.herokuapp.com/survey/call`. See the image
 below for an example:
 
 ![Webhook configuration](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/webhook-conf.png)

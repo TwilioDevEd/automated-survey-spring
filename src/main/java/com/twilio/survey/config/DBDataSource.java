@@ -28,14 +28,14 @@ public class DBDataSource {
      * includes username and password
      *
      * @return DataSource
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     @ConfigurationProperties(prefix = "spring.datasource")
     @Bean(name = "dBDataSource")
     @Primary
     public DataSource dBDataSource() throws URISyntaxException {
         AppSetup appSetup = new AppSetup();
-        Map<String, String> params = appSetup.getParamsFromDBURL(appSetup.getDatabaseURL());
+        Map<String, String> params = appSetup.getParamsFromDbUrl(appSetup.getDatabaseURL());
 
         return DataSourceBuilder.create().url(params.get("url")).type(PGPoolingDataSource.class)
                 .driverClassName("org.postgresql.Driver").build();

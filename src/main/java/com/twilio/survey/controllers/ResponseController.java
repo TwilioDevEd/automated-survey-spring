@@ -34,7 +34,7 @@ public class ResponseController {
      * End point that saves a question response and redirects the call to the next question,
      * if one is available.
      */
-    @RequestMapping(value = "/save_response", method = RequestMethod.POST)
+    @RequestMapping(value = "/save_response", method = RequestMethod.POST, produces="application/xml")
     public void save(HttpServletRequest request, HttpServletResponse response) throws Exception {
         PrintWriter responseWriter = response.getWriter();
         this.questionService = new QuestionService(questionRepository);

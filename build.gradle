@@ -24,8 +24,9 @@ war {
     baseName = 'twilio-survey'
     version = '0.0.1-SNAPSHOT'
 }
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+ext['logbackVersion'] = '1.1.11'
 
 repositories {
     mavenCentral()
@@ -37,10 +38,13 @@ configurations {
 
 dependencies {
     compile("org.flywaydb:flyway-core")
+    compile("ch.qos.logback:logback-access:${logbackVersion}")
+    compile("ch.qos.logback:logback-classic:${logbackVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile("org.springframework.boot:spring-boot-starter-mustache")
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile('net.rakugakibox.springbootext:spring-boot-ext-logback-access:1.6')
     compile("org.postgresql:postgresql:9.4-1201-jdbc41")
     compile("com.googlecode.json-simple:json-simple")
     compile("com.twilio.sdk:twilio:7.0.0-rc-29")

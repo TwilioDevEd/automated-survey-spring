@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk7
+- oraclejdk8
 env:
   global:
   - DATABASE_URL=postgres://postgres:@localhost:5432/survey
