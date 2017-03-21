@@ -13,6 +13,8 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
+
+import java.net.URISyntaxException;
 import java.util.Map;
 
 @Configuration
@@ -26,11 +28,12 @@ public class DBDataSource {
      * includes username and password
      *
      * @return DataSource
+     * @throws URISyntaxException 
      */
     @ConfigurationProperties(prefix = "spring.datasource")
     @Bean(name = "dBDataSource")
     @Primary
-    public DataSource dBDataSource() {
+    public DataSource dBDataSource() throws URISyntaxException {
         AppSetup appSetup = new AppSetup();
         Map<String, String> params = appSetup.getParamsFromDBURL(appSetup.getDatabaseURL());
 

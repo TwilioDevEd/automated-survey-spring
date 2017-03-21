@@ -6,3 +6,7 @@ survey-java.iml
 automated-survey-spring.iml
 classes/
 .env
+/bin/
+.settings
+.classpath
+.project
