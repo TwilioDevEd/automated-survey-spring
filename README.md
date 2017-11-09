@@ -8,10 +8,6 @@
 
 [Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/automated-survey/java/spring)!
 
-## Deploy to Heroku
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
 ## Requirements
 
 In order to run this application, you need to install Oracle's JDK (Tested with JDK7)
@@ -174,9 +170,9 @@ and open a number's configuration by clicking on it.
 
 Next, edit the "Request URL" field under the "Voice" section and point
 it towards your ngrok-exposed application `/survey/call` route. Set
-the HTTP method to GET. If you are trying out the Heroku
-application you need to point Twilio to
-`http://<your-app-name>.herokuapp.com/survey/call`. See the image
+the HTTP method to GET. If your application is running in production
+you need to point Twilio to
+`http://<your-app-name>.com/survey/call`. See the image
 below for an example:
 
 ![Webhook configuration](https://raw.github.com/TwilioDevEd/automated-survey-spring/master/screenshots/webhook-conf.png)
