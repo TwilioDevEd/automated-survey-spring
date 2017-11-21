@@ -48,7 +48,7 @@ public class DisplayControllerTest extends BaseControllerTest {
         surveyService.deleteAll();
         responseService.deleteAll();
     }
-
+    
     @Test
     public void showQuestions() throws Exception {
         Survey survey = surveyService.create(new Survey("New Title Survey", new Date()));

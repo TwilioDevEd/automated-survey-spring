@@ -1,9 +1,9 @@
 package com.twilio.survey.util;
 
 import com.twilio.survey.models.Question;
-import com.twilio.twiml.Hangup;
-import com.twilio.twiml.Pause;
-import com.twilio.twiml.Say;
+import com.twilio.twiml.voice.Hangup;
+import com.twilio.twiml.voice.Pause;
+import com.twilio.twiml.voice.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.VoiceResponse;
 
@@ -52,7 +52,7 @@ public class VoiceQuestionBuilder implements QuestionBuilder {
     public String buildNoMoreQuestions() throws TwiMLException {
         return new VoiceResponse.Builder()
                 .say(new Say.Builder(errorMessage).build())
-                .hangup(new Hangup())
+                .hangup(new Hangup.Builder().build())
                 .build()
                 .toXml();
     }
