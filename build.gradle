@@ -52,7 +52,7 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.apache.httpcomponents:httpclient:4.3.6")
     testCompile("org.apache.httpcomponents:httpasyncclient:4.0.2")
-    testCompile("org.apache.httpcomponents:httpmime:4.3.6")
+    testCompile("org.apache.httpcomponents:httpmime:4.5.9")
     testCompile("org.json:json:20140107")
     testCompile("com.mashape.unirest:unirest-java:1.4.6")
     testCompile("org.jdom:jdom:2.0.2")
