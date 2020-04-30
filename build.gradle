@@ -47,7 +47,7 @@ dependencies {
     compile('net.rakugakibox.springbootext:spring-boot-ext-logback-access:1.6')
     compile("org.postgresql:postgresql:9.4-1201-jdbc41")
     compile("com.googlecode.json-simple:json-simple")
-    compile("com.twilio.sdk:twilio:7.16.0")
+    compile("com.twilio.sdk:twilio:7.50.0")
     compile("org.springframework.boot:spring-boot-starter-tomcat")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.apache.httpcomponents:httpclient:4.3.6")
