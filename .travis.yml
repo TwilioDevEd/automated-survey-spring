@@ -1,9 +1,0 @@
-language: java
-jdk:
-- oraclejdk8
-env:
-  global:
-  - DATABASE_URL=postgres://postgres:@localhost:5432/survey
-  - TWILIO_DISABLE_DB_SSL=true
-before_script:
-- psql -c 'create database survey;' -U postgres

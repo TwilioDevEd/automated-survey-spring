@@ -4,7 +4,7 @@
 
 # Automated-survey-spring
 
-[![Build Status](https://travis-ci.org/TwilioDevEd/automated-survey-spring.svg?branch=master)](https://travis-ci.org/TwilioDevEd/automated-survey-spring)
+[![Build and test](https://github.com/TwilioDevEd/automated-survey-spring/actions/workflows/build_test.yml/badge.svg)](https://github.com/TwilioDevEd/automated-survey-spring/actions/workflows/build_test.yml)
 
 [Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/automated-survey/java/spring)!
 
