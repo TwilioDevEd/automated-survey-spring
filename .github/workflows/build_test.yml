@@ -1,0 +1,56 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Build and test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+        java: [ 8 ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Java ${{ matrix.java }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'adopt'
+      - name: Install Postgres
+        run: |
+          brew install postgres
+          brew services start postgresql
+          i=10
+          COMMAND='pg_isready'
+          while [ $i -gt 0 ]; do
+            echo "Check PostgreSQL service status"
+            eval $COMMAND && break
+            ((i--))
+            if [ $i == 0 ]; then
+              echo "PostgreSQL service not ready, all attempts exhausted"
+              exit 1
+            fi
+            echo "PostgreSQL service not ready, wait 10 more sec, attempts left: $i"
+            sleep 10
+          done
+      - name: Create Database
+        run: |
+          /usr/local/opt/postgres/bin/createuser -s postgres
+          psql -c 'create database survey;' -U postgres
+      - name: Run tests
+        run: ./gradlew test
+        env:
+          DATABASE_URL: postgres://postgres:@localhost:5432/survey
+          TWILIO_DISABLE_DB_SSL: True
