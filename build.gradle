@@ -49,6 +49,7 @@ dependencies {
     compile("com.googlecode.json-simple:json-simple")
     compile("com.twilio.sdk:twilio:7.16.0")
     compile("org.springframework.boot:spring-boot-starter-tomcat")
+    compile("me.paulschwarz:spring-dotenv:2.4.1")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.apache.httpcomponents:httpclient:4.3.6")
     testCompile("org.apache.httpcomponents:httpasyncclient:4.0.2")

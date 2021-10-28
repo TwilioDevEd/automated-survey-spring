@@ -10,17 +10,22 @@ import java.util.List;
 import java.util.Map;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.springframework.beans.factory.annotation.Value;
+
 
 /**
  * Class capable of retrieving environment variables necessary for the app to
  * run
  */
 public class AppSetup {
-  private Map<String, String> env;
 
-  public AppSetup() {
-    this.env = System.getenv();
-  }
+  @Value("${environment.DATABASE_URL}")
+  private String databaseUrl;
+
+  @Value("${environment.TWILIO_DISABLE_DB_SSL}")
+  private String sslDisabled;
+
+  public AppSetup() {}
 
   /**
    * Formats the database url to match JDB format
@@ -62,7 +67,7 @@ public class AppSetup {
   }
 
   public String getDatabaseURL() {
-    return env.get("DATABASE_URL");
+    return databaseUrl;
   }
 
   /**
@@ -70,6 +75,6 @@ public class AppSetup {
    * set to true if the database doesn't have SSL enabled
    */
   public boolean getSslEnabledDb() {
-    return !Boolean.parseBoolean(env.get("TWILIO_DISABLE_DB_SSL"));
+    return !Boolean.parseBoolean(sslDisabled);
   }
 }
