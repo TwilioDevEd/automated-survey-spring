@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Map;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  * Class capable of retrieving environment variables necessary for the app to
  * run
  */
 public class AppSetup {
-  private Map<String, String> env;
+  private static Dotenv env = Dotenv.configure().ignoreIfMissing().load();
 
   public AppSetup() {
-    this.env = System.getenv();
   }
 
   /**

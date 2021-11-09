@@ -22,7 +22,6 @@ configure:
 
 ```bash
 $ cp .env.example .env
-$ source .env
 ```
 
 Running the application will also run the database migrations.
