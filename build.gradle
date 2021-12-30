@@ -44,7 +44,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile("org.springframework.boot:spring-boot-starter-mustache")
     compile("org.springframework.boot:spring-boot-starter-web")
-    compile('net.rakugakibox.springbootext:spring-boot-ext-logback-access:1.6')
+    compile('net.rakugakibox.springbootext:spring-boot-ext-logback-access:1.7')
     compile("org.postgresql:postgresql:9.4-1201-jdbc41")
     compile("com.googlecode.json-simple:json-simple")
     compile("com.twilio.sdk:twilio:7.16.0")
