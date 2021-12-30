@@ -1,8 +1,8 @@
 package com.twilio.survey.util;
 
 import com.twilio.survey.models.Question;
-import com.twilio.twiml.Body;
-import com.twilio.twiml.Message;
+import com.twilio.twiml.messaging.Body;
+import com.twilio.twiml.messaging.Message;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.TwiMLException;
 
@@ -46,7 +46,9 @@ public class SMSQuestionBuilder implements QuestionBuilder {
 
     private String renderTwiMLMessage(String content) throws TwiMLException {
         return new MessagingResponse.Builder()
-                .message(new Message.Builder().body(new Body(content)).build())
+                .message(new Message.Builder()
+                        .body(new Body.Builder(content).build())
+                        .build())
                 .build()
                 .toXml();
     }
